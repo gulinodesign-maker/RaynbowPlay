@@ -1432,38 +1432,36 @@ const MELODY_STEP_MS = 250;
 
 const AudioContextWeb = window.AudioContext || window.webkitAudioContext;
 let audioCtx = null;
+let audioUnlocked = false;
 
-function ensureAudioCtx() {
-  if (!AudioContextWeb) {
-    return null;
-  }
-  if (!audioCtx) {
+function getAudioCtx() {
+  // Crea o ricrea il contesto se non esiste o è stato chiuso
+  if (!audioCtx || audioCtx.state === "closed") {
     audioCtx = new AudioContextWeb();
-  }
-  if (audioCtx.state === "suspended") {
-    audioCtx.resume();
   }
   return audioCtx;
 }
 
-// Sblocco audio per iOS / iPad (deve partire dopo un gesto utente)
-["touchstart", "touchend", "mousedown", "keydown"].forEach(eventName => {
-  window.addEventListener(
-    eventName,
-    function onFirstInteraction() {
-      const ctx = ensureAudioCtx();
-      if (ctx && ctx.state === "suspended") {
-        ctx.resume();
-      }
-      window.removeEventListener(eventName, onFirstInteraction);
-    },
-    { once: true }
-  );
-});
+// Sblocco esplicito per Safari / iOS: viene chiamato al primo tap/click
+function unlockAudioOnce() {
+  if (audioUnlocked) return;
+  const ctx = getAudioCtx();
+  if (ctx.state === "suspended") {
+    ctx.resume().catch(() => {});
+  }
+  audioUnlocked = true;
+}
+
+// Agganciamo l’unlock al primo gesto dell’utente
+window.addEventListener("touchstart", unlockAudioOnce, { once: true });
+window.addEventListener("mousedown", unlockAudioOnce, { once: true });
+window.addEventListener("pointerdown", unlockAudioOnce, { once: true });
 
 function playTone(freq) {
-  const ctx = ensureAudioCtx();
-  if (!ctx || !freq) return;
+  const ctx = getAudioCtx();
+  if (ctx.state === "suspended") {
+    try { ctx.resume(); } catch(e) {}
+  }
   const o = ctx.createOscillator();
   const g = ctx.createGain();
   o.frequency.value = freq;
