@@ -2904,32 +2904,23 @@ function renderChestGrid() {
   chestGridEl.innerHTML = "";
   const maxSlots = 64;
 
-  // ordina per id
-  const sorted = [...sessions].sort((a, b) => a.id - b.id);
+  // prendi solo le sessioni che hanno almeno una medaglia
+  const filled = sessions
+    .filter(s => ((s.bronze || 0) + (s.silver || 0) + (s.gold || 0)) > 0)
+    .sort((a, b) => a.id - b.id);
 
   for (let i = 0; i < maxSlots; i++) {
-    const session = sorted[i];
     const btn = document.createElement("button");
     btn.type = "button";
 
-    if (session) {
-      const totalCoins = (session.bronze || 0) + (session.silver || 0) + (session.gold || 0);
-
-      if (totalCoins > 0) {
-        // scrigno pieno: bottone giallo cliccabile
-        btn.className = "chest-btn chest-btn-filled";
-        btn.innerHTML = `🧰<br/>Scrigno ${session.id}`;
-        btn.addEventListener("click", () => {
-          showChestDetails(session);
-        });
-      } else {
-        // scrigno vuoto: slot grigio inattivo
-        btn.className = "chest-btn chest-btn-empty";
-        btn.disabled = true;
-        btn.innerHTML = "&nbsp;";
-      }
+    if (i < filled.length) {
+      const session = filled[i];
+      btn.className = "chest-btn chest-btn-filled";
+      btn.innerHTML = `🧰<br/>Scrigno ${session.id}`;
+      btn.addEventListener("click", () => {
+        showChestDetails(session);
+      });
     } else {
-      // nessuna sessione per questo slot: slot grigio inattivo
       btn.className = "chest-btn chest-btn-empty";
       btn.disabled = true;
       btn.innerHTML = "&nbsp;";
