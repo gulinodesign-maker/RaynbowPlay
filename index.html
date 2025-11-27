@@ -1689,53 +1689,28 @@ const SESSIONS_KEY = "musicRainbowChests";
 let sessions = [];
 let currentSessionId = null;
 
-const CHEST_COUNTER_KEY = "musicRainbowChestCounter";
-let lastChestNumber = 0;
-
 function loadSessionsFromStorage() {
   try {
     const raw = localStorage.getItem(SESSIONS_KEY);
     if (!raw) {
       sessions = [];
+      return;
+    }
+    const parsed = JSON.parse(raw);
+    if (Array.isArray(parsed)) {
+      sessions = parsed;
     } else {
-      const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed)) {
-        sessions = parsed;
-      } else {
-        sessions = [];
-      }
+      sessions = [];
     }
-
-    // Carica il contatore globale degli scrigni
-    const rawCounter = localStorage.getItem(CHEST_COUNTER_KEY);
-    if (rawCounter) {
-      const parsedCounter = parseInt(rawCounter, 10);
-      if (!isNaN(parsedCounter) && parsedCounter > 0) {
-        lastChestNumber = parsedCounter;
-      }
-    }
-
-    // Assegna numeri sequenziali agli scrigni che hanno medaglie ma non un numero di visualizzazione
-    const nonEmptyWithoutNumber = sessions
-      .filter(s => ((s.bronze || 0) + (s.silver || 0) + (s.gold || 0)) > 0 && typeof s.displayNumber !== "number")
-      .sort((a, b) => a.id - b.id);
-
-    nonEmptyWithoutNumber.forEach(s => {
-      lastChestNumber++;
-      s.displayNumber = lastChestNumber;
-    });
-
   } catch (e) {
     console.warn("Errore nel leggere gli scrigni:", e);
     sessions = [];
-    lastChestNumber = 0;
   }
 }
 
 function saveSessionsToStorage() {
   try {
     localStorage.setItem(SESSIONS_KEY, JSON.stringify(sessions));
-    localStorage.setItem(CHEST_COUNTER_KEY, String(lastChestNumber || 0));
   } catch (e) {
     console.warn("Errore nel salvare gli scrigni:", e);
   }
@@ -1765,10 +1740,6 @@ function incrementSessionMedal(type) {
   if (!currentSessionId) return;
   const s = sessions.find(sess => sess.id === currentSessionId);
   if (!s) return;
-
-  const hadMedalsBefore =
-    ((s.bronze || 0) + (s.silver || 0) + (s.gold || 0)) > 0;
-
   if (type === "bronze") {
     s.bronze = (s.bronze || 0) + 1;
   } else if (type === "silver") {
@@ -1776,26 +1747,14 @@ function incrementSessionMedal(type) {
   } else if (type === "gold") {
     s.gold = (s.gold || 0) + 1;
   }
-
-  const hasMedalsNow =
-    ((s.bronze || 0) + (s.silver || 0) + (s.gold || 0)) > 0;
-
-  // Se prima non aveva medaglie e ora sì, assegna un numero globale allo scrigno
-  if (!hadMedalsBefore && hasMedalsNow && typeof s.displayNumber !== "number") {
-    lastChestNumber++;
-    s.displayNumber = lastChestNumber;
-  }
-
   saveSessionsToStorage();
 }
 
 function clearAllSessionChests() {
   sessions = [];
   currentSessionId = null;
-  lastChestNumber = 0;
   try {
     localStorage.removeItem(SESSIONS_KEY);
-    localStorage.removeItem(CHEST_COUNTER_KEY);
   } catch (e) {
     console.warn("Errore nel cancellare gli scrigni:", e);
   }
@@ -2905,18 +2864,12 @@ function showChestDetails(session) {
   const goldCount   = session.gold   || 0;
 
   let html = "";
-  const labelNumber = (typeof session.displayNumber === "number")
-    ? session.displayNumber
-    : session.id;
 
   html += `<div class="trophy-section">
-    <h2>Scrigno ${labelNumber}</h2>
+    <h2>Scrigno ${session.id}</h2>
     <div class="trophy-medals-row">`;
   const totalCoins = bronzeCount + silverCount + goldCount;
   if (totalCoins === 0) {
-    html += `<div class="trophy-empty">In questa sessione non hai raccolto medaglie.</div>`;
-    html += `</div></div>`;
-  }
     html += `<div class="trophy-empty">In questa sessione non hai raccolto medaglie.</div>`;
     html += `</div></div>`;
   } else {
@@ -2979,11 +2932,8 @@ function renderChestGrid() {
 
     if (i < filled.length) {
       const session = filled[i];
-      const labelNumber = (typeof session.displayNumber === "number")
-        ? session.displayNumber
-        : session.id;
       btn.className = "chest-btn chest-btn-filled";
-      btn.innerHTML = `🧰<br/>Scrigno ${labelNumber}`;
+      btn.innerHTML = `🧰<br/>Scrigno ${session.id}`;
       btn.addEventListener("click", () => {
         showChestDetails(session);
       });
