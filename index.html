@@ -474,9 +474,12 @@
 
     /* TARGET PER LIVELLO */
     #level1Page .note-circle.target {
-      stroke: url(#rainbowStroke);
-      stroke-width: 3.5;
-      filter: url(#rainbowGlow);
+      /* versione compatibile con Safari / iPad:
+         niente gradient url(), bordo spesso e interno evidenziato */
+      stroke: #111827;
+      stroke-width: 4;
+      fill: #fee2e2;
+      filter: none;
     }
 
     #level2Page .note-circle.target,
@@ -1429,13 +1432,38 @@ const MELODY_STEP_MS = 250;
 
 const AudioContextWeb = window.AudioContext || window.webkitAudioContext;
 let audioCtx = null;
-function getAudioCtx() {
-  if (!audioCtx) audioCtx = new AudioContextWeb();
-  if (audioCtx.state === "suspended") audioCtx.resume();
+
+function ensureAudioCtx() {
+  if (!AudioContextWeb) {
+    return null;
+  }
+  if (!audioCtx) {
+    audioCtx = new AudioContextWeb();
+  }
+  if (audioCtx.state === "suspended") {
+    audioCtx.resume();
+  }
   return audioCtx;
 }
+
+// Sblocco audio per iOS / iPad (deve partire dopo un gesto utente)
+["touchstart", "touchend", "mousedown", "keydown"].forEach(eventName => {
+  window.addEventListener(
+    eventName,
+    function onFirstInteraction() {
+      const ctx = ensureAudioCtx();
+      if (ctx && ctx.state === "suspended") {
+        ctx.resume();
+      }
+      window.removeEventListener(eventName, onFirstInteraction);
+    },
+    { once: true }
+  );
+});
+
 function playTone(freq) {
-  const ctx = getAudioCtx();
+  const ctx = ensureAudioCtx();
+  if (!ctx || !freq) return;
   const o = ctx.createOscillator();
   const g = ctx.createGain();
   o.frequency.value = freq;
