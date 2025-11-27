@@ -131,7 +131,7 @@
 
     .home-levels {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 16px;
       max-width: 360px;
       margin: 0 auto;
@@ -163,10 +163,7 @@
     .home-level-2    { background: #4f46e5; }
     .home-level-3    { background: #22c55e; }
     .home-level-play { background: #ec4899; }
-    .home-level-trophy {
-      background: #facc15;
-      color: #78350f;
-    }
+    
 
     .home-rainbow-graphic {
       width: 320px;
@@ -780,6 +777,93 @@
       opacity:0.9;
     }
 
+
+    .home-level-trophy {
+      background: #facc15;
+      color: #78350f;
+      font-size: 1.3rem;
+      padding: 16px 20px;
+      grid-column: span 2;
+    }
+
+    /* Griglia scrigni (8x8) nella pagina trofei */
+    .chest-grid-container {
+      margin-top: 16px;
+      margin-bottom: 12px;
+    }
+
+    .chest-grid {
+      display: grid;
+      grid-template-columns: repeat(8, minmax(0, 1fr));
+      gap: 8px;
+      justify-items: stretch;
+    }
+
+    .chest-btn {
+      border-radius: 12px;
+      padding: 8px 6px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 3px 8px rgba(15,23,42,0.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      min-height: 40px;
+      line-height: 1.1;
+    }
+
+    .chest-btn-filled {
+      background: linear-gradient(to bottom, #facc15, #eab308);
+      color: #78350f;
+    }
+
+    .chest-btn-filled:hover {
+      filter: brightness(1.05);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 10px rgba(180,83,9,0.45);
+    }
+
+    .chest-btn-filled:active {
+      transform: translateY(1px);
+      box-shadow: 0 2px 6px rgba(180,83,9,0.6);
+    }
+
+    .chest-btn-empty {
+      background: #f3f4f6;
+      color: #9ca3af;
+      box-shadow: none;
+      cursor: default;
+    }
+
+    .clear-chests-btn {
+      margin-top: 12px;
+      margin-bottom: 8px;
+      padding: 10px 18px;
+      border-radius: 999px;
+      border: none;
+      font-weight: 800;
+      font-size: 1rem;
+      color: #f9fafb;
+      background: #ef4444;
+      box-shadow: 0 4px 10px rgba(127,29,29,0.4);
+      cursor: pointer;
+      transition: 0.15s;
+    }
+
+    .clear-chests-btn:hover {
+      filter: brightness(1.05);
+      transform: translateY(-1px);
+    }
+
+    .clear-chests-btn:active {
+      transform: translateY(1px);
+      box-shadow: 0 2px 6px rgba(127,29,29,0.5);
+    }
+
+
     /* ===========================
        PAGINA TROFEI
        =========================== */
@@ -1346,6 +1430,7 @@
 <!-- ===========================
      PAGINA TROFEI
      =========================== -->
+
 <div id="trophyPage" class="page-container" style="display:none">
   <div class="app">
     <div class="top-panel">
@@ -1366,17 +1451,24 @@
     </div>
 
     <div class="trophy-main">
-      <button id="trophyChestBtn" class="trophy-chest">
-        <span class="trophy-chest-emoji">🧰</span>
-        <span>Apri lo scrigno dei trofei</span>
+      <div class="chest-grid-container">
+        <div id="chestGrid" class="chest-grid"></div>
+      </div>
+
+      <button id="clearChestsBtn" class="clear-chests-btn" type="button">
+        Cancella tutti gli scrigni
       </button>
 
       <div id="trophyContent" class="trophy-content" style="display:none"></div>
 
       <div class="trophy-note">
-        Le medaglie vengono raccolte nei tre livelli e conservate in questo scrigno.
+        Ogni scrigno giallo raccoglie le medaglie di una sessione di gioco.<br/>
+        Tocca uno scrigno per vedere le medaglie di quella sessione.
       </div>
     </div>
+  </div>
+</div>
+
   </div>
 </div>
 
@@ -1587,6 +1679,84 @@ function setFinalOverlayTexts(level) {
 /* ===========================
    VARIABILI GLOBALI TROFEI
    =========================== */
+/* ===========================
+   SCRIGNI DI SESSIONE (LOCALSTORAGE)
+   =========================== */
+const SESSIONS_KEY = "musicRainbowChests";
+let sessions = [];
+let currentSessionId = null;
+
+function loadSessionsFromStorage() {
+  try {
+    const raw = localStorage.getItem(SESSIONS_KEY);
+    if (!raw) {
+      sessions = [];
+      return;
+    }
+    const parsed = JSON.parse(raw);
+    if (Array.isArray(parsed)) {
+      sessions = parsed;
+    } else {
+      sessions = [];
+    }
+  } catch (e) {
+    console.warn("Errore nel leggere gli scrigni:", e);
+    sessions = [];
+  }
+}
+
+function saveSessionsToStorage() {
+  try {
+    localStorage.setItem(SESSIONS_KEY, JSON.stringify(sessions));
+  } catch (e) {
+    console.warn("Errore nel salvare gli scrigni:", e);
+  }
+}
+
+function startNewSessionChest() {
+  // Crea sempre una nuova sessione quando si parte a giocare da Home
+  const nextId = sessions.length ? (sessions[sessions.length - 1].id + 1) : 1;
+  const newSession = {
+    id: nextId,
+    createdAt: Date.now(),
+    bronze: 0,
+    silver: 0,
+    gold: 0
+  };
+  sessions.push(newSession);
+  saveSessionsToStorage();
+  currentSessionId = newSession.id;
+}
+
+function getCurrentSessionChest() {
+  if (!currentSessionId) return null;
+  return sessions.find(s => s.id === currentSessionId) || null;
+}
+
+function incrementSessionMedal(type) {
+  if (!currentSessionId) return;
+  const s = sessions.find(sess => sess.id === currentSessionId);
+  if (!s) return;
+  if (type === "bronze") {
+    s.bronze = (s.bronze || 0) + 1;
+  } else if (type === "silver") {
+    s.silver = (s.silver || 0) + 1;
+  } else if (type === "gold") {
+    s.gold = (s.gold || 0) + 1;
+  }
+  saveSessionsToStorage();
+}
+
+function clearAllSessionChests() {
+  sessions = [];
+  currentSessionId = null;
+  try {
+    localStorage.removeItem(SESSIONS_KEY);
+  } catch (e) {
+    console.warn("Errore nel cancellare gli scrigni:", e);
+  }
+}
+
 let totalBronze = 0;
 let totalSilver = 0;
 let totalGold   = 0;
@@ -1877,6 +2047,7 @@ function playVictoryMelodyL1() {
 function showRainbowL1() {
   rainbowsL1++;
   totalBronze++;
+  incrementSessionMedal("bronze");
 
   if (rainbowWinIndexL1) rainbowWinIndexL1.textContent = rainbowsL1;
   addMedalIconL1(rainbowsL1);
@@ -2167,6 +2338,7 @@ function addMedalIcon(index) {
 function showRainbow() {
   rainbows++;
   totalSilver++;
+  incrementSessionMedal("silver");
 
   if (rainbowWinIndex) rainbowWinIndex.textContent = rainbows;
   addMedalIcon(rainbows);
@@ -2444,6 +2616,7 @@ function addMedalIconL3(index) {
 function showRainbowL3() {
   rainbowsL3++;
   totalGold++;
+  incrementSessionMedal("gold");
 
   if (rainbowWinIndexL3) rainbowWinIndexL3.textContent = rainbowsL3;
   addMedalIconL3(rainbowsL3);
@@ -2656,76 +2829,118 @@ if (resetBtn)     resetBtn.onclick     = resetAllLevels;
 if (resetBtnL3)   resetBtnL3.onclick   = resetAllLevels;
 if (resetBtnPlay) resetBtnPlay.onclick = () => clearPlayStaff();
 
+
 /* ===========================
    PAGINA TROFEI
    =========================== */
 
 const trophyContentEl = document.getElementById("trophyContent");
-const trophyChestBtn  = document.getElementById("trophyChestBtn");
+const chestGridEl     = document.getElementById("chestGrid");
+const clearChestsBtn  = document.getElementById("clearChestsBtn");
 const trophyBackBtn   = document.getElementById("trophyBackBtn");
 const trophyHomeBtn   = document.getElementById("trophyHomeBtn");
 
-function renderTrophies() {
-  if (!trophyContentEl) return;
-
-  const bronzeCount = totalBronze;
-  const silverCount = totalSilver;
-  const goldCount   = totalGold;
+function showChestDetails(session) {
+  if (!trophyContentEl || !session) return;
+  const bronzeCount = session.bronze || 0;
+  const silverCount = session.silver || 0;
+  const goldCount   = session.gold   || 0;
 
   let html = "";
 
   html += `<div class="trophy-section">
-    <h2>Medaglie di rame (Primo livello)</h2>
+    <h2>Scrigno ${session.id}</h2>
     <div class="trophy-medals-row">`;
-  if (bronzeCount === 0) {
-    html += `<div class="trophy-empty">Ancora nessuna medaglia di rame: prova il primo livello!</div>`;
+  const totalCoins = bronzeCount + silverCount + goldCount;
+  if (totalCoins === 0) {
+    html += `<div class="trophy-empty">In questa sessione non hai raccolto medaglie.</div>`;
+    html += `</div></div>`;
   } else {
-    for (let i = 1; i <= bronzeCount; i++) {
-      html += `<div class="medal-icon bronze">${i}</div>`;
-    }
-  }
-  html += `</div></div>`;
+    html += `</div></div>`;
 
-  html += `<div class="trophy-section">
-    <h2>Medaglie d’argento (Secondo livello)</h2>
-    <div class="trophy-medals-row">`;
-  if (silverCount === 0) {
-    html += `<div class="trophy-empty">Nessuna medaglia d’argento: suona nel secondo livello per ottenerle.</div>`;
-  } else {
-    for (let i = 1; i <= silverCount; i++) {
-      html += `<div class="medal-icon silver">${i}</div>`;
+    html += `<div class="trophy-section">
+      <h2>Rame (Primo livello)</h2>
+      <div class="trophy-medals-row">`;
+    if (bronzeCount === 0) {
+      html += `<div class="trophy-empty">Nessuna medaglia di rame in questa sessione.</div>`;
+    } else {
+      for (let i = 0; i < bronzeCount; i++) {
+        html += `<div class="medal-icon bronze">●</div>`;
+      }
     }
-  }
-  html += `</div></div>`;
+    html += `</div></div>`;
 
-  html += `<div class="trophy-section">
-    <h2>Medaglie d’oro (Terzo livello)</h2>
-    <div class="trophy-medals-row">`;
-  if (goldCount === 0) {
-    html += `<div class="trophy-empty">Lo scrigno dell’oro è ancora vuoto: prova il terzo livello!</div>`;
-  } else {
-    for (let i = 1; i <= goldCount; i++) {
-      html += `<div class="medal-icon gold">${i}</div>`;
+    html += `<div class="trophy-section">
+      <h2>Argento (Secondo livello)</h2>
+      <div class="trophy-medals-row">`;
+    if (silverCount === 0) {
+      html += `<div class="trophy-empty">Nessuna medaglia d’argento in questa sessione.</div>`;
+    } else {
+      for (let i = 0; i < silverCount; i++) {
+        html += `<div class="medal-icon silver">●</div>`;
+      }
     }
+    html += `</div></div>`;
+
+    html += `<div class="trophy-section">
+      <h2>Oro (Terzo livello)</h2>
+      <div class="trophy-medals-row">`;
+    if (goldCount === 0) {
+      html += `<div class="trophy-empty">Nessuna medaglia d’oro in questa sessione.</div>`;
+    } else {
+      for (let i = 0; i < goldCount; i++) {
+        html += `<div class="medal-icon gold">●</div>`;
+      }
+    }
+    html += `</div></div>`;
   }
-  html += `</div></div>`;
 
   trophyContentEl.innerHTML = html;
+  trophyContentEl.style.display = "block";
 }
 
-if (trophyChestBtn) {
-  trophyChestBtn.addEventListener("click", () => {
-    if (trophyContentEl.style.display === "none" || trophyContentEl.style.display === "") {
-      renderTrophies();
-      trophyContentEl.style.display = "block";
-      trophyChestBtn.classList.add("opened");
+function renderChestGrid() {
+  if (!chestGridEl) return;
+  chestGridEl.innerHTML = "";
+  const maxSlots = 64;
+  const sorted = [...sessions].sort((a, b) => a.id - b.id);
+
+  for (let i = 0; i < maxSlots; i++) {
+    const session = sorted[i];
+    const btn = document.createElement("button");
+    btn.type = "button";
+    if (session) {
+      btn.className = "chest-btn chest-btn-filled";
+      btn.innerHTML = `🧰<br/>Scrigno ${session.id}`;
+      btn.addEventListener("click", () => {
+        showChestDetails(session);
+      });
     } else {
-      trophyContentEl.style.display = "none";
-      trophyChestBtn.classList.remove("opened");
+      btn.className = "chest-btn chest-btn-empty";
+      btn.disabled = true;
+      btn.innerHTML = "&nbsp;";
+    }
+    chestGridEl.appendChild(btn);
+  }
+}
+
+if (clearChestsBtn) {
+  clearChestsBtn.addEventListener("click", () => {
+    const pwd = window.prompt("Per cancellare tutti gli scrigni digita la password: scrigno");
+    if (pwd === null) return;
+    if (pwd === "scrigno") {
+      clearAllSessionChests();
+      if (trophyContentEl) {
+        trophyContentEl.style.display = "none";
+        trophyContentEl.innerHTML = "";
+      }
+      renderChestGrid();
+      alert("Tutti gli scrigni sono stati cancellati.");
+    } else {
+      alert("Password errata.");
     }
   });
 }
-
 /* ===========================
    HOME, MENU, TROFEI, SUGGERIMENTO
    =========================== */
@@ -2733,6 +2948,9 @@ if (trophyChestBtn) {
 let lastGamePageId = "level2Page";
 
 document.addEventListener("DOMContentLoaded", function() {
+  loadSessionsFromStorage();
+  renderChestGrid();
+
   const homeScreen = document.getElementById("homeScreen");
   const btnLevel1  = document.getElementById("btnLevel1");
   const btnLevel2  = document.getElementById("btnLevel2");
@@ -2826,14 +3044,17 @@ document.addEventListener("DOMContentLoaded", function() {
     level3Page.style.display = "none";
     playPage.style.display   = "none";
     trophyPageEl.style.display = "flex";
-    trophyContentEl.style.display = "none";
-    trophyChestBtn.classList.remove("opened");
+    if (trophyContentEl) {
+      trophyContentEl.style.display = "none";
+      trophyContentEl.innerHTML = "";
+    }
+    renderChestGrid();
   }
 
-  if (btnLevel1) btnLevel1.addEventListener("click", () => showLevel("level1Page"));
-  if (btnLevel2) btnLevel2.addEventListener("click", () => showLevel("level2Page"));
-  if (btnLevel3) btnLevel3.addEventListener("click", () => showLevel("level3Page"));
-  if (btnPlay)   btnPlay.addEventListener("click",   () => showLevel("playPage"));
+  if (btnLevel1) btnLevel1.addEventListener("click", () => { startNewSessionChest(); showLevel("level1Page"); });
+  if (btnLevel2) btnLevel2.addEventListener("click", () => { startNewSessionChest(); showLevel("level2Page"); });
+  if (btnLevel3) btnLevel3.addEventListener("click", () => { startNewSessionChest(); showLevel("level3Page"); });
+  if (btnPlay)   btnPlay.addEventListener("click",   () => { startNewSessionChest(); showLevel("playPage"); });
   if (homeTrophyBtn) homeTrophyBtn.addEventListener("click", showTrophyPage);
 
   if (menuBtnL1)   menuBtnL1.addEventListener("click", showHome);
