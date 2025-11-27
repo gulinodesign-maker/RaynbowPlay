@@ -2903,23 +2903,38 @@ function renderChestGrid() {
   if (!chestGridEl) return;
   chestGridEl.innerHTML = "";
   const maxSlots = 64;
+
+  // ordina per id
   const sorted = [...sessions].sort((a, b) => a.id - b.id);
 
   for (let i = 0; i < maxSlots; i++) {
     const session = sorted[i];
     const btn = document.createElement("button");
     btn.type = "button";
+
     if (session) {
-      btn.className = "chest-btn chest-btn-filled";
-      btn.innerHTML = `🧰<br/>Scrigno ${session.id}`;
-      btn.addEventListener("click", () => {
-        showChestDetails(session);
-      });
+      const totalCoins = (session.bronze || 0) + (session.silver || 0) + (session.gold || 0);
+
+      if (totalCoins > 0) {
+        // scrigno pieno: bottone giallo cliccabile
+        btn.className = "chest-btn chest-btn-filled";
+        btn.innerHTML = `🧰<br/>Scrigno ${session.id}`;
+        btn.addEventListener("click", () => {
+          showChestDetails(session);
+        });
+      } else {
+        // scrigno vuoto: slot grigio inattivo
+        btn.className = "chest-btn chest-btn-empty";
+        btn.disabled = true;
+        btn.innerHTML = "&nbsp;";
+      }
     } else {
+      // nessuna sessione per questo slot: slot grigio inattivo
       btn.className = "chest-btn chest-btn-empty";
       btn.disabled = true;
       btn.innerHTML = "&nbsp;";
     }
+
     chestGridEl.appendChild(btn);
   }
 }
