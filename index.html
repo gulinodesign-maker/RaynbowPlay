@@ -1457,23 +1457,43 @@ window.addEventListener("touchstart", unlockAudioOnce, { once: true });
 window.addEventListener("mousedown", unlockAudioOnce, { once: true });
 window.addEventListener("pointerdown", unlockAudioOnce, { once: true });
 
+
 function playTone(freq) {
   const ctx = getAudioCtx();
-  if (ctx.state === "suspended") {
-    try { ctx.resume(); } catch(e) {}
+  if (!ctx) return;
+
+  const doPlay = () => {
+    const o = ctx.createOscillator();
+    const g = ctx.createGain();
+    o.frequency.value = freq;
+    o.type = "sine";
+    o.connect(g);
+    g.connect(ctx.destination);
+    const now = ctx.currentTime;
+    g.gain.setValueAtTime(0.4, now);
+    g.gain.exponentialRampToValueAtTime(0.001, now + 0.5);
+    o.start(now);
+    o.stop(now + 0.5);
+  };
+
+  if (ctx.state === "suspended" && typeof ctx.resume === "function") {
+    try {
+      const resumeResult = ctx.resume();
+      if (resumeResult && typeof resumeResult.then === "function") {
+        resumeResult.then(doPlay).catch(doPlay);
+      } else {
+        // resume non restituisce una Promise: proviamo comunque a suonare
+        doPlay();
+      }
+    } catch (e) {
+      // in caso di errore, proviamo comunque a suonare
+      doPlay();
+    }
+  } else {
+    doPlay();
   }
-  const o = ctx.createOscillator();
-  const g = ctx.createGain();
-  o.frequency.value = freq;
-  o.type = "sine";
-  o.connect(g);
-  g.connect(ctx.destination);
-  const now = ctx.currentTime;
-  g.gain.setValueAtTime(0.4, now);
-  g.gain.exponentialRampToValueAtTime(0.001, now + 0.5);
-  o.start(now);
-  o.stop(now + 0.5);
 }
+
 function playError() { playTone(150); }
 
 function getNoteColor(noteName) {
