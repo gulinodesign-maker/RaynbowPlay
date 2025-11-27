@@ -163,6 +163,7 @@
     .home-level-2    { background: #4f46e5; }
     .home-level-3    { background: #22c55e; }
     .home-level-play { background: #ec4899; }
+    .home-audio-reset { background: #0ea5e9; }
     
 
     .home-rainbow-graphic {
@@ -975,6 +976,8 @@
         <path d="M90 150 Q150 80 210 150" stroke="#4f46e5" stroke-width="18" fill="none" stroke-linecap="round"/>
       </svg>
     </div>
+    <button id="audioResetBtn" class="home-level-btn home-audio-reset" type="button">Reset audio 🔊</button>
+
 
     <div class="home-title">Music Rainbow</div>
     <div class="home-subtitle">Scegli il livello e inserisci il tuo nome</div>
@@ -1841,6 +1844,20 @@ if (autoColorToggleL1) {
   autoColorToggleL1.addEventListener("change", () => {
     autoColorL1 = autoColorToggleL1.checked;
   });
+
+// Reset manuale dell\'audio per iPad / Safari
+function hardResetAudio() {
+  try {
+    if (audioCtx && audioCtx.state !== "closed") {
+      audioCtx.close();
+    }
+  } catch (e) {}
+  audioCtx = null;
+  audioUnlocked = false;
+  try { unlockAudioOnce(); } catch (e) {}
+  alert("Audio reimpostato! Se non senti ancora i suoni, prova a toccare di nuovo lo schermo.");
+}
+
 }
 
 function getNoteCountL1() {
@@ -2983,6 +3000,7 @@ document.addEventListener("DOMContentLoaded", function() {
   const genderRadios = document.querySelectorAll('input[name="gender"]');
   const genderOptionLabels = document.querySelectorAll(".home-gender-option");
   const homeTrophyBtn = document.getElementById("homeTrophyBtn");
+  const audioResetBtn = document.getElementById("audioResetBtn");
 
   function refreshGenderButtons() {
     genderOptionLabels.forEach(label => {
@@ -3062,6 +3080,7 @@ document.addEventListener("DOMContentLoaded", function() {
   if (btnLevel3) btnLevel3.addEventListener("click", () => { startNewSessionChest(); showLevel("level3Page"); });
   if (btnPlay)   btnPlay.addEventListener("click",   () => { startNewSessionChest(); showLevel("playPage"); });
   if (homeTrophyBtn) homeTrophyBtn.addEventListener("click", showTrophyPage);
+  if (audioResetBtn) audioResetBtn.addEventListener("click", hardResetAudio);
 
   if (menuBtnL1)   menuBtnL1.addEventListener("click", showHome);
   if (menuBtnL2)   menuBtnL2.addEventListener("click", showHome);
