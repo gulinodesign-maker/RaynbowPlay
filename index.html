@@ -138,17 +138,24 @@
       margin: 0 auto;
     }
 
+    .home-levels-separator {
+      height: 8px;
+    }
+
     .home-level-btn {
       border: none;
-      border-radius: 999px;
+      border-radius: 24px;
       padding: 14px 20px;
       font-size: 1.3rem;
       font-weight: 700;
       cursor: pointer;
-      color: #ffffff;
       box-shadow: 0 6px 14px rgba(15, 23, 42, 0.3);
       transition: transform 0.12s, box-shadow 0.12s, filter 0.12s;
       width: 100%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
     }
 
     .home-level-btn:active {
@@ -160,12 +167,34 @@
       filter: brightness(1.05);
     }
 
-    .home-level-1    { background: #f97316; }
-    .home-level-2    { background: #4f46e5; }
-    .home-level-3    { background: #22c55e; }
-    .home-level-play { background: #ec4899; }
-    .home-audio-reset { background: #0ea5e9; }
-    
+    /* Livelli e scrigno: stile “scrigno” dorato uguale alla pagina trofei */
+    .home-level-1,
+    .home-level-2,
+    .home-level-3,
+    .home-level-trophy {
+      background: linear-gradient(to bottom, #facc15, #eab308);
+      color: #78350f;
+    }
+
+    .home-audio-reset {
+      background: #0ea5e9;
+      color: #ffffff;
+    }
+
+    /* Stato del tasto Play in home */
+    .home-play-active {
+      background: linear-gradient(to bottom, #a855f7, #6d28d9);
+      color: #f9fafb;
+    }
+
+    .home-play-disabled {
+      background: #9ca3af;
+      color: #111827;
+      cursor: default;
+      box-shadow: 0 4px 10px rgba(15, 23, 42, 0.2);
+      filter: none !important;
+      transform: none !important;
+    }
 
     .home-rainbow-graphic {
       width: 320px;
@@ -914,11 +943,8 @@
 
 
     .home-level-trophy {
-      background: #facc15;
-      color: #78350f;
       font-size: 1.3rem;
       padding: 16px 20px;
-      grid-column: span 2;
     }
 
     /* Griglia scrigni (8x8) nella pagina trofei */
@@ -1258,6 +1284,12 @@
       </button>
       <button id="btnLevel3" class="home-level-btn home-level-3" type="button">
         Terzo livello
+      </button>
+
+      <div class="home-levels-separator"></div>
+
+      <button id="homePlayBtn" class="home-level-btn home-level-play home-play-disabled" type="button" disabled>
+        Modalità Play
       </button>
       <button id="homeTrophyBtn" class="home-level-btn home-level-trophy" type="button">
         Scrigno dei trofei
@@ -2363,6 +2395,18 @@ let playTimerSeconds = 0;
 let playTimerIntervalId = null;
 let playSessionActive = false;
 
+function updateHomePlayButtonState() {
+  if (!homePlayBtn) return;
+  homePlayBtn.classList.remove("home-play-active", "home-play-disabled");
+  if (playSessionActive) {
+    homePlayBtn.disabled = false;
+    homePlayBtn.classList.add("home-play-active");
+  } else {
+    homePlayBtn.disabled = true;
+    homePlayBtn.classList.add("home-play-disabled");
+  }
+}
+
 function formatSeconds(sec) {
   const m = Math.floor(sec / 60);
   const s = sec % 60;
@@ -2385,14 +2429,28 @@ function stopPlaySession(resetToZero) {
     playTimerSeconds = 0;
     updatePlayTimerDisplay();
   }
+  updateHomePlayButtonState();
 }
 
 function endPlaySessionTimeUp() {
   stopPlaySession(false);
   const overlay = document.getElementById("playTimeupOverlay");
-  if (overlay) overlay.classList.add("active");
-  setTimeout(() => {
-    if (overlay) overlay.classList.remove("active");
+  const playVisible = playPageEl && playPageEl.style.display !== "none";
+  if (overlay && playVisible) {
+    overlay.classList.add("active");
+    setTimeout(() => {
+      overlay.classList.remove("active");
+      if (playPageEl) playPageEl.style.display = "none";
+      if (lastGamePageId === "level1Page") {
+        if (level1PageEl) level1PageEl.style.display = "flex";
+      } else if (lastGamePageId === "level3Page") {
+        if (level3PageEl) level3PageEl.style.display = "flex";
+      } else {
+        if (level2PageEl) level2PageEl.style.display = "flex";
+        lastGamePageId = "level2Page";
+      }
+    }, 2500);
+  } else {
     if (playPageEl) playPageEl.style.display = "none";
     if (lastGamePageId === "level1Page") {
       if (level1PageEl) level1PageEl.style.display = "flex";
@@ -2402,7 +2460,7 @@ function endPlaySessionTimeUp() {
       if (level2PageEl) level2PageEl.style.display = "flex";
       lastGamePageId = "level2Page";
     }
-  }, 2500);
+  }
 }
 
 function startPlaySession() {
@@ -2411,6 +2469,7 @@ function startPlaySession() {
   const overlay = document.getElementById("playTimeupOverlay");
   if (overlay) overlay.classList.remove("active");
   updatePlayTimerDisplay();
+  updateHomePlayButtonState();
   if (playTimerIntervalId) clearInterval(playTimerIntervalId);
   playTimerIntervalId = setInterval(() => {
     playTimerSeconds--;
@@ -3666,6 +3725,7 @@ if (clearChestsBtn) {
    =========================== */
 
 let lastGamePageId = "level2Page";
+let homePlayBtn = null;
 
 document.addEventListener("DOMContentLoaded", function() {
   loadSessionsFromStorage();
@@ -3680,6 +3740,8 @@ document.addEventListener("DOMContentLoaded", function() {
   const level2Page = document.getElementById("level2Page");
   const level3Page = document.getElementById("level3Page");
   const playPage   = document.getElementById("playPage");
+
+  homePlayBtn = document.getElementById("homePlayBtn");
 
   const menuBtnL1   = document.getElementById("menuBtnL1");
   const menuBtnL2   = document.getElementById("menuBtnL2");
@@ -3740,8 +3802,6 @@ document.addEventListener("DOMContentLoaded", function() {
 
   function showHome() {
     hideAllPages();
-    stopPlaySession(true);
-    clearPlayStaff();
     homeScreen.style.display = "flex";
     // La musichetta introduttiva parte al primo sblocco audio (gestito da unlockAudioOnce)
   }
@@ -3769,8 +3829,6 @@ document.addEventListener("DOMContentLoaded", function() {
     level2Page.style.display = "none";
     level3Page.style.display = "none";
     playPage.style.display   = "none";
-    stopPlaySession(true);
-    clearPlayStaff();
     trophyPageEl.style.display = "flex";
     if (trophyContentEl) {
       trophyContentEl.style.display = "none";
@@ -3794,6 +3852,22 @@ document.addEventListener("DOMContentLoaded", function() {
   if (trophyBtnL2)   trophyBtnL2.addEventListener("click", showTrophyPage);
   if (trophyBtnL3)   trophyBtnL3.addEventListener("click", showTrophyPage);
   if (trophyBtnPlay) trophyBtnPlay.addEventListener("click", showTrophyPage);
+  if (homePlayBtn) {
+    homePlayBtn.addEventListener("click", () => {
+      if (!playSessionActive) return;
+      homeScreen.style.display = "none";
+      level1Page.style.display = "none";
+      level2Page.style.display = "none";
+      level3Page.style.display = "none";
+      trophyPageEl.style.display = "none";
+      if (playPage) {
+        playPage.style.display = "flex";
+        lastGamePageId = "playPage";
+      }
+    });
+  }
+
+  updateHomePlayButtonState();
 
   if (trophyBackBtn) {
     trophyBackBtn.addEventListener("click", () => {
