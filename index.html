@@ -347,6 +347,13 @@
       transition: 0.15s;
     }
 
+    .hint-btn:disabled {
+      opacity: 0.5;
+      cursor: default;
+      box-shadow: none;
+      filter: none;
+    }
+
     .menu-btn {
       color: #111827;
       background: #e5e7eb;
@@ -476,7 +483,7 @@
          niente gradient url(), bordo spesso e interno evidenziato */
       stroke: #111827;
       stroke-width: 4;
-      fill: #fee2e2;
+      fill: white;
       filter: none;
     }
 
@@ -955,7 +962,29 @@
       text-align: center;
     }
 
-  </style>
+  
+    /* Auto toggle più grande nel Livello 1 */
+    #level1Page .auto-toggle {
+      font-size: 1.1rem;
+      gap: 8px;
+    }
+
+    #level1Page .auto-slider {
+      width: 60px;
+      height: 30px;
+    }
+
+    #level1Page .auto-slider::before {
+      width: 24px;
+      height: 24px;
+      top: 3px;
+      left: 3px;
+    }
+
+    #level1Page .auto-toggle-input:checked + .auto-slider::before {
+      transform: translateX(30px);
+    }
+</style>
 </head>
 
 <body>
@@ -976,6 +1005,7 @@
         <path d="M90 150 Q150 80 210 150" stroke="#4f46e5" stroke-width="18" fill="none" stroke-linecap="round"/>
       </svg>
     </div>
+
     <button id="audioResetBtn" class="home-level-btn home-audio-reset" type="button">
       Reset audio 🔊
     </button>
@@ -1529,6 +1559,7 @@ const MELODY_STEP_MS = 250;
 const AudioContextWeb = window.AudioContext || window.webkitAudioContext;
 let audioCtx = null;
 let audioUnlocked = false;
+let hasPlayedHomeJingle = false;
 
 function getAudioCtx() {
   // Crea o ricrea il contesto se non esiste o è stato chiuso
@@ -1553,25 +1584,23 @@ window.addEventListener("touchstart", unlockAudioOnce, { once: true });
 window.addEventListener("mousedown", unlockAudioOnce, { once: true });
 window.addEventListener("pointerdown", unlockAudioOnce, { once: true });
 
-// Reset manuale dell'audio per iPad / Safari
+
 function hardResetAudio() {
   try {
     if (audioCtx && audioCtx.state !== "closed") {
       audioCtx.close();
     }
   } catch (e) {
-    // Ignoro eventuali errori di chiusura
+    // ignore
   }
 
-  // Azzeriamo lo stato
   audioCtx = null;
   audioUnlocked = false;
 
-  // Creiamo e sblocchiamo subito un nuovo AudioContext
   try {
     unlockAudioOnce();
   } catch (e) {
-    // Se fallisce, il prossimo tap farà comunque partire l'audio
+    // ignore
   }
 
   alert("Audio reimpostato! Se non senti ancora i suoni, prova a toccare di nuovo lo schermo.");
@@ -1612,6 +1641,41 @@ function playTone(freq) {
     doPlay();
   }
 }
+
+function playHomeJingle() {
+  // Scala semplice da do basso a do alto con lo stesso suono della tastiera
+  try {
+    const baseDo = NOTE_FREQS["do"] || 261.63;
+    const notes = [
+      { name: "do", octave: 1 },
+      { name: "re", octave: 1 },
+      { name: "mi", octave: 1 },
+      { name: "fa", octave: 1 },
+      { name: "sol", octave: 1 },
+      { name: "la", octave: 1 },
+      { name: "si", octave: 1 },
+      { name: "do", octave: 2 }
+    ];
+    let delay = 0;
+    const step = 220;
+
+    notes.forEach(n => {
+      const base = NOTE_FREQS[n.name] || baseDo;
+      let freq = base;
+      if (n.octave === 1) freq = base / 2;
+      if (n.octave === 2) freq = base * 1;
+      setTimeout(() => {
+        if (audioUnlocked) {
+          playTone(freq);
+        }
+      }, delay);
+      delay += step;
+    });
+  } catch (e) {
+    // se qualcosa va storto, ignoriamo la musichetta
+  }
+}
+
 
 function playError() { playTone(150); }
 
@@ -1739,7 +1803,7 @@ function loadSessionsFromStorage() {
       }
     }
 
-    // Assegna numeri sequenziali agli scrigni che hanno medaglie ma non un numero di visualizzazione
+    // Assegna numeri sequenziali agli scrigni non vuoti che non hanno ancora un numero di visualizzazione
     const nonEmptyWithoutNumber = sessions
       .filter(s => ((s.bronze || 0) + (s.silver || 0) + (s.gold || 0)) > 0 && typeof s.displayNumber !== "number")
       .sort((a, b) => a.id - b.id);
@@ -1804,7 +1868,6 @@ function incrementSessionMedal(type) {
   const hasMedalsNow =
     ((s.bronze || 0) + (s.silver || 0) + (s.gold || 0)) > 0;
 
-  // Se prima non aveva medaglie e ora sì, assegna un numero globale allo scrigno
   if (!hadMedalsBefore && hasMedalsNow && typeof s.displayNumber !== "number") {
     lastChestNumber++;
     s.displayNumber = lastChestNumber;
@@ -1875,6 +1938,9 @@ let autoColorL1 = false;
 /* Suggerimento L1 */
 let hintCircleL1 = null;
 let hintTimeoutL1 = null;
+let hintCountL1 = 0;
+const MAX_HINTS_L1 = 3;
+let hintBtnL1El = null;
 
 function clearHintL1() {
   if (hintCircleL1) {
@@ -1903,6 +1969,25 @@ function showHintL1() {
   staffSvgL1.appendChild(circle);
   hintCircleL1 = circle;
   hintTimeoutL1 = setTimeout(clearHintL1, 3000);
+}
+
+function updateHintLabelL1() {
+  if (!hintBtnL1El) return;
+  const remaining = Math.max(0, MAX_HINTS_L1 - hintCountL1);
+  hintBtnL1El.innerHTML = `💡 ${remaining}`;
+}
+
+function handleHintClickL1() {
+  if (!hintBtnL1El) return;
+  if (hintCountL1 >= MAX_HINTS_L1) return;
+
+  showHintL1();
+  hintCountL1++;
+  updateHintLabelL1();
+
+  if (hintCountL1 >= MAX_HINTS_L1) {
+    hintBtnL1El.disabled = true;
+  }
 }
 
 if (autoColorToggleL1) {
@@ -1938,6 +2023,12 @@ function createNotesL1() {
   currentIndexL1 = 0;
   consecutiveErrorsL1 = 0;
   updateStatusL1();
+
+  hintCountL1 = 0;
+  if (hintBtnL1El) {
+    hintBtnL1El.disabled = false;
+    updateHintLabelL1();
+  }
 
   const startX = 220;
   const endX = 780;
@@ -3097,6 +3188,10 @@ document.addEventListener("DOMContentLoaded", function() {
   function showHome() {
     hideAllPages();
     homeScreen.style.display = "flex";
+    if (!hasPlayedHomeJingle && audioUnlocked) {
+      playHomeJingle();
+      hasPlayedHomeJingle = true;
+    }
   }
 
   function showLevel(pageId) {
@@ -3137,7 +3232,6 @@ document.addEventListener("DOMContentLoaded", function() {
   if (btnLevel3) btnLevel3.addEventListener("click", () => { startNewSessionChest(); showLevel("level3Page"); });
   if (btnPlay)   btnPlay.addEventListener("click",   () => { startNewSessionChest(); showLevel("playPage"); });
   if (homeTrophyBtn) homeTrophyBtn.addEventListener("click", showTrophyPage);
-  if (audioResetBtn) audioResetBtn.addEventListener("click", hardResetAudio);
 
   if (menuBtnL1)   menuBtnL1.addEventListener("click", showHome);
   if (menuBtnL2)   menuBtnL2.addEventListener("click", showHome);
@@ -3167,7 +3261,15 @@ document.addEventListener("DOMContentLoaded", function() {
     trophyHomeBtn.addEventListener("click", showHome);
   }
 
-  if (hintBtnL1) hintBtnL1.addEventListener("click", showHintL1);
+  if (hintBtnL1) {
+    hintBtnL1El = hintBtnL1;
+    updateHintLabelL1();
+    hintBtnL1.addEventListener("click", handleHintClickL1);
+  }
+
+  if (audioResetBtn) {
+    audioResetBtn.addEventListener("click", hardResetAudio);
+  }
 
   updateRainbowCountersGlobal();
 });
