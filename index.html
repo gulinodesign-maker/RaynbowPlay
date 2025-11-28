@@ -19,7 +19,6 @@
 
   <style>
     * { box-sizing: border-box; }
-    body { margin:0; padding:15px; background:aquamarine; height:100vh; }
 
     /* ===========================
        HOME: SELEZIONE LIVELLI
@@ -179,12 +178,16 @@
       overflow: visible;
     }
 
-        /* ===========================
+    /* ===========================
        STILE GENERALE PAGINE LIVELLO
        =========================== */
 
     body {
       font-family: "Baloo 2", sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f2f5ff;
+      min-height: 100vh;
     }
 
     .page-container {
@@ -195,16 +198,15 @@
     }
 
     .app {
+      margin: 24px;
+      padding: 24px;
+      background: #ffffff;
+      border-radius: 24px;
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.1);
+      max-width: 920px;
       width: 100%;
-      height: 100%;
-      margin: 0;
-      padding: 0;
-      background: white;
-      border-radius: 12px;
       position: relative;
       z-index: 1;
-      display: flex;
-      flex-direction: column;
     }
 
     .top-panel {
@@ -460,7 +462,7 @@
     }
     svg.staff {
       width: 100%;
-      max-width: none;
+      max-width: 820px;
       display: block;
       margin: 0 auto;
       cursor: pointer;
@@ -552,9 +554,8 @@
     }
 
     .keyboard-container {
-      margin-top: auto;
+      margin-top: 18px;
       text-align: center;
-      padding: 10px 8px 12px;
     }
     .piano {
       max-width: 920px;
@@ -565,13 +566,13 @@
       box-shadow: 0 4px 10px rgba(15,23,42,0.18);
     }
     .piano-keys {
-      position: relative;
-      display: flex;
-      height: 260px;
-      width: 100%;
-      max-width: none;
-      margin: 0;
-    }
+  position: relative;
+  display: flex;
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  height: 190px;
+}
 
     .white-key {
       flex: 1;
@@ -630,11 +631,10 @@
     }
 
     .note-buttons-wrapper {
-      width: 100%;
-      max-width: none;
-      margin: 12px 0 0 0;
+      max-width: 920px;
+      margin: 0 auto;
       background: #d4d4d8;
-      padding: 16px 12px 22px;
+      padding: 16px 20px 22px;
       border-radius: 18px;
       box-shadow: 0 4px 10px rgba(15,23,42,0.18);
       display: flex;
@@ -882,14 +882,7 @@
        PAGINA TROFEI
        =========================== */
     #trophyPage .app {
-      width: 100%;
-      height: 100%;
-      margin: 0;
-      padding: 0;
-      background: white;
-      border-radius: 12px;
-      position: relative;
-      z-index: 1;
+      max-width: 800px;
     }
 
     .trophy-main {
@@ -1024,64 +1017,10 @@
       display: none;
     }
 
-
-    /* Stato pulsanti audio: verde ON, grigio OFF */
-    .audio-on {
-      background-color: #22c55e !important;
-    }
-    .audio-off {
-      background-color: #9ca3af !important;
-    }
-
-    /* Rendi visibile il testo interno dei pulsanti audio */
-    #audioResetBtn,
-    #resetAudioBtnL1,
-    #resetAudioBtnL2,
-    #resetAudioBtnL3,
-    #resetAudioBtnPlay {
-      font-size: 0.9rem;
-    }
-
-    #audioResetBtn::before,
-    #resetAudioBtnL1::before,
-    #resetAudioBtnL2::before,
-    #resetAudioBtnL3::before,
-    #resetAudioBtnPlay::before {
-      margin-right: 0.35rem;
-    }
-
-
-    /* OVERRIDE 2025-11: layout dei pulsanti audio
-       - Home: icona + testo in grassetto
-       - Livelli/Play: solo icona, nessun testo visibile */
-    #audioResetBtn {
-      font-size: 0.95rem;
-      font-weight: 700;
-      position: relative;
-    }
-
-    #audioResetBtn::before {
-      content: "🔊";
-      font-size: 1.3rem;
-      margin-right: 0.35rem;
-    }
-
-    #resetAudioBtnL1,
-    #resetAudioBtnL2,
-    #resetAudioBtnL3,
-    #resetAudioBtnPlay {
-      position: relative;
-      font-size: 0; /* nasconde il testo interno */
-    }
-
-    #resetAudioBtnL1::before,
-    #resetAudioBtnL2::before,
-    #resetAudioBtnL3::before,
-    #resetAudioBtnPlay::before {
-      content: "🔊";
-      font-size: 1.3rem;
-    }
-
+@media (orientation: landscape) and (min-width: 900px) {
+  .piano-keys { height: 260px; }
+  .keyboard-container { padding-bottom:10px; margin-top:auto; }
+}
 </style>
 </head>
 
@@ -1673,9 +1612,6 @@ let hasPlayedHomeJingle = false;
 let homeIntroTimeoutId = null;
 let homeIntroTimerElapsed = false;
 
-// Stato globale audio: spento di default
-let audioEnabled = false;
-
 function getAudioCtx() {
   // Crea o ricrea il contesto se non esiste o è stato chiuso
   if (!audioCtx || audioCtx.state === "closed") {
@@ -1688,10 +1624,16 @@ function getAudioCtx() {
 function unlockAudioOnce() {
   if (audioUnlocked) return;
   const ctx = getAudioCtx();
-  if (ctx && ctx.state === "suspended") {
+  if (ctx.state === "suspended") {
     ctx.resume().catch(() => {});
   }
   audioUnlocked = true;
+
+  // Appena l'audio è sbloccato per la prima volta, avvia la musichetta introduttiva
+  if (!hasPlayedHomeJingle && typeof playHomeJingle === "function") {
+    playHomeJingle();
+    hasPlayedHomeJingle = true;
+  }
 }
 
 // Agganciamo l’unlock al primo gesto dell’utente
@@ -1722,9 +1664,6 @@ function hardResetAudio() {
 }
 
 function playTone(freq) {
-  // Non suonare nulla se l'audio è disattivato
-  if (!audioEnabled) return;
-
   const ctx = getAudioCtx();
   if (!ctx) return;
 
@@ -1761,19 +1700,29 @@ function playTone(freq) {
 }
 
 function playHomeJingle() {
-  // Piccola musichetta introduttiva: do, re, mi
+  // Scala semplice da do basso a do alto con lo stesso suono della tastiera
   try {
-    const seq = [
-      NOTE_FREQS["do"] || 261.63,
-      NOTE_FREQS["re"] || 293.66,
-      NOTE_FREQS["mi"] || 329.63
+    const baseDo = NOTE_FREQS["do"] || 261.63;
+    const notes = [
+      { name: "do", octave: 1 },
+      { name: "re", octave: 1 },
+      { name: "mi", octave: 1 },
+      { name: "fa", octave: 1 },
+      { name: "sol", octave: 1 },
+      { name: "la", octave: 1 },
+      { name: "si", octave: 1 },
+      { name: "do", octave: 2 }
     ];
     let delay = 0;
-    const step = 250;
+    const step = 220;
 
-    seq.forEach(freq => {
+    notes.forEach(n => {
+      const base = NOTE_FREQS[n.name] || baseDo;
+      let freq = base;
+      if (n.octave === 1) freq = base / 2;
+      if (n.octave === 2) freq = base * 1;
       setTimeout(() => {
-        if (audioUnlocked && audioEnabled) {
+        if (audioUnlocked) {
           playTone(freq);
         }
       }, delay);
@@ -1784,86 +1733,6 @@ function playHomeJingle() {
   }
 }
 
-
-// Aggiorna il testo del pulsante audio mantenendo eventuali span interni
-function setButtonAudioLabel(btn, text) {
-  if (!btn) return;
-  const nodes = Array.from(btn.childNodes);
-  let textNode = nodes.find(n => n.nodeType === Node.TEXT_NODE);
-  if (textNode) {
-    textNode.textContent = text + " ";
-  } else {
-    btn.insertBefore(document.createTextNode(text + " "), btn.firstChild);
-  }
-}
-
-// Aggiorna aspetto (colore + label) di tutti i pulsanti audio
-function updateAudioButtonsUI() {
-  const homeBtn = document.getElementById("audioResetBtn");
-  const otherButtons = [
-    document.getElementById("resetAudioBtnL1"),
-    document.getElementById("resetAudioBtnL2"),
-    document.getElementById("resetAudioBtnL3"),
-    document.getElementById("resetAudioBtnPlay")
-  ].filter(Boolean);
-
-  // Aggiorna classi colore per tutti
-  if (homeBtn) {
-    homeBtn.classList.toggle("audio-on", audioEnabled);
-    homeBtn.classList.toggle("audio-off", !audioEnabled);
-  }
-  otherButtons.forEach(btn => {
-    btn.classList.toggle("audio-on", audioEnabled);
-    btn.classList.toggle("audio-off", !audioEnabled);
-  });
-
-  // La label testuale va solo sul pulsante della home
-  if (homeBtn) {
-    setButtonAudioLabel(homeBtn, audioEnabled ? "Disattiva audio" : "Attiva audio");
-  }
-}
-
-// Imposta lo stato audio globale
-// Piccolo reset audio ogni volta che si ri-attiva l'audio (utile per iOS/iPadOS)
-function resetAudioOnEnable() {
-  try {
-    if (audioCtx && audioCtx.state !== "closed") {
-      audioCtx.close();
-    }
-  } catch (e) {
-    // ignore
-  }
-  audioCtx = null;
-  audioUnlocked = false;
-
-  try {
-    unlockAudioOnce();
-  } catch (e) {
-    // ignore
-  }
-}
-
-function setAudioEnabled(enabled) {
-  const wasEnabled = audioEnabled;
-  audioEnabled = !!enabled;
-  updateAudioButtonsUI();
-
-  // Se lo stiamo appena attivando, fai un reset veloce dell'audio (per iPad/iOS)
-  if (audioEnabled && !wasEnabled) {
-    resetAudioOnEnable();
-
-    // Suona il jingle iniziale do–re–mi solo la prima volta
-    if (!hasPlayedHomeJingle) {
-      playHomeJingle();
-      hasPlayedHomeJingle = true;
-    }
-  }
-}
-
-// Toggle rapido (usato dai pulsanti)
-function toggleAudio() {
-  setAudioEnabled(!audioEnabled);
-}
 
 function playError() { playTone(150); }
 
@@ -3454,15 +3323,12 @@ document.addEventListener("DOMContentLoaded", function() {
   }
 
   if (audioResetBtn) {
-    audioResetBtn.addEventListener("click", toggleAudio);
+    audioResetBtn.addEventListener("click", hardResetAudio);
   }
-  if (resetAudioBtnL1) resetAudioBtnL1.addEventListener("click", toggleAudio);
-  if (resetAudioBtnL2) resetAudioBtnL2.addEventListener("click", toggleAudio);
-  if (resetAudioBtnL3) resetAudioBtnL3.addEventListener("click", toggleAudio);
-  if (resetAudioBtnPlay) resetAudioBtnPlay.addEventListener("click", toggleAudio);
-
-  // Imposta audio spento di default e aggiorna subito i pulsanti
-  setAudioEnabled(false);
+  if (resetAudioBtnL1) resetAudioBtnL1.addEventListener("click", hardResetAudio);
+  if (resetAudioBtnL2) resetAudioBtnL2.addEventListener("click", hardResetAudio);
+  if (resetAudioBtnL3) resetAudioBtnL3.addEventListener("click", hardResetAudio);
+  if (resetAudioBtnPlay) resetAudioBtnPlay.addEventListener("click", hardResetAudio);
 
   showHome();
   updateRainbowCountersGlobal();
