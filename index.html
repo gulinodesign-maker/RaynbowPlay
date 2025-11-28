@@ -1038,9 +1038,7 @@
       </svg>
     </div>
 
-    <button id="audioResetBtn" class="home-level-btn home-audio-reset" type="button">
-      Reset audio 🔊
-    </button>
+    
 
     <div class="home-title">Music Rainbow</div>
     <div class="home-subtitle">Scegli il livello e inserisci il tuo nome</div>
@@ -3341,6 +3339,29 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     });
   }
+
+// PATCH: reset audio automatico e musica introduttiva dopo 1 secondo
+document.addEventListener("DOMContentLoaded", () => {
+  setTimeout(() => {
+    try {
+      if (audioCtx && audioCtx.state !== "closed" && typeof audioCtx.close === "function") {
+        audioCtx.close().catch(() => {});
+      }
+    } catch (e) {
+      // ignore
+    }
+    audioCtx = null;
+    audioUnlocked = false;
+
+    try {
+      // Simula uno sblocco audio iniziale: crea il nuovo contesto e avvia il jingle
+      unlockAudioOnce();
+    } catch (e) {
+      // se qualcosa va storto, non bloccare l'app
+    }
+  }, 1000);
+});
+
 </script>
 
 </body>
