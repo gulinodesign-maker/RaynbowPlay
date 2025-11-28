@@ -1621,12 +1621,6 @@ function unlockAudioOnce() {
     ctx.resume().catch(() => {});
   }
   audioUnlocked = true;
-
-  // Appena l'audio è sbloccato per la prima volta, avvia la musichetta introduttiva
-  if (!hasPlayedHomeJingle && typeof playHomeJingle === "function") {
-    playHomeJingle();
-    hasPlayedHomeJingle = true;
-  }
 }
 
 // Agganciamo l’unlock al primo gesto dell’utente
