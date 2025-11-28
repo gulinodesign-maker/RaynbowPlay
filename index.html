@@ -989,6 +989,33 @@
     #level1Page .auto-toggle-input:checked + .auto-slider::before {
       transform: translateX(30px);
     }
+
+    /* PATCH: icone per i pulsanti Reset audio (solo icona, niente testo) */
+    #audioResetBtn,
+    #resetAudioBtnL1,
+    #resetAudioBtnL2,
+    #resetAudioBtnL3,
+    #resetAudioBtnPlay {
+      position: relative;
+      font-size: 0; /* nasconde il testo interno */
+    }
+
+    #audioResetBtn::before,
+    #resetAudioBtnL1::before,
+    #resetAudioBtnL2::before,
+    #resetAudioBtnL3::before,
+    #resetAudioBtnPlay::before {
+      content: "🔊";
+      font-size: 1.3rem;
+    }
+
+    #resetAudioBtnL1 span,
+    #resetAudioBtnL2 span,
+    #resetAudioBtnL3 span,
+    #resetAudioBtnPlay span {
+      display: none;
+    }
+
 </style>
 </head>
 
@@ -1597,8 +1624,8 @@ function unlockAudioOnce() {
   }
   audioUnlocked = true;
 
-  // Se il timer della home è già scaduto e la musichetta non è ancora partita, avvia il jingle
-  if (!hasPlayedHomeJingle && homeIntroTimerElapsed) {
+  // Appena l'audio è sbloccato per la prima volta, avvia la musichetta introduttiva
+  if (!hasPlayedHomeJingle && typeof playHomeJingle === "function") {
     playHomeJingle();
     hasPlayedHomeJingle = true;
   }
@@ -3214,21 +3241,7 @@ document.addEventListener("DOMContentLoaded", function() {
   function showHome() {
     hideAllPages();
     homeScreen.style.display = "flex";
-
-    if (!hasPlayedHomeJingle) {
-      if (homeIntroTimeoutId) {
-        clearTimeout(homeIntroTimeoutId);
-        homeIntroTimeoutId = null;
-      }
-      homeIntroTimerElapsed = false;
-      homeIntroTimeoutId = setTimeout(() => {
-        homeIntroTimerElapsed = true;
-        if (!hasPlayedHomeJingle && audioUnlocked) {
-          playHomeJingle();
-          hasPlayedHomeJingle = true;
-        }
-      }, 2000);
-    }
+    // La musichetta introduttiva parte al primo sblocco audio (gestito da unlockAudioOnce)
   }
 
   function showLevel(pageId) {
