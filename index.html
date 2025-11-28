@@ -537,24 +537,25 @@
       color: #78350f;
     }
 
-    .play-timer-wrapper {
-      display: flex;
-      justify-content: center;
-      margin-bottom: 8px;
-    }
-    .play-timer-circle {
-      width: 100px;
-      height: 100px;
-      border-radius: 50%;
+    .play-timer-pill {
       background: #46d1c6;
-      display: flex;
+      color: #ffffff;
+      padding: 8px 16px;
+      border-radius: 999px;
+      border: none;
+      display: inline-flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 4px 10px rgba(15,23,42,0.35);
-      color: #ffffff;
+      min-width: 80px;
       font-family: "Baloo 2", sans-serif;
-      font-size: 1.6rem;
+      font-size: 1.2rem;
       font-weight: 700;
+      box-shadow: 0 3px 8px rgba(15,23,42,0.3);
+      cursor: default;
+    }
+    .play-timer-pill span {
+      font-variant-numeric: tabular-nums;
+      letter-spacing: 0.03em;
     }
     .play-timeup-overlay {
       position: absolute;
@@ -1903,16 +1904,14 @@ body {
             Reset audio
             <span id="rainbowCountPlay" class="rainbow-hidden-count">0</span>
           </button>
+          <button class="play-timer-pill" type="button" aria-label="Tempo rimanente Modalità Play">
+            <span id="playTimerText">05:00</span>
+          </button>
         </div>
       </div>
     </div>
 
     
-      <div class="play-timer-wrapper">
-        <div class="play-timer-circle">
-          <span id="playTimerText">05:00</span>
-        
-      </div>
       <svg id="staffSvgPlay" class="staff" viewBox="0 0 820 260">
         <line x1="150" y1="120" x2="790" y2="120" stroke="#111827" stroke-width="2"/>
         <line x1="150" y1="140" x2="790" y2="140" stroke="#111827" stroke-width="2"/>
@@ -1921,7 +1920,6 @@ body {
         <line x1="150" y1="200" x2="790" y2="200" stroke="#111827" stroke-width="2"/>
         <text x="88" y="195" font-size="150">&#119070;</text>
       </svg>
-    </div>
 
     <div class="keyboard-container">
       <div class="piano">
