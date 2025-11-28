@@ -1162,92 +1162,60 @@
       transform: translateX(30px);
     }
 
-    /* PATCH: icone per i pulsanti Reset audio (solo icona, niente testo) */
-    #audioResetBtn,
-    #resetAudioBtnL1,
-    #resetAudioBtnL2,
-    #resetAudioBtnL3,
-    #resetAudioBtnPlay {
-      position: relative;
-      font-size: 0; /* nasconde il testo interno */
-    }
-
-    #audioResetBtn::before,
-    #resetAudioBtnL1::before,
-    #resetAudioBtnL2::before,
-    #resetAudioBtnL3::before,
-    #resetAudioBtnPlay::before {
-      content: "🔊";
-      font-size: 1.3rem;
-    }
-
-    #resetAudioBtnL1 span,
-    #resetAudioBtnL2 span,
-    #resetAudioBtnL3 span,
-    #resetAudioBtnPlay span {
-      display: none;
-    }
-
-
     /* Stato pulsanti audio: verde ON, grigio OFF */
-    .audio-on {
-      background-color: #22c55e !important;
-    }
-    .audio-off {
-      background-color: #9ca3af !important;
-    }
+.audio-on {
+  background-color: #22c55e !important;
+}
+.audio-off {
+  background-color: #9ca3af !important;
+}
 
-    /* Rendi visibile il testo interno dei pulsanti audio */
-    #audioResetBtn,
-    #resetAudioBtnL1,
-    #resetAudioBtnL2,
-    #resetAudioBtnL3,
-    #resetAudioBtnPlay {
-      font-size: 0.9rem;
-    }
+/* HOME: icona + testo visibile */
+#audioResetBtn {
+  position: relative;
+  font-size: 0.95rem;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
 
-    #audioResetBtn::before,
-    #resetAudioBtnL1::before,
-    #resetAudioBtnL2::before,
-    #resetAudioBtnL3::before,
-    #resetAudioBtnPlay::before {
-      margin-right: 0.35rem;
-    }
+#audioResetBtn::before {
+  content: "🔊";
+  font-size: 1.3rem;
+  margin-right: 0.35rem;
+}
 
+/* LIVELLI / PLAY: solo icona, nascondi il testo */
+#resetAudioBtnL1,
+#resetAudioBtnL2,
+#resetAudioBtnL3,
+#resetAudioBtnPlay {
+  position: relative;
+  font-size: 0;           /* nasconde il testo interno */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
 
-    /* OVERRIDE 2025-11: layout dei pulsanti audio
-       - Home: icona + testo in grassetto
-       - Livelli/Play: solo icona, nessun testo visibile */
-    #audioResetBtn {
-      font-size: 0.95rem;
-      font-weight: 700;
-      position: relative;
-    }
+#resetAudioBtnL1::before,
+#resetAudioBtnL2::before,
+#resetAudioBtnL3::before,
+#resetAudioBtnPlay::before {
+  content: "🔊";
+  font-size: 1.3rem;
+}
 
-    #audioResetBtn::before {
-      content: "🔊";
-      font-size: 1.3rem;
-      margin-right: 0.35rem;
-    }
-
-    #resetAudioBtnL1,
-    #resetAudioBtnL2,
-    #resetAudioBtnL3,
-    #resetAudioBtnPlay {
-      position: relative;
-      font-size: 0; /* nasconde il testo interno */
-    }
-
-    #resetAudioBtnL1::before,
-    #resetAudioBtnL2::before,
-    #resetAudioBtnL3::before,
-    #resetAudioBtnPlay::before {
-      content: "🔊";
-      font-size: 1.3rem;
-    }
-
+/* nascondi la scritta "Reset audio" nelle versioni livello/play */
+#resetAudioBtnL1 span,
+#resetAudioBtnL2 span,
+#resetAudioBtnL3 span,
+#resetAudioBtnPlay span {
+  display: none;
+}
 
 :root {
+
   /* fix per 100vh sui mobile browser */
   --vh: 1vh;
 }
@@ -3708,6 +3676,19 @@ function resetAllLevels() {
   consecutiveErrorsL1 = 0;
   currentIndexL1 = 0;
   selectedColorL1 = null;
+
+  // reset completo suggerimenti L1
+  if (typeof hintCountL1 !== "undefined") {
+    hintCountL1 = 0;
+  }
+  clearHintL1();
+  if (typeof hintBtnL1El !== "undefined" && hintBtnL1El) {
+    hintBtnL1El.disabled = false;
+    if (typeof updateHintLabelL1 === "function") {
+      updateHintLabelL1();
+    }
+  }
+
   if (rainbowWinIndexL1) rainbowWinIndexL1.textContent = "0";
   if (medalsPanelL1) medalsPanelL1.innerHTML = "";
   noteButtonsL1.forEach(btn => btn.classList.remove("selected"));
@@ -3715,7 +3696,6 @@ function resetAllLevels() {
     createNotesL1();
     updateStatusL1();
   }
-  clearHintL1();
 
   // L2
   rainbows = 0;
