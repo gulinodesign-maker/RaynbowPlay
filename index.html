@@ -482,7 +482,7 @@
       height: 96px;
     }
 
-    #trophyTokensRow .token-icon-btn {
+    #trophyTokensRow .trophy-token-btn {
       padding: 4px;
     }
 
@@ -2370,11 +2370,15 @@ function renderTokensInTrophyPage() {
     row.appendChild(empty);
     return;
   }
+
   for (let i = 0; i < available; i++) {
-    const item = document.createElement("div");
-    item.className = "medal-icon gold";
-    item.innerHTML = getTokenSvgMarkup();
-    row.appendChild(item);
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "token-icon-btn trophy-token-btn";
+    // svg con classe token-svg (poi resa 3x via CSS nella bacheca)
+    btn.innerHTML = getTokenSvgMarkup("token-svg");
+    btn.addEventListener("click", handleTokenClick);
+    row.appendChild(btn);
   }
 }
 
