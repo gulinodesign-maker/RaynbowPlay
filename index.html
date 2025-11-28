@@ -132,8 +132,8 @@
 
     .home-levels {
       display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 16px;
+      grid-template-columns: 1fr;
+      gap: 12px;
       max-width: 360px;
       margin: 0 auto;
     }
@@ -407,6 +407,127 @@
       padding: 6px 10px;
       background: #f9fafb;
     }
+
+    .medals-panel-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .tokens-panel {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 6px;
+      min-height: 32px;
+      min-width: 80px;
+    }
+    .token-label {
+      font-size: 0.8rem;
+      color: #374151;
+      margin-right: 4px;
+    }
+    .token-icon-btn {
+      border: none;
+      background: transparent;
+      padding: 0;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .token-icon-btn:disabled {
+      opacity: 0.4;
+      cursor: default;
+    }
+    .token-svg {
+      width: 32px;
+      height: 32px;
+      filter: drop-shadow(0 2px 4px rgba(15,23,42,0.4));
+    }
+
+    .token-overlay {
+      position: fixed;
+      inset: 0;
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 11000;
+      backdrop-filter: blur(4px);
+      background: radial-gradient(circle at center,
+        rgba(255,255,255,0.96),
+        rgba(252,211,77,0.85),
+        rgba(245,158,11,0.55));
+    }
+    .token-overlay.active {
+      display: flex;
+    }
+    .token-box {
+      background: rgba(255,255,255,0.98);
+      padding: 24px 26px 20px;
+      border-radius: 24px;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.35);
+      text-align: center;
+      max-width: 360px;
+    }
+    .token-big-svg {
+      width: 80px;
+      height: 80px;
+      margin-bottom: 10px;
+      filter: drop-shadow(0 6px 12px rgba(146,64,14,0.6));
+    }
+    .token-message-main {
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-bottom: 4px;
+      color: #92400e;
+    }
+    .token-message-sub {
+      font-size: 0.95rem;
+      color: #78350f;
+    }
+
+    .play-timer-wrapper {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 8px;
+    }
+    .play-timer-circle {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background: #46d1c6;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 10px rgba(15,23,42,0.35);
+      color: #ffffff;
+      font-family: "Baloo 2", sans-serif;
+      font-size: 1.6rem;
+      font-weight: 700;
+    }
+    .play-timeup-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(15,23,42,0.65);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 20;
+    }
+    .play-timeup-overlay.active {
+      display: flex;
+    }
+    .play-timeup-box {
+      background: #ffffff;
+      padding: 20px 24px;
+      border-radius: 16px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.35);
+      max-width: 320px;
+      text-align: center;
+    }
+
     .medals-panel {
       display: flex;
       flex-wrap: wrap;
@@ -1138,9 +1259,6 @@
       <button id="btnLevel3" class="home-level-btn home-level-3" type="button">
         Terzo livello
       </button>
-      <button id="btnPlay" class="home-level-btn home-level-play" type="button">
-        Modalità Play
-      </button>
       <button id="homeTrophyBtn" class="home-level-btn home-level-trophy" type="button">
         Scrigno dei trofei
       </button>
@@ -1311,6 +1429,23 @@
 </div>
 
 <!-- ===========================
+     POPUP GETTONI PLAY
+     =========================== -->
+<div class="token-overlay" id="tokenOverlay">
+  <div class="token-box">
+    <svg class="token-big-svg" viewBox="0 0 100 100" aria-hidden="true">
+      <circle cx="50" cy="50" r="45" fill="#facc15" stroke="#92400e" stroke-width="4"/>
+      <circle cx="50" cy="50" r="35" fill="#fde68a" stroke="#fbbf24" stroke-width="3"/>
+      <rect x="30" y="27" width="4" height="46" fill="#eab308"/>
+      <rect x="47" y="27" width="4" height="46" fill="#eab308"/>
+      <rect x="63" y="27" width="4" height="46" fill="#eab308"/>
+    </svg>
+    <div class="token-message-main">Hai vinto un gettone!</div>
+    <div class="token-message-sub">Usalo per attivare 5 minuti di Modalità Play.</div>
+  </div>
+</div>
+
+<!-- ===========================
      LIVELLO 1
      =========================== -->
 <div id="level1Page" class="page-container" style="display:none">
@@ -1342,6 +1477,7 @@
       </div>
       <div class="medals-panel-container">
         <div class="medals-panel" id="medalsPanelL1"></div>
+        <div class="tokens-panel" id="tokensPanelL1"></div>
       </div>
     </div>
 
@@ -1416,6 +1552,7 @@
       </div>
       <div class="medals-panel-container">
         <div class="medals-panel" id="medalsPanel"></div>
+        <div class="tokens-panel" id="tokensPanelL2"></div>
       </div>
     </div>
 
@@ -1484,6 +1621,7 @@
       </div>
       <div class="medals-panel-container">
         <div class="medals-panel" id="medalsPanelL3"></div>
+        <div class="tokens-panel" id="tokensPanelL3"></div>
       </div>
     </div>
 
@@ -1531,6 +1669,12 @@
      =========================== -->
 <div id="playPage" class="page-container" style="display:none">
   <div class="app">
+    <div id="playTimeupOverlay" class="play-timeup-overlay">
+      <div class="play-timeup-box">
+        <div class="rainbow-message-main">Tempo Play terminato!</div>
+        <div class="rainbow-message-sub">Vinci un altro gettone completando 5 medaglie.</div>
+      </div>
+    </div>
     <div class="top-panel">
       <div class="top-row">
         <div class="top-left-controls">
@@ -1553,6 +1697,11 @@
     </div>
 
     <div class="staff-container">
+      <div class="play-timer-wrapper">
+        <div class="play-timer-circle">
+          <span id="playTimerText">05:00</span>
+        </div>
+      </div>
       <svg id="staffSvgPlay" class="staff" viewBox="0 0 820 260">
         <line x1="150" y1="120" x2="790" y2="120" stroke="#111827" stroke-width="2"/>
         <line x1="150" y1="140" x2="790" y2="140" stroke="#111827" stroke-width="2"/>
@@ -1604,6 +1753,16 @@
       </button>
 
       <div id="trophyContent" class="trophy-content" style="display:none"></div>
+
+      <div id="trophyTokensSection" class="trophy-content">
+        <div class="trophy-section">
+          <h2>GETTONI PLAY</h2>
+          <div id="trophyTokensRow" class="trophy-medals-row"></div>
+        </div>
+        <div class="trophy-note">
+          I gettoni Play non vengono salvati: si azzerano quando chiudi o ricarichi l'app.
+        </div>
+      </div>
 
       <div class="trophy-note">
         Ogni scrigno giallo raccoglie le medaglie di una sessione di gioco.<br/>
@@ -2085,6 +2244,202 @@ const rainbowCountEl     = document.getElementById("rainbowCount");
 const rainbowCountElL3   = document.getElementById("rainbowCountL3");
 const rainbowCountElPlay = document.getElementById("rainbowCountPlay");
 
+// ===========================
+//   GETTONI PLAY (non persistenti)
+// ===========================
+let mintedTokens = 0;      // gettoni guadagnati in questa esecuzione
+let spentTokens  = 0;      // gettoni usati
+let lastTotalMedalsForTokens = 0; // conteggio medaglie alla precedente verifica
+
+function getAvailableTokens() {
+  return Math.max(0, mintedTokens - spentTokens);
+}
+
+function getTokenSvgMarkup(className) {
+  const cls = className || "token-svg";
+  return '<svg class="' + cls + '" viewBox="0 0 100 100" aria-hidden="true">'
+    + '<circle cx="50" cy="50" r="45" fill="#facc15" stroke="#92400e" stroke-width="4"/>'
+    + '<circle cx="50" cy="50" r="35" fill="#fde68a" stroke="#fbbf24" stroke-width="3"/>'
+    + '<rect x="30" y="27" width="4" height="46" fill="#eab308"/>'
+    + '<rect x="47" y="27" width="4" height="46" fill="#eab308"/>'
+    + '<rect x="63" y="27" width="4" height="46" fill="#eab308"/>'
+    + '</svg>';
+}
+
+function showTokenWonPopup() {
+  const overlay = document.getElementById("tokenOverlay");
+  if (!overlay) return;
+  overlay.classList.add("active");
+  setTimeout(() => {
+    overlay.classList.remove("active");
+  }, 2200);
+}
+
+function checkForNewToken() {
+  const total = getTotalMedalsCount();
+  const prevTotal = lastTotalMedalsForTokens;
+  lastTotalMedalsForTokens = total;
+  const prevFloor = Math.floor(prevTotal / 5);
+  const newFloor  = Math.floor(total / 5);
+  if (newFloor > prevFloor) {
+    const gained = newFloor - prevFloor;
+    mintedTokens += gained;
+    showTokenWonPopup();
+    updateTokensUIAll();
+  }
+}
+
+function renderTokensPanel(panelId) {
+  const panel = document.getElementById(panelId);
+  if (!panel) return;
+  const available = getAvailableTokens();
+  panel.innerHTML = "";
+  if (available <= 0) {
+    const empty = document.createElement("div");
+    empty.className = "trophy-empty";
+    empty.textContent = "Nessun gettone";
+    panel.appendChild(empty);
+    return;
+  }
+  const label = document.createElement("div");
+  label.className = "token-label";
+  label.textContent = "Gettoni:";
+  panel.appendChild(label);
+
+  for (let i = 0; i < available; i++) {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "token-icon-btn";
+    btn.innerHTML = getTokenSvgMarkup();
+    btn.addEventListener("click", handleTokenClick);
+    panel.appendChild(btn);
+  }
+}
+
+function renderTokensInTrophyPage() {
+  const row = document.getElementById("trophyTokensRow");
+  if (!row) return;
+  const available = getAvailableTokens();
+  row.innerHTML = "";
+  if (available <= 0) {
+    const empty = document.createElement("div");
+    empty.className = "trophy-empty";
+    empty.textContent = "Nessun gettone Play disponibile.";
+    row.appendChild(empty);
+    return;
+  }
+  for (let i = 0; i < available; i++) {
+    const item = document.createElement("div");
+    item.className = "medal-icon gold";
+    item.innerHTML = getTokenSvgMarkup();
+    row.appendChild(item);
+  }
+}
+
+function updateTokensUIAll() {
+  renderTokensPanel("tokensPanelL1");
+  renderTokensPanel("tokensPanelL2");
+  renderTokensPanel("tokensPanelL3");
+  renderTokensInTrophyPage();
+}
+
+function handleTokenClick() {
+  if (getAvailableTokens() <= 0) return;
+  if (playSessionActive) {
+    alert("Hai già una sessione Play attiva.");
+    return;
+  }
+  const ok = window.confirm("Vuoi usare il gettone?");
+  if (!ok) return;
+  spentTokens++;
+  updateTokensUIAll();
+  openPlayPageFromToken();
+}
+
+// ===========================
+//   TIMER MODALITÀ PLAY (5 minuti)
+// ===========================
+let playTimerSeconds = 0;
+let playTimerIntervalId = null;
+let playSessionActive = false;
+
+function formatSeconds(sec) {
+  const m = Math.floor(sec / 60);
+  const s = sec % 60;
+  const mm = String(m).padStart(2,"0");
+  const ss = String(s).padStart(2,"0");
+  return mm + ":" + ss;
+}
+
+function updatePlayTimerDisplay() {
+  const el = document.getElementById("playTimerText");
+  if (!el) return;
+  el.textContent = formatSeconds(playTimerSeconds);
+}
+
+function stopPlaySession(resetToZero) {
+  playSessionActive = false;
+  if (playTimerIntervalId) clearInterval(playTimerIntervalId);
+  playTimerIntervalId = null;
+  if (resetToZero) {
+    playTimerSeconds = 0;
+    updatePlayTimerDisplay();
+  }
+}
+
+function endPlaySessionTimeUp() {
+  stopPlaySession(false);
+  const overlay = document.getElementById("playTimeupOverlay");
+  if (overlay) overlay.classList.add("active");
+  setTimeout(() => {
+    if (overlay) overlay.classList.remove("active");
+    if (playPageEl) playPageEl.style.display = "none";
+    if (lastGamePageId === "level1Page") {
+      if (level1PageEl) level1PageEl.style.display = "flex";
+    } else if (lastGamePageId === "level3Page") {
+      if (level3PageEl) level3PageEl.style.display = "flex";
+    } else {
+      if (level2PageEl) level2PageEl.style.display = "flex";
+      lastGamePageId = "level2Page";
+    }
+  }, 2500);
+}
+
+function startPlaySession() {
+  playTimerSeconds = 300;
+  playSessionActive = true;
+  const overlay = document.getElementById("playTimeupOverlay");
+  if (overlay) overlay.classList.remove("active");
+  updatePlayTimerDisplay();
+  if (playTimerIntervalId) clearInterval(playTimerIntervalId);
+  playTimerIntervalId = setInterval(() => {
+    playTimerSeconds--;
+    if (playTimerSeconds <= 0) {
+      playTimerSeconds = 0;
+      updatePlayTimerDisplay();
+      endPlaySessionTimeUp();
+    } else {
+      updatePlayTimerDisplay();
+    }
+  }, 1000);
+}
+
+// Apertura pagina Play solo tramite gettone
+function openPlayPageFromToken() {
+  const homeScreen = document.getElementById("homeScreen");
+  if (homeScreen) homeScreen.style.display = "none";
+  if (trophyPageEl) trophyPageEl.style.display = "none";
+  if (level1PageEl) level1PageEl.style.display = "none";
+  if (level2PageEl) level2PageEl.style.display = "none";
+  if (level3PageEl) level3PageEl.style.display = "none";
+  if (playPageEl) {
+    playPageEl.style.display = "flex";
+    clearPlayStaff();
+    startPlaySession();
+  }
+}
+
+
 function getTotalMedalsCount() {
   return totalBronze + totalSilver + totalGold;
 }
@@ -2400,6 +2755,7 @@ function showRainbowL1() {
   consecutiveErrorsL1 = 0;
   updateStatusL1();
   updateRainbowCountersGlobal();
+  checkForNewToken();
 
   const totalDuration = MELODY_STEP_MS * currentNotesL1.length + 600;
 
@@ -2691,6 +3047,7 @@ function showRainbow() {
   consecutiveErrors = 0;
   updateStatus();
   updateRainbowCountersGlobal();
+  checkForNewToken();
 
   const totalDuration = MELODY_STEP_MS * currentNotes.length + 600;
 
@@ -2969,6 +3326,7 @@ function showRainbowL3() {
   consecutiveErrorsL3 = 0;
   updateStatusL3();
   updateRainbowCountersGlobal();
+  checkForNewToken();
 
   const totalDuration = MELODY_STEP_MS * currentNotesL3.length + 600;
 
@@ -3021,6 +3379,7 @@ function clearPlayStaff() {
 
 function addPlayNote(noteName, octave) {
   if (!staffSvgPlay) return;
+  if (!playSessionActive) return;
   const y = getStaffY(noteName, octave);
   if (y == null) return;
 
@@ -3317,7 +3676,6 @@ document.addEventListener("DOMContentLoaded", function() {
   const btnLevel1  = document.getElementById("btnLevel1");
   const btnLevel2  = document.getElementById("btnLevel2");
   const btnLevel3  = document.getElementById("btnLevel3");
-  const btnPlay    = document.getElementById("btnPlay");
   const level1Page = document.getElementById("level1Page");
   const level2Page = document.getElementById("level2Page");
   const level3Page = document.getElementById("level3Page");
@@ -3382,6 +3740,8 @@ document.addEventListener("DOMContentLoaded", function() {
 
   function showHome() {
     hideAllPages();
+    stopPlaySession(true);
+    clearPlayStaff();
     homeScreen.style.display = "flex";
     // La musichetta introduttiva parte al primo sblocco audio (gestito da unlockAudioOnce)
   }
@@ -3392,8 +3752,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const pageMap = {
       "level1Page": level1Page,
       "level2Page": level2Page,
-      "level3Page": level3Page,
-      "playPage":   playPage
+      "level3Page": level3Page
     };
     if (pageMap[pageId]) {
       pageMap[pageId].style.display = "flex";
@@ -3401,7 +3760,6 @@ document.addEventListener("DOMContentLoaded", function() {
       if (pageId === "level1Page") softResetLevel1();
       if (pageId === "level2Page") softResetLevel2();
       if (pageId === "level3Page") softResetLevel3();
-      if (pageId === "playPage")   clearPlayStaff();
     }
   }
 
@@ -3411,18 +3769,20 @@ document.addEventListener("DOMContentLoaded", function() {
     level2Page.style.display = "none";
     level3Page.style.display = "none";
     playPage.style.display   = "none";
+    stopPlaySession(true);
+    clearPlayStaff();
     trophyPageEl.style.display = "flex";
     if (trophyContentEl) {
       trophyContentEl.style.display = "none";
       trophyContentEl.innerHTML = "";
     }
     renderChestGrid();
+    updateTokensUIAll();
   }
 
   if (btnLevel1) btnLevel1.addEventListener("click", () => { showLevel("level1Page"); });
   if (btnLevel2) btnLevel2.addEventListener("click", () => { showLevel("level2Page"); });
   if (btnLevel3) btnLevel3.addEventListener("click", () => { showLevel("level3Page"); });
-  if (btnPlay)   btnPlay.addEventListener("click",   () => { showLevel("playPage"); });
   if (homeTrophyBtn) homeTrophyBtn.addEventListener("click", showTrophyPage);
 
   if (menuBtnL1)   menuBtnL1.addEventListener("click", showHome);
@@ -3469,6 +3829,10 @@ document.addEventListener("DOMContentLoaded", function() {
 
   // Imposta audio spento di default e aggiorna subito i pulsanti
   setAudioEnabled(false);
+
+  // Inizializza sistema gettoni (non persistenti)
+  lastTotalMedalsForTokens = getTotalMedalsCount();
+  updateTokensUIAll();
 
   showHome();
   updateRainbowCountersGlobal();
