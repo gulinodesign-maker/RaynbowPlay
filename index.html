@@ -392,10 +392,15 @@
       align-items: center;
       gap: 8px;
       box-shadow: 0 3px 9px rgba(15, 23, 42, 0.16);
+      cursor: pointer;
+      border: none;
     }
     .rainbow-counter span {
       font-weight: 800;
       font-size: 1.4rem;
+    }
+    .rainbow-hidden-count {
+      display: none;
     }
 
     .medals-panel-container {
@@ -1236,7 +1241,10 @@
             <input type="checkbox" id="autoColorToggleL1" class="auto-toggle-input">
             <span class="auto-slider"></span>
           </label>
-          <div class="rainbow-counter"> 🌈 <span id="rainbowCountL1">0</span> </div>
+          <button class="rainbow-counter" id="resetAudioBtnL1" type="button">
+            Reset audio
+            <span id="rainbowCountL1" class="rainbow-hidden-count">0</span>
+          </button>
         </div>
       </div>
       <div class="medals-panel-container">
@@ -1307,7 +1315,10 @@
           <span>R</span><span>a</span><span>i</span><span>n</span><span>b</span><span>o</span><span>w</span>
         </h1>
         <div class="top-right-controls">
-          <div class="rainbow-counter"> 🌈 <span id="rainbowCount">0</span> </div>
+          <button class="rainbow-counter" id="resetAudioBtnL2" type="button">
+            Reset audio
+            <span id="rainbowCount" class="rainbow-hidden-count">0</span>
+          </button>
         </div>
       </div>
       <div class="medals-panel-container">
@@ -1372,7 +1383,10 @@
           <span>R</span><span>a</span><span>i</span><span>n</span><span>b</span><span>o</span><span>w</span>
         </h1>
         <div class="top-right-controls">
-          <div class="rainbow-counter"> 🌈 <span id="rainbowCountL3">0</span> </div>
+          <button class="rainbow-counter" id="resetAudioBtnL3" type="button">
+            Reset audio
+            <span id="rainbowCountL3" class="rainbow-hidden-count">0</span>
+          </button>
         </div>
       </div>
       <div class="medals-panel-container">
@@ -1437,7 +1451,10 @@
           <span>R</span><span>a</span><span>i</span><span>n</span><span>b</span><span>o</span><span>w</span>
         </h1>
         <div class="top-right-controls">
-          <div class="rainbow-counter"> 🌈 <span id="rainbowCountPlay">0</span> </div>
+          <button class="rainbow-counter" id="resetAudioBtnPlay" type="button">
+            Reset audio
+            <span id="rainbowCountPlay" class="rainbow-hidden-count">0</span>
+          </button>
         </div>
       </div>
     </div>
@@ -1560,6 +1577,8 @@ const AudioContextWeb = window.AudioContext || window.webkitAudioContext;
 let audioCtx = null;
 let audioUnlocked = false;
 let hasPlayedHomeJingle = false;
+let homeIntroTimeoutId = null;
+let homeIntroTimerElapsed = false;
 
 function getAudioCtx() {
   // Crea o ricrea il contesto se non esiste o è stato chiuso
@@ -1577,6 +1596,12 @@ function unlockAudioOnce() {
     ctx.resume().catch(() => {});
   }
   audioUnlocked = true;
+
+  // Se il timer della home è già scaduto e la musichetta non è ancora partita, avvia il jingle
+  if (!hasPlayedHomeJingle && homeIntroTimerElapsed) {
+    playHomeJingle();
+    hasPlayedHomeJingle = true;
+  }
 }
 
 // Agganciamo l’unlock al primo gesto dell’utente
@@ -1939,7 +1964,7 @@ let autoColorL1 = false;
 let hintCircleL1 = null;
 let hintTimeoutL1 = null;
 let hintCountL1 = 0;
-const MAX_HINTS_L1 = 3;
+const MAX_HINTS_L1 = 5;
 let hintBtnL1El = null;
 
 function clearHintL1() {
@@ -2024,9 +2049,8 @@ function createNotesL1() {
   consecutiveErrorsL1 = 0;
   updateStatusL1();
 
-  hintCountL1 = 0;
   if (hintBtnL1El) {
-    hintBtnL1El.disabled = false;
+    hintBtnL1El.disabled = (hintCountL1 >= MAX_HINTS_L1);
     updateHintLabelL1();
   }
 
@@ -3097,19 +3121,16 @@ function renderChestGrid() {
 
 if (clearChestsBtn) {
   clearChestsBtn.addEventListener("click", () => {
-    const pwd = window.prompt("Per cancellare tutti gli scrigni digita la password: scrigno");
-    if (pwd === null) return;
-    if (pwd === "scrigno") {
-      clearAllSessionChests();
-      if (trophyContentEl) {
-        trophyContentEl.style.display = "none";
-        trophyContentEl.innerHTML = "";
-      }
-      renderChestGrid();
-      alert("Tutti gli scrigni sono stati cancellati.");
-    } else {
-      alert("Password errata.");
+    const conferma = window.confirm("Cancellare tutto?");
+    if (!conferma) return;
+
+    clearAllSessionChests();
+    if (trophyContentEl) {
+      trophyContentEl.style.display = "none";
+      trophyContentEl.innerHTML = "";
     }
+    renderChestGrid();
+    alert("Tutti gli scrigni sono stati cancellati.");
   });
 }
 /* ===========================
@@ -3121,6 +3142,7 @@ let lastGamePageId = "level2Page";
 document.addEventListener("DOMContentLoaded", function() {
   loadSessionsFromStorage();
   renderChestGrid();
+  startNewSessionChest();
 
   const homeScreen = document.getElementById("homeScreen");
   const btnLevel1  = document.getElementById("btnLevel1");
@@ -3149,6 +3171,10 @@ document.addEventListener("DOMContentLoaded", function() {
   const genderOptionLabels = document.querySelectorAll(".home-gender-option");
   const homeTrophyBtn = document.getElementById("homeTrophyBtn");
   const audioResetBtn = document.getElementById("audioResetBtn");
+  const resetAudioBtnL1 = document.getElementById("resetAudioBtnL1");
+  const resetAudioBtnL2 = document.getElementById("resetAudioBtnL2");
+  const resetAudioBtnL3 = document.getElementById("resetAudioBtnL3");
+  const resetAudioBtnPlay = document.getElementById("resetAudioBtnPlay");
 
   function refreshGenderButtons() {
     genderOptionLabels.forEach(label => {
@@ -3188,9 +3214,20 @@ document.addEventListener("DOMContentLoaded", function() {
   function showHome() {
     hideAllPages();
     homeScreen.style.display = "flex";
-    if (!hasPlayedHomeJingle && audioUnlocked) {
-      playHomeJingle();
-      hasPlayedHomeJingle = true;
+
+    if (!hasPlayedHomeJingle) {
+      if (homeIntroTimeoutId) {
+        clearTimeout(homeIntroTimeoutId);
+        homeIntroTimeoutId = null;
+      }
+      homeIntroTimerElapsed = false;
+      homeIntroTimeoutId = setTimeout(() => {
+        homeIntroTimerElapsed = true;
+        if (!hasPlayedHomeJingle && audioUnlocked) {
+          playHomeJingle();
+          hasPlayedHomeJingle = true;
+        }
+      }, 2000);
     }
   }
 
@@ -3227,10 +3264,10 @@ document.addEventListener("DOMContentLoaded", function() {
     renderChestGrid();
   }
 
-  if (btnLevel1) btnLevel1.addEventListener("click", () => { startNewSessionChest(); showLevel("level1Page"); });
-  if (btnLevel2) btnLevel2.addEventListener("click", () => { startNewSessionChest(); showLevel("level2Page"); });
-  if (btnLevel3) btnLevel3.addEventListener("click", () => { startNewSessionChest(); showLevel("level3Page"); });
-  if (btnPlay)   btnPlay.addEventListener("click",   () => { startNewSessionChest(); showLevel("playPage"); });
+  if (btnLevel1) btnLevel1.addEventListener("click", () => { showLevel("level1Page"); });
+  if (btnLevel2) btnLevel2.addEventListener("click", () => { showLevel("level2Page"); });
+  if (btnLevel3) btnLevel3.addEventListener("click", () => { showLevel("level3Page"); });
+  if (btnPlay)   btnPlay.addEventListener("click",   () => { showLevel("playPage"); });
   if (homeTrophyBtn) homeTrophyBtn.addEventListener("click", showTrophyPage);
 
   if (menuBtnL1)   menuBtnL1.addEventListener("click", showHome);
@@ -3270,7 +3307,12 @@ document.addEventListener("DOMContentLoaded", function() {
   if (audioResetBtn) {
     audioResetBtn.addEventListener("click", hardResetAudio);
   }
+  if (resetAudioBtnL1) resetAudioBtnL1.addEventListener("click", hardResetAudio);
+  if (resetAudioBtnL2) resetAudioBtnL2.addEventListener("click", hardResetAudio);
+  if (resetAudioBtnL3) resetAudioBtnL3.addEventListener("click", hardResetAudio);
+  if (resetAudioBtnPlay) resetAudioBtnPlay.addEventListener("click", hardResetAudio);
 
+  showHome();
   updateRainbowCountersGlobal();
 });
 </script>
