@@ -19,7 +19,7 @@
 
   <style>
     * { box-sizing: border-box; }
-    body { margin:0; padding:15px; background:aquamarine; height:100vh; }
+    body { margin:0; padding:15px; background:#46d1c6; height:100vh; }
 
     /* ===========================
        HOME: SELEZIONE LIVELLI
@@ -3287,11 +3287,17 @@ if (clearChestsBtn) {
     const conferma = window.confirm("Cancellare tutto?");
     if (!conferma) return;
 
+    // Svuota tutte le sessioni esistenti
     clearAllSessionChests();
+
+    // Crea subito una nuova sessione vuota per la stessa partita
+    startNewSessionChest();
+
     if (trophyContentEl) {
       trophyContentEl.style.display = "none";
       trophyContentEl.innerHTML = "";
     }
+    // Aggiorna la griglia degli scrigni
     renderChestGrid();
     alert("Tutti gli scrigni sono stati cancellati.");
   });
