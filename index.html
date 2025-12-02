@@ -684,6 +684,7 @@
       fill: #111827;
       pointer-events: none;
       transition: fill 0.15s ease-out, transform 0.15s ease-out;
+      font-family: "Times New Roman", "Georgia", "STIXGeneral", "Segoe UI Symbol", serif;
     }
     .note-symbol.note-played {
   fill: #ef4444;
@@ -1526,7 +1527,7 @@ body {
       </button>
     </div>
 
-    <div class="home-version-label">Versione 2.26</div>
+    <div class="home-version-label">Versione 2.29</div>
   </div>
 </div>
 
@@ -3862,7 +3863,9 @@ const SYMBOLS_L4 = {
   croma:       "𝅘𝅥𝅮"
 };
 
-const isIOSL4 = /iPad|iPhone|iPod/.test((navigator.userAgent || ""));
+const isIOSL4 = /iPad|iPhone|iPod/.test((navigator.userAgent || "")) ||
+  (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+
 if (isIOSL4) {
   // Su molti iPad i simboli musicali avanzati non sono disponibili
   // Usiamo una notazione più semplice ma sicura:
@@ -3872,6 +3875,13 @@ if (isIOSL4) {
   SYMBOLS_L4.minima     = "♩";
   SYMBOLS_L4.semiminima = "♩";
   SYMBOLS_L4.croma      = "♪";
+  // Fallback estremo: se anche questi simboli non fossero visualizzabili,
+  // puoi sostituirli con lettere semplici, ad esempio:
+  // SYMBOLS_L4.semibreve  = "S";
+  // SYMBOLS_L4.minima     = "M";
+  // SYMBOLS_L4.semiminima = "Q";
+  // SYMBOLS_L4.croma      = "C";
+
 }
 
 
@@ -3924,24 +3934,36 @@ function getBeatIntervalMsL4() {
   return 60000 / bpmL4;
 }
 
+function clickMetronomeL4() {
+  if (!metronomeDotL4) return;
+
+  // Click visivo
+  metronomeDotL4.classList.add("active");
+  setTimeout(() => {
+    if (metronomeDotL4) metronomeDotL4.classList.remove("active");
+  }, 90);
+
+  // Click sonoro (solo se l'audio è attivo)
+  if (typeof audioEnabled !== "undefined" && audioEnabled) {
+    try {
+      // Click breve e secco
+      playTone(1200, 120);
+    } catch (e) {
+      // ignora eventuali errori audio
+    }
+  }
+}
+
 function startMetronomeL4() {
   stopMetronomeL4();
   if (!metronomeDotL4) return;
-  metronomeIntervalIdL4 = setInterval(() => {
-    // Click visivo
-    metronomeDotL4.classList.add("active");
-    setTimeout(() => {
-      if (metronomeDotL4) metronomeDotL4.classList.remove("active");
-    }, 90);
 
-    // Click sonoro (solo se l'audio è attivo)
-    if (typeof audioEnabled !== "undefined" && audioEnabled) {
-      try {
-        playTone(1200);
-      } catch (e) {
-        // ignora eventuali errori audio
-      }
-    }
+  // Primo click immediato, in sincro con la prima nota
+  clickMetronomeL4();
+
+  // Click successivi ad ogni battito
+  metronomeIntervalIdL4 = setInterval(() => {
+    clickMetronomeL4();
   }, getBeatIntervalMsL4());
 }
 
@@ -4237,6 +4259,14 @@ if (bpmInputL4) {
     if (metronomeIntervalIdL4) {
       startMetronomeL4();
     }
+  });
+}
+
+// Clic sul pallino del metronomo: spegne il metronomo e ricomincia lo spartito
+if (metronomeDotL4) {
+  metronomeDotL4.addEventListener("click", () => {
+    stopMetronomeL4();
+    softResetLevel4();
   });
 }
 
