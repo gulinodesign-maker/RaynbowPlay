@@ -1527,7 +1527,7 @@ body {
       </button>
     </div>
 
-    <div class="home-version-label">Versione 2.29</div>
+    <div class="home-version-label">Versione 2.30</div>
   </div>
 </div>
 
@@ -3867,21 +3867,23 @@ const isIOSL4 = /iPad|iPhone|iPod/.test((navigator.userAgent || "")) ||
   (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
 
 if (isIOSL4) {
-  // Su molti iPad i simboli musicali avanzati non sono disponibili
-  // Usiamo una notazione più semplice ma sicura:
-  // - semibreve, minima, semiminima: ♩ (si distinguono comunque per la durata)
-  // - croma: ♪
-  SYMBOLS_L4.semibreve  = "♩";
-  SYMBOLS_L4.minima     = "♩";
+  // Su molti iPad i simboli musicali avanzati non sono disponibili.
+  // Usiamo una notazione più semplice ma visivamente distinta:
+  // - semibreve:    ○  (cerchio vuoto)
+  // - minima:      ●  (cerchio pieno)
+  // - semiminima:  ♩  (nota singola)
+  // - croma:       ♪  (nota con coda)
+  SYMBOLS_L4.semibreve  = "\u25CB"; // ○
+  SYMBOLS_L4.minima     = "\u25CF"; // ●
   SYMBOLS_L4.semiminima = "♩";
   SYMBOLS_L4.croma      = "♪";
+
   // Fallback estremo: se anche questi simboli non fossero visualizzabili,
   // puoi sostituirli con lettere semplici, ad esempio:
   // SYMBOLS_L4.semibreve  = "S";
   // SYMBOLS_L4.minima     = "M";
   // SYMBOLS_L4.semiminima = "Q";
   // SYMBOLS_L4.croma      = "C";
-
 }
 
 
