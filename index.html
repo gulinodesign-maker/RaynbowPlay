@@ -1579,7 +1579,7 @@ body {
       </button>
     </div>
 
-    <div class="home-version-label">Versione 2.38</div>
+    <div class="home-version-label">Versione 2.43</div>
   </div>
 </div>
 
@@ -3950,7 +3950,8 @@ function onPatternCompletedL4() {
 const DURATIONS_L4 = [
   { name: "semibreve",   beats: 4 },
   { name: "minima",      beats: 2 },
-  { name: "semiminima",  beats: 1 }
+  { name: "semiminima",  beats: 1 },
+  { name: "croma",       beats: 0.5 }
 ];
 
 const SYMBOLS_L4 = {
@@ -4055,8 +4056,8 @@ function stopMetronomeL4() {
 
 
 // Geometria nota livello 4: pallino + gambo
-const NOTE_HEAD_RX = 7;   // raggio orizzontale pallino
-const NOTE_HEAD_RY = 5;   // raggio verticale pallino
+const NOTE_HEAD_RX = 10.5;   // raggio orizzontale pallino
+const NOTE_HEAD_RY = 7.5;   // raggio verticale pallino
 const STEM_X       = NOTE_HEAD_RX; // gambo tangente al bordo destro del pallino
 
 function createNotesL4() {
@@ -4078,9 +4079,9 @@ function createNotesL4() {
     // in caso di problemi, manteniamo totalMedals = 0
   }
 
-  // Pool di durate: niente crome prima della 10ª medaglia
+  // Pool di durate: le crome compaiono dalla 6ª medaglia consecutiva nel livello 4
   let durationsPool = DURATIONS_L4.slice();
-  if (totalMedals < 10) {
+  if (rainbowsL4Local < 6) {
     durationsPool = durationsPool.filter(d => d.name !== "croma");
   }
 
@@ -4165,11 +4166,24 @@ function createNotesL4() {
       head.setAttribute("cy", 0);
       head.setAttribute("rx", NOTE_HEAD_RX);
       head.setAttribute("ry", NOTE_HEAD_RY);
+      // leggera rotazione per avvicinarsi alla forma delle note reali
+      head.setAttribute("transform", "rotate(-15)");
       head.classList.add("note-head");
       if (durationName === "semiminima" || durationName === "croma") {
         head.classList.add("filled");
       }
       group.appendChild(head);
+
+      // Puntino per le figure puntate (se mai usate nel livello 4)
+      if (durationName === "minima_puntata" || durationName === "semiminima_puntata") {
+        const dot = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+        dot.setAttribute("cx", STEM_X + NOTE_HEAD_RX + 4);
+        dot.setAttribute("cy", 0);
+        dot.setAttribute("r", 3);
+        dot.classList.add("note-head");
+        dot.classList.add("filled");
+        group.appendChild(dot);
+      }
 
       // Gambo per tutte tranne la semibreve
       if (durationName !== "semibreve") {
@@ -4178,7 +4192,7 @@ function createNotesL4() {
         stem.setAttribute("x1", STEM_X);
         stem.setAttribute("y1", 0);
         stem.setAttribute("x2", STEM_X);
-        stem.setAttribute("y2", -28);
+        stem.setAttribute("y2", -42);
         stem.classList.add("note-stem");
         group.appendChild(stem);
 
