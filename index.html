@@ -1579,7 +1579,7 @@ body {
       </button>
     </div>
 
-    <div class="home-version-label">Versione 2.45</div>
+    <div class="home-version-label">Versione 2.49</div>
   </div>
 </div>
 
@@ -2080,7 +2080,6 @@ body {
         <line x1="150" y1="180" x2="790" y2="180" stroke="#111827" stroke-width="2"/>
         <line x1="150" y1="200" x2="790" y2="200" stroke="#111827" stroke-width="2"/>
         <text x="88" y="195" font-size="150">&#119070;</text>
-        <line x1="500" y1="120" x2="500" y2="200" stroke="#111827" stroke-width="2"/>
 
       </svg>
       <div class="status-bar" id="statusBarL4">
@@ -4083,7 +4082,7 @@ function createNotesL4() {
 
   // Pulisci vecchie note/segni di errore
   staffSvgL4
-    .querySelectorAll(".note-circle, .note-symbol, .error-x, .ledger-line, .note-stem, .note-flag")
+    .querySelectorAll(".note-circle, .note-symbol, .error-x, .ledger-line, .note-stem, .note-flag, .measure-bar-l4")
     .forEach(e => e.remove());
   currentNotesL4 = [];
   currentIndexL4 = 0;
@@ -4093,14 +4092,48 @@ function createNotesL4() {
 
   const startX = 220;
   const endX = 780;
-  const barX = 500;
 
-  // Genera le due battute da 4/4
+  // Decidi il numero di battute in base alle medaglie vinte
+  const measureCount = (totalMedals >= 5) ? 3 : 2;
+
+  // Calcola le posizioni delle linee di battuta
+  const barPositions = [];
+  const span = endX - startX;
+  for (let i = 1; i < measureCount; i++) {
+    const x = startX + (span * i) / measureCount;
+    barPositions.push(x);
+  }
+
+  // Una sola linea di battuta tra le battute (indipendente dalle medaglie)
+  const barsPerSeparator = 1;
+
+  // Disegna le linee di battuta
+  const barGap = 6;
+  barPositions.forEach((barX) => {
+    const totalWidth = barGap * (barsPerSeparator - 1);
+    const firstX = barX - totalWidth / 2;
+    for (let i = 0; i < barsPerSeparator; i++) {
+      const x = firstX + i * barGap;
+      const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+      line.setAttribute("x1", x);
+      line.setAttribute("x2", x);
+      line.setAttribute("y1", 120);
+      line.setAttribute("y2", 200);
+      line.setAttribute("stroke", "#111827");
+      line.setAttribute("stroke-width", "2");
+      line.classList.add("measure-bar-l4");
+      staffSvgL4.appendChild(line);
+    }
+  });
+
+  // Genera le battute da 4/4
   const measure1 = pickMeasurePatternL4(durationsPool);
   const measure2 = pickMeasurePatternL4(durationsPool);
+  const measure3 = (measureCount === 3) ? pickMeasurePatternL4(durationsPool) : null;
 
   const count1 = measure1.length;
   const count2 = measure2.length;
+  const count3 = measure3 ? measure3.length : 0;
 
   let lastName = null;
   let lastOct = null;
@@ -4113,15 +4146,15 @@ function createNotesL4() {
     return pool.splice(idx, 1)[0];
   }
 
-  function placeMeasure(pattern, fromX, toX, isRightMeasure) {
+  function placeMeasure(pattern, fromX, toX) {
     const count = pattern.length;
     if (count === 0) return;
     for (let i = 0; i < count; i++) {
       const p = takeRandomPositionFromPool();
       const t = (count === 1) ? 0.5 : (i / Math.max(1, count - 1));
       const margin = 25;
-      const leftX  = isRightMeasure ? (fromX + margin) : fromX;
-      const rightX = isRightMeasure ? toX : (toX - margin);
+      const leftX  = fromX + margin;
+      const rightX = toX - margin;
       const cx = leftX + (rightX - leftX) * t;
       const cy = getStaffY(p.noteName, p.octave);
 
@@ -4222,10 +4255,17 @@ function createNotesL4() {
     }
   }
 
-  // Prima battuta (a sinistra della lineetta)
-  placeMeasure(measure1, startX, barX, false);
-  // Seconda battuta (a destra della lineetta)
-  placeMeasure(measure2, barX, endX, true);
+  // Colloca le battute sul pentagramma
+  if (measureCount === 2) {
+    // Due battute: [startX, barPositions[0]] e [barPositions[0], endX]
+    placeMeasure(measure1, startX, barPositions[0]);
+    placeMeasure(measure2, barPositions[0], endX);
+  } else {
+    // Tre battute: [startX, barPositions[0]], [barPositions[0], barPositions[1]], [barPositions[1], endX]
+    placeMeasure(measure1, startX, barPositions[0]);
+    placeMeasure(measure2, barPositions[0], barPositions[1]);
+    placeMeasure(measure3, barPositions[1], endX);
+  }
 
   // Ordina da sinistra a destra (per sicurezza)
   currentNotesL4.sort((a, b) => a.cx - b.cx);
@@ -4366,7 +4406,15 @@ function renderPianoL4() {
 
 function softResetLevel4() {
   if (!staffSvgL4) return;
+  // Ferma il metronomo e rigenera un nuovo spartito del livello 4
+  stopMetronomeL4();
+  currentNotesL4 = [];
+  currentIndexL4 = 0;
+  consecutiveErrorsL4 = 0;
+  lastHitTimeL4 = null;
+  updateErrorPill(errorPillL4, consecutiveErrorsL4, 7);
   createNotesL4();
+  // La tastiera viene ricostruita per sicurezza (svuotando i tasti precedenti)
   renderPianoL4();
 }
 
