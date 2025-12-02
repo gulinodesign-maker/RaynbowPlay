@@ -1526,7 +1526,7 @@ body {
       </button>
     </div>
 
-    <div class="home-version-label">Versione 2.22</div>
+    <div class="home-version-label">Versione 2.23</div>
   </div>
 </div>
 
@@ -3833,6 +3833,19 @@ const SYMBOLS_L4 = {
   semiminima:  "𝅘𝅥",
   croma:       "𝅘𝅥𝅮"
 };
+
+const isIOSL4 = /iPad|iPhone|iPod/.test((navigator.userAgent || ""));
+if (isIOSL4) {
+  // Su molti iPad i simboli musicali avanzati non sono disponibili
+  // Usiamo una notazione più semplice ma sicura:
+  // - semibreve, minima, semiminima: ♩ (si distinguono comunque per la durata)
+  // - croma: ♪
+  SYMBOLS_L4.semibreve  = "♩";
+  SYMBOLS_L4.minima     = "♩";
+  SYMBOLS_L4.semiminima = "♩";
+  SYMBOLS_L4.croma      = "♪";
+}
+
 
 
 
