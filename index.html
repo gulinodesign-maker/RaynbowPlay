@@ -681,11 +681,10 @@
 
 .note-symbol {
   pointer-events: none;
-  transition: transform 0.2s ease-out;
+  transition: transform 0.15s ease-out;
 }
     .note-symbol.note-played {
-  transform: scale(1.5);
-  transform-origin: center;
+  /* niente scala: la nota resta esattamente nella sua posizione */
 }
 
 
@@ -697,20 +696,12 @@
 .note-head.filled {
   fill: #111827;
 }
-/* TESTA NOTA SUONATA */
-.note-symbol.note-played .note-head {
-  stroke: #ef4444 !important;
-}
-
-/* TESTA NOTA PIENA SUONATA */
-.note-symbol.note-played .note-head.filled {
-  fill: #ef4444 !important;
-}
-
-/* GAMBO E BANDIERINA SUONATI */
+.note-symbol.note-played .note-head,
+.note-symbol.note-played .note-head.filled,
 .note-symbol.note-played .note-stem,
 .note-symbol.note-played .note-flag {
-  stroke: #ef4444 !important;
+  stroke: #ef4444;
+  fill: #ef4444;
 }
 
 .note-stem {
@@ -1473,6 +1464,38 @@ body {
   }
 }
 
+
+    /* ===============================
+       PATCH iOS — Miglioramento note
+       LIVELLO 4 (Music Rainbow)
+       =============================== */
+
+    /* Stroke non deformati quando lo SVG viene scalato su Safari iOS */
+    #level4Page .note-head,
+    #level4Page .note-stem,
+    #level4Page .note-flag,
+    #level4Page .ledger-line {
+      vector-effect: non-scaling-stroke;
+    }
+
+    /* Spessori aumentati solo nel livello 4 per maggiore leggibilità */
+    #level4Page .note-head {
+      stroke-width: 2.6;
+    }
+
+    #level4Page .note-stem,
+    #level4Page .note-flag,
+    #level4Page .ledger-line {
+      stroke-width: 3;
+    }
+
+    /* In landscape basso su iPhone permette una migliore dimensione delle note */
+    @media (orientation: landscape) and (max-height: 480px) {
+      #level4Page svg.staff {
+        max-height: 190px !important;
+      }
+    }
+
 </style>
 </head>
 
@@ -1550,7 +1573,7 @@ body {
       </button>
     </div>
 
-    <div class="home-version-label">Versione 2.33</div>
+    <div class="home-version-label">Versione 2.35</div>
   </div>
 </div>
 
@@ -3805,7 +3828,7 @@ let consecutiveErrorsL4 = 0;
 let lastHitTimeL4 = null;
 let metronomeIntervalIdL4 = null;
 let bpmL4 = 80;
-const TOLERANCE_MS_L4 = 220;
+const TOLERANCE_MS_L4 = 340;
 let rainbowsL4Local = 0;
 
 function addMedalIconL4(index) {
@@ -3875,8 +3898,7 @@ function onPatternCompletedL4() {
 const DURATIONS_L4 = [
   { name: "semibreve",   beats: 4 },
   { name: "minima",      beats: 2 },
-  { name: "semiminima",  beats: 1 },
-  { name: "croma",       beats: 0.5 }
+  { name: "semiminima",  beats: 1 }
 ];
 
 const SYMBOLS_L4 = {
