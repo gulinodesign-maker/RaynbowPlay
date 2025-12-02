@@ -1579,7 +1579,7 @@ body {
       </button>
     </div>
 
-    <div class="home-version-label">Versione 2.49</div>
+    <div class="home-version-label">Versione 2.50</div>
   </div>
 </div>
 
@@ -4295,8 +4295,8 @@ function handleAnswerL4(answerNoteName, answerOctave) {
   if (!target) return;
 
   const now = performance.now();
-  // Nel livello 4 ci interessa l'altezza relativa (nome della nota), non l'ottava.
-  const inPitch = (answerNoteName === target.noteName);
+  // Nel livello 4 devono coincidere sia il nome della nota sia l'ottava (bassa o alta).
+  const inPitch = (answerNoteName === target.noteName && answerOctave === target.octave);
 
   let inTime = false;
   if (currentIndexL4 === 0 || lastHitTimeL4 == null) {
@@ -4418,7 +4418,7 @@ function softResetLevel4() {
   renderPianoL4();
 }
 
-if (resetBtnL4) resetBtnL4.onclick = softResetLevel4;
+if (resetBtnL4) resetBtnL4.onclick = resetAllLevels;
 if (bpmInputL4) {
   bpmInputL4.addEventListener("change", () => {
     let v = parseInt(bpmInputL4.value, 10);
@@ -4616,6 +4616,24 @@ function resetAllLevels() {
   if (staffSvgL3) {
     createNotesL3();
     updateStatusL3();
+  }
+
+  // L4
+  rainbowsL4Local = 0;
+  consecutiveErrorsL4 = 0;
+  currentIndexL4 = 0;
+  lastHitTimeL4 = null;
+  if (rainbowWinIndexL4) rainbowWinIndexL4.textContent = "0";
+  if (medalsPanelL4) medalsPanelL4.innerHTML = "";
+  if (typeof softResetLevel4 === "function") {
+    softResetLevel4();
+  } else {
+    if (staffSvgL4 && pianoKeysElL4) {
+      stopMetronomeL4();
+      updateErrorPill(errorPillL4, consecutiveErrorsL4, 7);
+      createNotesL4();
+      renderPianoL4();
+    }
   }
 
   // Play
