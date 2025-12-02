@@ -1527,7 +1527,7 @@ body {
       </button>
     </div>
 
-    <div class="home-version-label">Versione 2.30</div>
+    <div class="home-version-label">Versione 2.32</div>
   </div>
 </div>
 
@@ -3791,6 +3791,9 @@ function addMedalIconL4(index) {
   medal.className = "medal-icon";
   medal.textContent = index;
   medalsPanelL4.appendChild(medal);
+  try {
+    playTone(900,150); // pop sound
+  } catch(e){}
 }
 
 function playVictoryPatternL4() {
@@ -3867,23 +3870,16 @@ const isIOSL4 = /iPad|iPhone|iPod/.test((navigator.userAgent || "")) ||
   (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
 
 if (isIOSL4) {
-  // Su molti iPad i simboli musicali avanzati non sono disponibili.
-  // Usiamo una notazione più semplice ma visivamente distinta:
-  // - semibreve:    ○  (cerchio vuoto)
-  // - minima:      ●  (cerchio pieno)
-  // - semiminima:  ♩  (nota singola)
-  // - croma:       ♪  (nota con coda)
-  SYMBOLS_L4.semibreve  = "\u25CB"; // ○
-  SYMBOLS_L4.minima     = "\u25CF"; // ●
-  SYMBOLS_L4.semiminima = "♩";
-  SYMBOLS_L4.croma      = "♪";
-
-  // Fallback estremo: se anche questi simboli non fossero visualizzabili,
-  // puoi sostituirli con lettere semplici, ad esempio:
-  // SYMBOLS_L4.semibreve  = "S";
-  // SYMBOLS_L4.minima     = "M";
-  // SYMBOLS_L4.semiminima = "Q";
-  // SYMBOLS_L4.croma      = "C";
+  // Su molti iPad i simboli musicali avanzati non sono disponibili o cambiano da font a font.
+  // Per massima compatibilità usiamo solo caratteri ASCII (sempre supportati):
+  // - semibreve:    "S"
+  // - minima:      "M"
+  // - semiminima:  "Q"
+  // - croma:       "C"
+  SYMBOLS_L4.semibreve  = "S";
+  SYMBOLS_L4.minima     = "M";
+  SYMBOLS_L4.semiminima = "Q";
+  SYMBOLS_L4.croma      = "C";
 }
 
 
