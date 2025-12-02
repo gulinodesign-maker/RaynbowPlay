@@ -1011,6 +1011,12 @@
       color:#78350f;
     }
 
+    #rainbowOverlayL4 .medal-circle {
+      background:radial-gradient(circle at 30% 30%, #fef9c3, #facc15, #b45309);
+      border-color:#fbbf24;
+      color:#78350f;
+    }
+
     #finalOverlayL1 .medal-circle,
     #finalOverlayL2 .medal-circle,
     #finalOverlayL3 .medal-circle {
@@ -1652,6 +1658,32 @@ body {
 
     <div id="rainbowOverlayL3Main" class="rainbow-message-main">Che orecchio musicale!</div>
     <div id="rainbowOverlayL3Sub" class="rainbow-message-sub">Hai riconosciuto tutte le note. Ora ascolta la melodia.</div>
+  </div>
+</div>
+
+
+<div class="rainbow-overlay" id="rainbowOverlayL4">
+  <div class="rainbow-box">
+    <div class="rainbow-graphic">
+      <svg viewBox="0 0 300 180">
+        <path d="M30 150 Q150 20 270 150" stroke="#ef4444" stroke-width="18" fill="none" stroke-linecap="round"/>
+        <path d="M40 150 Q150 30 260 150" stroke="#f97316" stroke-width="18" fill="none" stroke-linecap="round"/>
+        <path d="M50 150 Q150 40 250 150" stroke="#eab308" stroke-width="18" fill="none" stroke-linecap="round"/>
+        <path d="M60 150 Q150 50 240 150" stroke="#22c55e" stroke-width="18" fill="none" stroke-linecap="round"/>
+        <path d="M70 150 Q150 60 230 150" stroke="#38bdf8" stroke-width="18" fill="none" stroke-linecap="round"/>
+        <path d="M80 150 Q150 70 220 150" stroke="#a855f7" stroke-width="18" fill="none" stroke-linecap="round"/>
+        <path d="M90 150 Q150 80 210 150" stroke="#4f46e5" stroke-width="18" fill="none" stroke-linecap="round"/>
+      </svg>
+
+      <div class="medal-in-arc">
+        <div class="medal-circle">
+          <span id="rainbowWinIndexL4">1</span>
+        </div>
+      </div>
+    </div>
+
+    <div id="rainbowOverlayL4Main" class="rainbow-message-main">Che ritmo perfetto!</div>
+    <div id="rainbowOverlayL4Sub" class="rainbow-message-sub">Hai suonato tutto a tempo. Ora ascolta la melodia.</div>
   </div>
 </div>
 
@@ -2486,9 +2518,14 @@ function setNormalOverlayTexts(level) {
     if (!mainEl || !subEl) return;
     mainEl.textContent = (g === "F" ? "Brava" : "Bravo") + nameFrag + ", che memoria musicale!";
     subEl.textContent = "Hai riconosciuto tutte le note. Ora ascolta la melodia.";
+  } else if (level === 4) {
+    const mainEl = document.getElementById("rainbowOverlayL4Main");
+    const subEl  = document.getElementById("rainbowOverlayL4Sub");
+    if (!mainEl || !subEl) return;
+    mainEl.textContent = (g === "F" ? "Brava" : "Bravo") + nameFrag + ", che ritmo perfetto!";
+    subEl.textContent = "Hai suonato tutto a tempo. Ora ascolta la melodia.";
   }
 }
-
 function setFinalOverlayTexts(level) {
   const nameFrag = getNameFragment();
   const g = playerGender;
@@ -3817,7 +3854,7 @@ const pianoKeysElL4 = document.getElementById("pianoKeysL4");
 const resetBtnL4    = document.getElementById("resetBtnL4");
 const rainbowWinIndexL4 = document.getElementById("rainbowWinIndexL4");
 const medalsPanelL4  = document.getElementById("medalsPanelL4");
-const rainbowOverlayL4 = null;
+const rainbowOverlayL4 = document.getElementById("rainbowOverlayL4");
 const finalOverlayL4 = null;
 const bpmInputL4 = document.getElementById("bpmInputL4");
 const metronomeDotL4 = document.getElementById("metronomeDotL4");
@@ -3834,7 +3871,7 @@ let rainbowsL4Local = 0;
 function addMedalIconL4(index) {
   if (!medalsPanelL4) return;
   const medal = document.createElement("div");
-  medal.className = "medal-icon";
+  medal.className = "medal-icon gold";
   medal.textContent = index;
   medalsPanelL4.appendChild(medal);
 }
@@ -3873,6 +3910,18 @@ function onPatternCompletedL4() {
   // Aggiungi una piccola medaglia nel pannello del livello 4
   addMedalIconL4(rainbowsL4Local);
 
+  // Aggiorna lo scrigno di sessione con una medaglia d'oro
+  totalGold++;
+  incrementSessionMedal("gold");
+  updateRainbowCountersGlobal();
+  checkForNewToken();
+
+  // Mostra il popup della medaglia (stile oro)
+  setNormalOverlayTexts(4);
+  if (rainbowOverlayL4) {
+    rainbowOverlayL4.classList.add("active");
+  }
+
   // Calcola quanto deve durare ancora l'ultima nota
   let lastNoteDelay = 0;
   if (currentNotesL4.length) {
@@ -3889,6 +3938,9 @@ function onPatternCompletedL4() {
     // Dopo la melodia, genera un nuovo pentagramma/ritmo
     const totalDuration = melodyDuration + 600;
     setTimeout(() => {
+      if (rainbowOverlayL4) {
+        rainbowOverlayL4.classList.remove("active");
+      }
       createNotesL4();
     }, totalDuration);
   }, lastNoteDelay);
@@ -4003,8 +4055,8 @@ function stopMetronomeL4() {
 
 
 // Geometria nota livello 4: pallino + gambo
-const NOTE_HEAD_RX = 10.5;  // raggio orizzontale (1.5x)
-const NOTE_HEAD_RY = 7.5;   // raggio verticale (1.5x)
+const NOTE_HEAD_RX = 10.5;   // raggio orizzontale pallino
+const NOTE_HEAD_RY = 7.5;   // raggio verticale pallino
 const STEM_X       = NOTE_HEAD_RX; // gambo tangente al bordo destro del pallino
 
 function createNotesL4() {
@@ -4026,7 +4078,7 @@ function createNotesL4() {
     // in caso di problemi, manteniamo totalMedals = 0
   }
 
-  // Pool di durate: nel livello 4 usiamo solo semibrevi, minime e semiminime
+  // Pool di durate nel livello 4 (solo semibrevi, minime e semiminime)
   let durationsPool = DURATIONS_L4.slice();
 
   // Pulisci vecchie note/segni di errore
@@ -4104,7 +4156,7 @@ function createNotesL4() {
       group.classList.add("note-symbol");
       group.setAttribute("transform", "translate(" + cx + ", " + cy + ")");
 
-      // Testa della nota (ovale, ruotata)
+      // Testa della nota (ovale)
       const head = document.createElementNS("http://www.w3.org/2000/svg", "ellipse");
       head.setAttribute("cx", 0);
       head.setAttribute("cy", 0);
@@ -4143,7 +4195,7 @@ function createNotesL4() {
         // Bandierina solo per la croma
         if (durationName === "croma") {
           const flag = document.createElementNS("http://www.w3.org/2000/svg", "path");
-          // bandierina: semiarco che parte dalla punta del gambo
+          // bandierina agganciata al gambo in x = STEM_X
           flag.setAttribute(
             "d",
             "M " + STEM_X + " -42 Q " + (STEM_X + 12) + " -38, " +
