@@ -1526,7 +1526,7 @@ body {
       </button>
     </div>
 
-    <div class="home-version-label">Versione 2.20</div>
+    <div class="home-version-label">Versione 2.22</div>
   </div>
 </div>
 
@@ -3836,30 +3836,49 @@ const SYMBOLS_L4 = {
 
 
 
-function pickMeasurePatternL4(durationsPool, noteCount) {
+
+function pickMeasurePatternL4(durationsPool) {
   const targetBeats = 4;
-  const maxTries = 400;
+  const maxNotes = 8;
   if (!Array.isArray(durationsPool) || !durationsPool.length) {
     durationsPool = DURATIONS_L4.slice();
   }
 
-  for (let attempt = 0; attempt < maxTries; attempt++) {
-    const pattern = [];
-    let sum = 0;
-    for (let i = 0; i < noteCount; i++) {
-      const d = durationsPool[Math.floor(Math.random() * durationsPool.length)];
-      pattern.push(d);
-      sum += d.beats;
+  let pattern = [];
+  let sum = 0;
+  let safety = 0;
+  let lastName = null;
+
+  while (sum < targetBeats && safety < 1000 && pattern.length < maxNotes) {
+    const remaining = targetBeats - sum;
+    // scegli solo durate che non superano il totale della battuta
+    let candidates = durationsPool.filter(d => d.beats <= remaining);
+    if (!candidates.length) break;
+
+    // prova ad alternare la figura rispetto alla precedente
+    if (lastName !== null) {
+      const alt = candidates.filter(d => d.name !== lastName);
+      if (alt.length > 0) {
+        candidates = alt;
+      }
     }
-    if (Math.abs(sum - targetBeats) < 0.0001) {
-      return pattern;
-    }
+
+    const d = candidates[Math.floor(Math.random() * candidates.length)];
+    pattern.push(d);
+    sum += d.beats;
+    lastName = d.name;
+    safety++;
+  }
+
+  if (Math.abs(sum - targetBeats) < 0.0001 && pattern.length > 0) {
+    return pattern;
   }
 
   // Fallback: 4/4 pieno con semiminime
   const semiminima = DURATIONS_L4.find(d => d.name === "semiminima") || { name: "semiminima", beats: 1 };
-  return Array.from({ length: noteCount }, () => semiminima);
+  return [semiminima, semiminima, semiminima, semiminima];
 }
+
 function getBeatIntervalMsL4() {
   return 60000 / bpmL4;
 }
@@ -3896,9 +3915,9 @@ function stopMetronomeL4() {
 }
 
 
+
 function createNotesL4() {
   if (!staffSvgL4) return;
-  const count = 8;
 
   // Solo note sulle 5 linee/spazi: da mi1 a fa2
   let pool = STAFF_CORE_POSITIONS.slice();
@@ -3916,11 +3935,16 @@ function createNotesL4() {
     // in caso di problemi, manteniamo totalMedals = 0
   }
 
-  // Pool di durate per il livello 4: usiamo sempre tutte le figure ritmiche
+  // Pool di durate: niente crome prima della 10ª medaglia
   let durationsPool = DURATIONS_L4.slice();
+  if (totalMedals < 10) {
+    durationsPool = durationsPool.filter(d => d.name !== "croma");
+  }
 
   // Pulisci vecchie note/segni di errore
-  staffSvgL4.querySelectorAll(".note-circle, .note-symbol, .error-x, .ledger-line, .note-stem, .note-flag").forEach(e => e.remove());
+  staffSvgL4
+    .querySelectorAll(".note-circle, .note-symbol, .error-x, .ledger-line, .note-stem, .note-flag")
+    .forEach(e => e.remove());
   currentNotesL4 = [];
   currentIndexL4 = 0;
   consecutiveErrorsL4 = 0;
@@ -3929,77 +3953,99 @@ function createNotesL4() {
 
   const startX = 220;
   const endX = 780;
+  const barX = 500;
 
-  const notesPerMeasureL4 = 4;
-  const pattern1L4 = pickMeasurePatternL4(durationsPool, notesPerMeasureL4);
-  const pattern2L4 = pickMeasurePatternL4(durationsPool, notesPerMeasureL4);
+  // Genera le due battute da 4/4
+  const measure1 = pickMeasurePatternL4(durationsPool);
+  const measure2 = pickMeasurePatternL4(durationsPool);
+
+  const count1 = measure1.length;
+  const count2 = measure2.length;
 
   let lastName = null;
   let lastOct = null;
 
-  for (let i = 0; i < count; i++) {
+  function takeRandomPositionFromPool() {
     if (!pool.length) {
       pool = STAFF_CORE_POSITIONS.slice();
     }
     const idx = Math.floor(Math.random() * pool.length);
-    const p = pool.splice(idx, 1)[0];
-
-    const t = i / Math.max(1, count - 1);
-    const cx = startX + (endX - startX) * t;
-    const cy = getStaffY(p.noteName, p.octave);
-
-    const noteName = p.noteName;
-    const octave = p.octave;
-    lastName = noteName;
-    lastOct = octave;
-
-    const baseFreq = NOTE_FREQS[noteName] || 440;
-    const freq = baseFreq * (octave === 2 ? 2 : 1);
-
-    // Linee aggiuntive per note molto alte/basse
-    if ((cy > 200 || cy < 120) && !(noteName === "re" && octave === 1) && !(noteName === "sol" && octave === 2)) {
-      const ledger = document.createElementNS("http://www.w3.org/2000/svg","line");
-      ledger.setAttribute("x1", cx - 16);
-      ledger.setAttribute("x2", cx + 16);
-      ledger.setAttribute("y1", cy);
-      ledger.setAttribute("y2", cy);
-      ledger.classList.add("ledger-line");
-      staffSvgL4.appendChild(ledger);
-    }
-
-    const duration = (i < notesPerMeasureL4
-      ? pattern1L4[i]
-      : pattern2L4[i - notesPerMeasureL4]);
-    const beats = duration.beats;
-    const symbol = SYMBOLS_L4[duration.name] || SYMBOLS_L4["semiminima"];
-
-    const textEl = document.createElementNS("http://www.w3.org/2000/svg","text");
-    textEl.setAttribute("x", cx);
-    textEl.setAttribute("y", cy - 13);
-    textEl.setAttribute("text-anchor", "middle");
-    textEl.setAttribute("dominant-baseline", "middle");
-    textEl.textContent = symbol;
-    textEl.classList.add("note-symbol");
-    staffSvgL4.appendChild(textEl);
-
-    const obj = {
-      cx,
-      cy,
-      noteName,
-      octave,
-      freq,
-      beats,
-      durationName: duration.name,
-      element: textEl
-    };
-    currentNotesL4.push(obj);
+    return pool.splice(idx, 1)[0];
   }
 
+  function placeMeasure(pattern, fromX, toX, isRightMeasure) {
+    const count = pattern.length;
+    if (count === 0) return;
+    for (let i = 0; i < count; i++) {
+      const p = takeRandomPositionFromPool();
+      const t = (count === 1) ? 0.5 : (i / Math.max(1, count - 1));
+      const margin = 25;
+      const leftX  = isRightMeasure ? (fromX + margin) : fromX;
+      const rightX = isRightMeasure ? toX : (toX - margin);
+      const cx = leftX + (rightX - leftX) * t;
+      const cy = getStaffY(p.noteName, p.octave);
+
+      const noteName = p.noteName;
+      const octave = p.octave;
+      lastName = noteName;
+      lastOct = octave;
+
+      const baseFreq = NOTE_FREQS[noteName] || 440;
+      const freq = baseFreq * (octave === 2 ? 2 : 1);
+
+      // Linee aggiuntive per note molto alte/basse
+      if (
+        (cy > 200 || cy < 120) &&
+        !(noteName === "re" && octave === 1) &&
+        !(noteName === "sol" && octave === 2)
+      ) {
+        const ledger = document.createElementNS("http://www.w3.org/2000/svg", "line");
+        ledger.setAttribute("x1", cx - 16);
+        ledger.setAttribute("x2", cx + 16);
+        ledger.setAttribute("y1", cy);
+        ledger.setAttribute("y2", cy);
+        ledger.classList.add("ledger-line");
+        staffSvgL4.appendChild(ledger);
+      }
+
+      const duration = pattern[i];
+      const beats = duration.beats;
+      const symbol = SYMBOLS_L4[duration.name] || SYMBOLS_L4["semiminima"];
+
+      const textEl = document.createElementNS("http://www.w3.org/2000/svg", "text");
+      textEl.setAttribute("x", cx);
+      textEl.setAttribute("y", cy - 13);
+      textEl.setAttribute("text-anchor", "middle");
+      textEl.setAttribute("dominant-baseline", "middle");
+      textEl.textContent = symbol;
+      textEl.classList.add("note-symbol");
+      staffSvgL4.appendChild(textEl);
+
+      const obj = {
+        cx,
+        cy,
+        noteName,
+        octave,
+        freq,
+        beats,
+        durationName: duration.name,
+        element: textEl
+      };
+      currentNotesL4.push(obj);
+    }
+  }
+
+  // Prima battuta (a sinistra della lineetta)
+  placeMeasure(measure1, startX, barX, false);
+  // Seconda battuta (a destra della lineetta)
+  placeMeasure(measure2, barX, endX, true);
+
   // Ordina da sinistra a destra (per sicurezza)
-  currentNotesL4.sort((a,b) => a.cx - b.cx);
+  currentNotesL4.sort((a, b) => a.cx - b.cx);
   updateErrorPill(errorPillL4, consecutiveErrorsL4, 7);
   stopMetronomeL4();
 }
+
 
 function restartSamePatternL4() {
   currentIndexL4 = 0;
