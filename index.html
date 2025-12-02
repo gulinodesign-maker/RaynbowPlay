@@ -680,15 +680,37 @@
     }
 
 .note-symbol {
-  font-size: 104px;
-  fill: #111827;
   pointer-events: none;
-  transition: fill 0.15s ease-out, transform 0.15s ease-out;
-  font-family: -apple-system, system-ui, "SF Pro Text", "New York",
-               "Times New Roman", "Georgia", "STIXGeneral", "Segoe UI Symbol", serif;
+  transition: transform 0.2s ease-out;
 }
     .note-symbol.note-played {
-  fill: #ef4444;
+  transform: scale(1.5);
+  transform-origin: center;
+}
+
+
+.note-head {
+  stroke: #111827;
+  stroke-width: 2;
+  fill: #ffffff;
+}
+.note-head.filled {
+  fill: #111827;
+}
+/* TESTA NOTA SUONATA */
+.note-symbol.note-played .note-head {
+  stroke: #ef4444 !important;
+}
+
+/* TESTA NOTA PIENA SUONATA */
+.note-symbol.note-played .note-head.filled {
+  fill: #ef4444 !important;
+}
+
+/* GAMBO E BANDIERINA SUONATI */
+.note-symbol.note-played .note-stem,
+.note-symbol.note-played .note-flag {
+  stroke: #ef4444 !important;
 }
 
 .note-stem {
@@ -1528,7 +1550,7 @@ body {
       </button>
     </div>
 
-    <div class="home-version-label">Versione 2.30</div>
+    <div class="home-version-label">Versione 2.33</div>
   </div>
 </div>
 
@@ -3867,9 +3889,6 @@ const SYMBOLS_L4 = {
 
 
 
-
-
-
 function pickMeasurePatternL4(durationsPool) {
   const targetBeats = 4;
   const maxNotes = 8;
@@ -4053,18 +4072,46 @@ function createNotesL4() {
         staffSvgL4.appendChild(ledger);
       }
 
-      const duration = pattern[i];
+            const duration = pattern[i];
       const beats = duration.beats;
-      const symbol = SYMBOLS_L4[duration.name] || SYMBOLS_L4["semiminima"];
+      const durationName = duration.name;
 
-      const textEl = document.createElementNS("http://www.w3.org/2000/svg", "text");
-      textEl.setAttribute("x", cx);
-      textEl.setAttribute("y", cy - 13);
-      textEl.setAttribute("text-anchor", "middle");
-      textEl.setAttribute("dominant-baseline", "middle");
-      textEl.textContent = symbol;
-      textEl.classList.add("note-symbol");
-      staffSvgL4.appendChild(textEl);
+      const group = document.createElementNS("http://www.w3.org/2000/svg", "g");
+      group.classList.add("note-symbol");
+      group.setAttribute("transform", "translate(" + cx + ", " + cy + ")");
+
+      // Testa della nota (ovale)
+      const head = document.createElementNS("http://www.w3.org/2000/svg", "ellipse");
+      head.setAttribute("cx", 0);
+      head.setAttribute("cy", 0);
+      head.setAttribute("rx", 7);
+      head.setAttribute("ry", 5);
+      head.classList.add("note-head");
+      if (durationName === "semiminima" || durationName === "croma") {
+        head.classList.add("filled");
+      }
+      group.appendChild(head);
+
+      // Gambo per tutte tranne la semibreve
+      if (durationName !== "semibreve") {
+        const stem = document.createElementNS("http://www.w3.org/2000/svg", "line");
+        stem.setAttribute("x1", 6);
+        stem.setAttribute("y1", 0);
+        stem.setAttribute("x2", 6);
+        stem.setAttribute("y2", -28);
+        stem.classList.add("note-stem");
+        group.appendChild(stem);
+
+        // Bandierina solo per la croma
+        if (durationName === "croma") {
+          const flag = document.createElementNS("http://www.w3.org/2000/svg", "path");
+          flag.setAttribute("d", "M 6 -28 C 16 -26, 16 -18, 6 -16");
+          flag.classList.add("note-flag");
+          group.appendChild(flag);
+        }
+      }
+
+      staffSvgL4.appendChild(group);
 
       const obj = {
         cx,
@@ -4073,8 +4120,8 @@ function createNotesL4() {
         octave,
         freq,
         beats,
-        durationName: duration.name,
-        element: textEl
+        durationName: durationName,
+        element: group
       };
       currentNotesL4.push(obj);
     }
