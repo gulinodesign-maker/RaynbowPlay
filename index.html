@@ -680,12 +680,13 @@
     }
 
 .note-symbol {
-      font-size: 104px;
-      fill: #111827;
-      pointer-events: none;
-      transition: fill 0.15s ease-out, transform 0.15s ease-out;
-      font-family: "Times New Roman", "Georgia", "STIXGeneral", "Segoe UI Symbol", serif;
-    }
+  font-size: 104px;
+  fill: #111827;
+  pointer-events: none;
+  transition: fill 0.15s ease-out, transform 0.15s ease-out;
+  font-family: -apple-system, system-ui, "SF Pro Text", "New York",
+               "Times New Roman", "Georgia", "STIXGeneral", "Segoe UI Symbol", serif;
+}
     .note-symbol.note-played {
   fill: #ef4444;
 }
@@ -1527,7 +1528,7 @@ body {
       </button>
     </div>
 
-    <div class="home-version-label">Versione 2.32</div>
+    <div class="home-version-label">Versione 2.30</div>
   </div>
 </div>
 
@@ -3791,9 +3792,6 @@ function addMedalIconL4(index) {
   medal.className = "medal-icon";
   medal.textContent = index;
   medalsPanelL4.appendChild(medal);
-  try {
-    playTone(900,150); // pop sound
-  } catch(e){}
 }
 
 function playVictoryPatternL4() {
@@ -3866,21 +3864,7 @@ const SYMBOLS_L4 = {
   croma:       "𝅘𝅥𝅮"
 };
 
-const isIOSL4 = /iPad|iPhone|iPod/.test((navigator.userAgent || "")) ||
-  (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
 
-if (isIOSL4) {
-  // Su molti iPad i simboli musicali avanzati non sono disponibili o cambiano da font a font.
-  // Per massima compatibilità usiamo solo caratteri ASCII (sempre supportati):
-  // - semibreve:    "S"
-  // - minima:      "M"
-  // - semiminima:  "Q"
-  // - croma:       "C"
-  SYMBOLS_L4.semibreve  = "S";
-  SYMBOLS_L4.minima     = "M";
-  SYMBOLS_L4.semiminima = "Q";
-  SYMBOLS_L4.croma      = "C";
-}
 
 
 
