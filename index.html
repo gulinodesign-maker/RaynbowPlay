@@ -1526,7 +1526,7 @@ body {
       </button>
     </div>
 
-    <div class="home-version-label">Versione 2.23</div>
+    <div class="home-version-label">Versione 2.26</div>
   </div>
 </div>
 
@@ -2228,7 +2228,7 @@ function hardResetAudio() {
   alert("Audio reimpostato! Se non senti ancora i suoni, prova a toccare di nuovo lo schermo.");
 }
 
-function playTone(freq) {
+function playTone(freq, durationMs) {
   // Non suonare nulla se l'audio è disattivato
   if (!audioEnabled) return;
 
@@ -2242,11 +2242,16 @@ function playTone(freq) {
     o.type = "sine";
     o.connect(g);
     g.connect(ctx.destination);
+
     const now = ctx.currentTime;
+    const durationSec = (typeof durationMs === "number" && durationMs > 0)
+      ? (durationMs / 1000)
+      : 0.5;
+
     g.gain.setValueAtTime(0.4, now);
-    g.gain.exponentialRampToValueAtTime(0.001, now + 0.5);
+    g.gain.exponentialRampToValueAtTime(0.001, now + durationSec);
     o.start(now);
-    o.stop(now + 0.5);
+    o.stop(now + durationSec + 0.05);
   };
 
   if (ctx.state === "suspended" && typeof ctx.resume === "function") {
@@ -3077,7 +3082,8 @@ function handleAnswerL1(clickedNoteObj) {
     target.element.style.filter = "none";
     target.element.style.strokeWidth = 2;
     target.solved = true;
-    playTone(target.freq);
+    const noteDurationMs = (target.beats || 1) * getBeatIntervalMsL4();
+    playTone(target.freq, noteDurationMs);
     consecutiveErrorsL1 = 0;
     currentIndexL1++;
     setTimeout(setCurrentTargetL1, 250);
@@ -3107,7 +3113,8 @@ function handleAutoColorL1(colorNoteName) {
     target.element.style.filter = "none";
     target.element.style.strokeWidth = 2;
     target.solved = true;
-    playTone(target.freq);
+    const noteDurationMs = (target.beats || 1) * getBeatIntervalMsL4();
+    playTone(target.freq, noteDurationMs);
     consecutiveErrorsL1 = 0;
     currentIndexL1++;
     setTimeout(setCurrentTargetL1, 250);
@@ -3402,7 +3409,8 @@ function handleAnswer(answerNoteName, answerOctave) {
     target.element.style.filter = "none";
     target.element.style.strokeWidth = 2;
     target.solved = true;
-    playTone(target.freq);
+    const noteDurationMs = (target.beats || 1) * getBeatIntervalMsL4();
+    playTone(target.freq, noteDurationMs);
     consecutiveErrors = 0;
     currentIndex++;
     setTimeout(setCurrentTarget, 250);
@@ -3681,7 +3689,8 @@ function handleAnswerL3(answerNoteName, answerOctave) {
     target.element.style.filter = "none";
     target.element.style.strokeWidth = 2;
     target.solved = true;
-    playTone(target.freq);
+    const noteDurationMs = (target.beats || 1) * getBeatIntervalMsL4();
+    playTone(target.freq, noteDurationMs);
     consecutiveErrorsL3 = 0;
     currentIndexL3++;
     setTimeout(setCurrentTargetL3, 250);
@@ -3785,20 +3794,28 @@ function addMedalIconL4(index) {
 
 function playVictoryPatternL4() {
   if (!currentNotesL4.length) return;
-  currentNotesL4.forEach((n, idx) => {
+  const beatMs = getBeatIntervalMsL4();
+  let offset = 0;
+
+  currentNotesL4.forEach((n) => {
+    const noteDurationMs = (n.beats || 1) * beatMs;
     setTimeout(() => {
       try {
-        playTone(n.freq);
+        playTone(n.freq, noteDurationMs);
       } catch (e) {
         // ignora eventuali errori audio
       }
-    }, idx * MELODY_STEP_MS);
+    }, offset);
+    offset += noteDurationMs;
   });
+
+  // Restituisce la durata totale della melodia (in ms)
+  return currentNotesL4.reduce((acc, n) => acc + ((n.beats || 1) * beatMs), 0);
 }
 
+
 function onPatternCompletedL4() {
-  // Ferma il metronomo del livello 4
-  stopMetronomeL4();
+  // Il metronomo continua a suonare fino alla fine della nota finale
 
   // Aggiorna il contatore locale e il numero nell'arco
   rainbowsL4Local++;
@@ -3809,14 +3826,25 @@ function onPatternCompletedL4() {
   // Aggiungi una piccola medaglia nel pannello del livello 4
   addMedalIconL4(rainbowsL4Local);
 
-  // Riproduci la melodia come ricompensa
-  playVictoryPatternL4();
+  // Calcola quanto deve durare ancora l'ultima nota
+  let lastNoteDelay = 0;
+  if (currentNotesL4.length) {
+    const last = currentNotesL4[currentNotesL4.length - 1];
+    lastNoteDelay = (last.beats || 1) * getBeatIntervalMsL4();
+  }
 
-  // Dopo la melodia, genera un nuovo pentagramma/ritmo
-  const totalDuration = MELODY_STEP_MS * currentNotesL4.length + 600;
+  // Riproduci la melodia come ricompensa solo dopo la fine della nota finale
   setTimeout(() => {
-    createNotesL4();
-  }, totalDuration);
+    // Ora possiamo fermare il metronomo del livello 4
+    stopMetronomeL4();
+    const melodyDuration = playVictoryPatternL4() || 0;
+
+    // Dopo la melodia, genera un nuovo pentagramma/ritmo
+    const totalDuration = melodyDuration + 600;
+    setTimeout(() => {
+      createNotesL4();
+    }, totalDuration);
+  }, lastNoteDelay);
 }
 
 
@@ -4106,7 +4134,8 @@ function handleAnswerL4(answerNoteName, answerOctave) {
       startMetronomeL4();
     }
 
-    playTone(target.freq);
+    const noteDurationMs = (target.beats || 1) * getBeatIntervalMsL4();
+    playTone(target.freq, noteDurationMs);
     if (target.element && target.element.classList) {
       target.element.classList.add("note-played");
     }
