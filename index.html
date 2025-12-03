@@ -1762,7 +1762,7 @@ Music Rainbow</div>
       </button>
     </div>
 
-    <div class="home-version-label">Versione 2.88</div>
+    <div class="home-version-label">Versione 2.90</div>
   </div>
 </div>
 
@@ -2999,7 +2999,10 @@ function checkForNewToken() {
   if (!s) return;
 
   const prevTotal = typeof s.tokenMedalCount === "number" ? s.tokenMedalCount : 0;
-  const currentTotal = (s.bronze || 0) + (s.silver || 0) + (s.gold || 0);
+  const currentTotal = (s.bronze || 0)
+    + (s.silver || 0)
+    + (s.gold   || 0)
+    + (s.green  || 0);
   s.tokenMedalCount = currentTotal;
 
   const prevFloor = Math.floor(prevTotal / 5);
@@ -3404,7 +3407,7 @@ try {
     const circle = document.createElementNS("http://www.w3.org/2000/svg","circle");
     circle.setAttribute("cx", cx);
     circle.setAttribute("cy", cy);
-    circle.setAttribute("r", 12);
+    circle.setAttribute("r", 9);
     circle.classList.add("note-circle");
     circle.dataset.noteName = noteName;
     circle.dataset.octave = octave;
@@ -3760,7 +3763,7 @@ function createNotes() {
     const circle = document.createElementNS("http://www.w3.org/2000/svg","circle");
     circle.setAttribute("cx", cx);
     circle.setAttribute("cy", cy);
-    circle.setAttribute("r", 12);
+    circle.setAttribute("r", 9);
     circle.classList.add("note-circle");
     circle.dataset.noteName = noteName;
     circle.dataset.octave = octave;
@@ -4041,7 +4044,7 @@ function createNotesL3() {
     const circle = document.createElementNS("http://www.w3.org/2000/svg","circle");
     circle.setAttribute("cx", cx);
     circle.setAttribute("cy", cy);
-    circle.setAttribute("r", 12);
+    circle.setAttribute("r", 9);
     circle.classList.add("note-circle");
     circle.dataset.noteName = noteName;
     circle.dataset.octave = octave;
@@ -4827,7 +4830,7 @@ function addPlayNote(noteName, octave) {
   const circle = document.createElementNS("http://www.w3.org/2000/svg","circle");
   circle.setAttribute("cx", cx);
   circle.setAttribute("cy", cy);
-  circle.setAttribute("r", 12);
+  circle.setAttribute("r", 9);
   circle.classList.add("note-circle");
   circle.dataset.play = "1";
   const col = getNoteColor(noteName);
