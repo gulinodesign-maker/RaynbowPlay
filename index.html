@@ -24,19 +24,15 @@
     /* ===========================
        HOME: SELEZIONE LIVELLI
        =========================== */
-    .home-screen {
-      position: fixed;
-      inset: 0;
-      background: #46d1c6; /* acquamarina pieno */
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      padding: 16px 12px 24px;
-      z-index: 10000;
-      font-family: "Baloo 2", sans-serif;
-      overflow-y: auto;
-      -webkit-overflow-scrolling: touch;
-    }
+    
+.home-screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+}
+
 
     .home-container {
       text-align: center;
@@ -89,29 +85,40 @@
       color: #9ca3af;
     }
 
-    .home-gender-select {
-      display: flex;
-      gap: 12px;
-      align-items: center;
-      justify-content: center;
-      flex-wrap: wrap;
-      font-size: 1rem;
-      margin-top: 4px;
-    }
+    
+    
+.home-gender-select {
+  display: flex;
+  flex-direction: row;
+  gap: 12px;
+  align-items: center;
+  justify-content: center;
+  margin: 12px auto 16px;
+}
 
+
+
+    
+    
+    
     .home-gender-option {
-      display: inline-flex;
+      display: flex;
       align-items: center;
       justify-content: center;
-      padding: 8px 18px;
-      border-radius: 999px;
-      background: #e0f2fe;
+      padding: 12px 14px;
+      border-radius: 24px;
       cursor: pointer;
-      box-shadow: 0 2px 6px rgba(148,163,184,0.7);
-      min-width: 110px;
+      box-shadow: 0 3px 8px rgba(148,163,184,0.7);
+      width: 100%;
+      max-width: 160px;
+      font-size: 1.05rem;
+      font-weight: 700;
       transition: background 0.12s, transform 0.12s, box-shadow 0.12s, color 0.12s;
       user-select: none;
     }
+    
+
+
 
     .home-gender-option input[type="radio"] {
       display: none;
@@ -133,13 +140,41 @@
       box-shadow: 0 1px 4px rgba(148,163,184,0.7);
     }
 
+    
+    
+.home-gender-option:nth-child(1) {
+  background: #bfdbfe !important;
+  color: #1e3a8a !important;
+}
+
+
+    
+.home-gender-option:nth-child(2) {
+  background: #fbcfe8 !important;
+  color: #9d174d !important;
+}
+
+
+    .home-gender-option.active:nth-child(1) {
+      background: #1d4ed8;
+      color: #ffffff;
+    }
+
+    .home-gender-option.active:nth-child(2) {
+      background: #db2777;
+      color: #ffffff;
+    }
+
+    
     .home-levels {
       display: grid;
       grid-template-columns: 1fr;
       gap: 12px;
       max-width: 360px;
+      width: 100%;
       margin: 0 auto;
     }
+
 
     .home-levels-separator {
       height: 8px;
@@ -179,6 +214,7 @@
     }
 
     /* Livelli e scrigno: stile “scrigno” dorato uguale alla pagina trofei */
+    .home-level-main,
     .home-level-1,
     .home-level-2,
     .home-level-3,
@@ -187,10 +223,17 @@
       color: #78350f;
     }
 
+    
+    
     .home-audio-reset {
       background: #0ea5e9;
       color: #ffffff;
+      max-width: 360px;
+      width: 100%;
+      margin: 0 auto 16px;
     }
+
+
 
     /* Stato del tasto Play in home */
     .home-play-active {
@@ -491,6 +534,167 @@
     #trophyTokensRow .trophy-token-btn {
       padding: 4px;
     }
+
+    
+    /* ===========================
+       SELEZIONE LIVELLO - OVERLAY
+       =========================== */
+    .level-select-overlay {
+      position: fixed;
+      inset: 0;
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 10500;
+      backdrop-filter: blur(4px);
+      background: radial-gradient(circle at center,
+        rgba(15,23,42,0.96),
+        rgba(59,130,246,0.88),
+        rgba(15,23,42,0.7));
+    }
+
+    .level-select-overlay.active {
+      display: flex;
+    }
+
+    .level-select-box {
+      background: rgba(15,23,42,0.98);
+      border-radius: 24px;
+      padding: 22px 20px 18px;
+      width: min(360px, 88%);
+      box-shadow: 0 18px 40px rgba(15,23,42,0.85);
+      border: 2px solid rgba(129,140,248,0.9);
+      text-align: center;
+    }
+
+    .level-select-title {
+      font-size: 1.4rem;
+      margin-bottom: 4px;
+      color: #e5e7eb;
+    }
+
+    .level-select-subtitle {
+      font-size: 0.95rem;
+      margin-bottom: 16px;
+      color: #c7d2fe;
+    }
+
+    .level-select-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .level-select-btn {
+      border-radius: 18px;
+      border: none;
+      padding: 10px 6px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      background: linear-gradient(to bottom, #facc15, #eab308);
+      color: #78350f;
+      box-shadow: 0 4px 10px rgba(15,23,42,0.6);
+      transition: transform 0.12s, box-shadow 0.12s, filter 0.12s;
+    }
+
+    .level-select-btn:hover {
+      filter: brightness(1.05);
+    }
+
+    .level-select-btn:active {
+      transform: translateY(1px);
+      box-shadow: 0 2px 5px rgba(15,23,42,0.6);
+    }
+
+    .level-select-actions {
+      display: flex;
+      justify-content: center;
+    }
+
+    .level-select-close {
+      border-radius: 999px;
+      border: none;
+      padding: 8px 18px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      cursor: pointer;
+      background: #0f172a;
+      color: #e5e7eb;
+      box-shadow: 0 3px 8px rgba(15,23,42,0.8);
+    }
+
+    .level-select-close:active {
+      transform: translateY(1px);
+      box-shadow: 0 1px 4px rgba(15,23,42,0.8);
+    }
+
+
+
+    /* ===========================
+       POPUP SCRIGNI TROFEI
+       =========================== */
+    .trophy-overlay {
+      position: fixed;
+      inset: 0;
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 12000;
+      backdrop-filter: blur(4px);
+      background: radial-gradient(circle at center,
+        rgba(15,23,42,0.88),
+        rgba(30,64,175,0.94),
+        rgba(15,23,42,0.96));
+    }
+
+    .trophy-overlay.active {
+      display: flex;
+    }
+
+    .trophy-overlay-box {
+      position: relative;
+      background: #f9fafb;
+      border-radius: 24px;
+      padding: 22px 22px 18px;
+      width: min(90%, 520px);
+      max-width: 520px;
+      box-shadow: 0 18px 42px rgba(0,0,0,0.5);
+      border: 2px solid #e5e7eb;
+    }
+
+    .trophy-overlay-content {
+      max-height: min(60vh, 420px);
+      overflow-y: auto;
+    }
+
+    
+.trophy-overlay-close {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+  border: none;
+  background: #f97316;
+  color: #ffffff;
+  font-size: 1.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 8px 18px rgba(0,0,0,0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+    .trophy-overlay-close:active {
+      transform: translateY(1px);
+      box-shadow: 0 3px 8px rgba(0,0,0,0.7);
+    }
+
 
     .token-overlay {
       position: fixed;
@@ -1531,19 +1735,10 @@ body {
       </svg>
     </div>
 
-    <button id="audioResetBtn" class="home-level-btn home-audio-reset" type="button">
-      Attiva audio 🔊
-    </button>
-
-    <div class="home-title">Music Rainbow</div>
-    <div class="home-subtitle">Scegli il livello e inserisci il tuo nome</div>
-
-    <div class="home-player-box">
-      <div class="home-player-label">Il tuo nome</div>
-      <input id="playerNameInput" class="home-player-input" type="text" placeholder="Scrivi il tuo nome..." />
-
-      <div class="home-player-label">Sei maschio o femmina?</div>
-      <div class="home-gender-select">
+    <div class="home-title">
+Music Rainbow</div>
+    <div class="home-subtitle">Scegli chi gioca e il livello</div>
+    <div class="home-gender-select">
         <label class="home-gender-option">
           <input type="radio" name="gender" value="M" checked />
           <span>Maschio</span>
@@ -1553,20 +1748,13 @@ body {
           <span>Femmina</span>
         </label>
       </div>
+
+
     </div>
 
     <div class="home-levels">
-      <button id="btnLevel1" class="home-level-btn home-level-1" type="button">
-        Primo livello
-      </button>
-      <button id="btnLevel2" class="home-level-btn home-level-2" type="button">
-        Secondo livello
-      </button>
-      <button id="btnLevel3" class="home-level-btn home-level-3" type="button">
-        Terzo livello
-      </button>
-      <button id="btnLevel4" class="home-level-btn home-level-4" type="button">
-        Quarto livello
+      <button id="btnOpenLevelSelect" class="home-level-btn home-level-main" type="button">
+        Scegli il livello
       </button>
 
       <div class="home-levels-separator"></div>
@@ -1579,7 +1767,34 @@ body {
       </button>
     </div>
 
-    <div class="home-version-label">Versione 2.50</div>
+    <div class="home-version-label">Versione 2.64</div>
+  </div>
+</div>
+
+
+<div id="levelSelectOverlay" class="level-select-overlay">
+  <div class="level-select-box">
+    <h2 class="level-select-title">Scegli il livello</h2>
+    <p class="level-select-subtitle">Puoi cambiare livello in qualsiasi momento.</p>
+    <div class="level-select-grid">
+      <button type="button" class="level-select-btn" data-level="level1Page">
+        Primo livello
+      </button>
+      <button type="button" class="level-select-btn" data-level="level2Page">
+        Secondo livello
+      </button>
+      <button type="button" class="level-select-btn" data-level="level3Page">
+        Terzo livello
+      </button>
+      <button type="button" class="level-select-btn" data-level="level4Page">
+        Quarto livello
+      </button>
+    </div>
+    <div class="level-select-actions">
+      <button type="button" id="btnLevelSelectClose" class="level-select-close">
+        Chiudi
+      </button>
+    </div>
   </div>
 </div>
 
@@ -2179,6 +2394,14 @@ body {
       </button>
 
       <div id="trophyContent" class="trophy-content" style="display:none"></div>
+
+      <div id="trophyOverlay" class="trophy-overlay">
+        <div class="trophy-overlay-box">
+          <button id="trophyOverlayClose" class="trophy-overlay-close" type="button" aria-label="Chiudi scrigno">✕</button>
+          <div id="trophyOverlayContent" class="trophy-overlay-content"></div>
+        </div>
+      </div>
+
 
       <div id="trophyTokensSection" class="trophy-content">
         <div class="trophy-section">
@@ -4657,67 +4880,43 @@ const chestGridEl     = document.getElementById("chestGrid");
 const clearChestsBtn  = document.getElementById("clearChestsBtn");
 const trophyBackBtn   = document.getElementById("trophyBackBtn");
 const trophyHomeBtn   = document.getElementById("trophyHomeBtn");
+const trophyOverlayEl = document.getElementById("trophyOverlay");
+const trophyOverlayContentEl = document.getElementById("trophyOverlayContent");
+const trophyOverlayCloseBtn = document.getElementById("trophyOverlayClose");
+
 
 function showChestDetails(session) {
-  if (!trophyContentEl || !session) return;
+  if (!trophyOverlayEl || !trophyOverlayContentEl || !session) return;
   const bronzeCount = session.bronze || 0;
   const silverCount = session.silver || 0;
   const goldCount   = session.gold   || 0;
 
-  let html = "";
+  let htmlInner = "";
   const labelNumber = (typeof session.displayNumber === "number")
     ? session.displayNumber
     : session.id;
 
-  html += `<div class="trophy-section">
+  htmlInner += `<div class="trophy-section">
     <h2>Scrigno ${labelNumber}</h2>
     <div class="trophy-medals-row">`;
   const totalCoins = bronzeCount + silverCount + goldCount;
   if (totalCoins === 0) {
-    html += `<div class="trophy-empty">In questa sessione non hai raccolto medaglie.</div>`;
-    html += `</div></div>`;
+    htmlInner += `<div class="trophy-empty">Nessuna medaglia in questa sessione.</div>`;
   } else {
-    html += `</div></div>`;
-
-    html += `<div class="trophy-section">
-      <h2>Rame (Primo livello)</h2>
-      <div class="trophy-medals-row">`;
-    if (bronzeCount === 0) {
-      html += `<div class="trophy-empty">Nessuna medaglia di rame in questa sessione.</div>`;
-    } else {
-      for (let i = 0; i < bronzeCount; i++) {
-        html += `<div class="medal-icon bronze">●</div>`;
-      }
+    for (let i = 0; i < bronzeCount; i++) {
+      htmlInner += `<div class="medal-icon bronze">●</div>`;
     }
-    html += `</div></div>`;
-
-    html += `<div class="trophy-section">
-      <h2>Argento (Secondo livello)</h2>
-      <div class="trophy-medals-row">`;
-    if (silverCount === 0) {
-      html += `<div class="trophy-empty">Nessuna medaglia d’argento in questa sessione.</div>`;
-    } else {
-      for (let i = 0; i < silverCount; i++) {
-        html += `<div class="medal-icon silver">●</div>`;
-      }
+    for (let i = 0; i < silverCount; i++) {
+      htmlInner += `<div class="medal-icon silver">●</div>`;
     }
-    html += `</div></div>`;
-
-    html += `<div class="trophy-section">
-      <h2>Oro (Terzo livello)</h2>
-      <div class="trophy-medals-row">`;
-    if (goldCount === 0) {
-      html += `<div class="trophy-empty">Nessuna medaglia d’oro in questa sessione.</div>`;
-    } else {
-      for (let i = 0; i < goldCount; i++) {
-        html += `<div class="medal-icon gold">●</div>`;
-      }
+    for (let i = 0; i < goldCount; i++) {
+      htmlInner += `<div class="medal-icon gold">●</div>`;
     }
-    html += `</div></div>`;
   }
+  htmlInner += `</div></div>`;
 
-  trophyContentEl.innerHTML = html;
-  trophyContentEl.style.display = "block";
+  trophyOverlayContentEl.innerHTML = htmlInner;
+  trophyOverlayEl.classList.add("active");
 }
 
 function renderChestGrid() {
@@ -4750,6 +4949,20 @@ function renderChestGrid() {
       btn.innerHTML = "&nbsp;";
     }
 
+
+if (trophyOverlayCloseBtn && trophyOverlayEl) {
+  trophyOverlayCloseBtn.addEventListener("click", () => {
+    trophyOverlayEl.classList.remove("active");
+  });
+}
+
+if (trophyOverlayEl) {
+  trophyOverlayEl.addEventListener("click", (ev) => {
+    if (ev.target === trophyOverlayEl) {
+      trophyOverlayEl.classList.remove("active");
+    }
+  });
+}
     chestGridEl.appendChild(btn);
   }
 }
@@ -4798,6 +5011,11 @@ document.addEventListener("DOMContentLoaded", function() {
   const playPage   = document.getElementById("playPage");
 
   homePlayBtn = document.getElementById("homePlayBtn");
+
+  const levelSelectOverlay = document.getElementById("levelSelectOverlay");
+  const btnOpenLevelSelect = document.getElementById("btnOpenLevelSelect");
+  const btnLevelSelectClose = document.getElementById("btnLevelSelectClose");
+  const levelSelectButtons = document.querySelectorAll(".level-select-btn");
 
   const menuBtnL1   = document.getElementById("menuBtnL1");
   const menuBtnL2   = document.getElementById("menuBtnL2");
@@ -4899,6 +5117,31 @@ document.addEventListener("DOMContentLoaded", function() {
     }
     renderChestGrid();
     updateTokensUIAll();
+  }
+
+
+  if (btnOpenLevelSelect && levelSelectOverlay) {
+    btnOpenLevelSelect.addEventListener("click", () => {
+      levelSelectOverlay.classList.add("active");
+    });
+  }
+
+  if (btnLevelSelectClose && levelSelectOverlay) {
+    btnLevelSelectClose.addEventListener("click", () => {
+      levelSelectOverlay.classList.remove("active");
+    });
+  }
+
+  if (levelSelectButtons && levelSelectButtons.length > 0) {
+    levelSelectButtons.forEach(btn => {
+      btn.addEventListener("click", () => {
+        const target = btn.getAttribute("data-level");
+        if (target) {
+          showLevel(target);
+          if (levelSelectOverlay) levelSelectOverlay.classList.remove("active");
+        }
+      });
+    });
   }
 
   if (btnLevel1) btnLevel1.addEventListener("click", () => { showLevel("level1Page"); });
