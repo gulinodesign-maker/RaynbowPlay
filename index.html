@@ -316,6 +316,31 @@
       justify-content: flex-start;
     }
 
+    .clef-btn {
+      border-radius: 999px;
+      border: 2px solid #e5e7eb;
+      background: #ffffff;
+      padding: 4px 9px 6px;
+      font-size: 1.1rem;
+      line-height: 1;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 1px 2px rgba(15,23,42,0.08);
+      height:48px;
+  min-width:48px;
+  font-size:28px;
+  padding:0 12px;
+  border-radius:12px;
+}
+
+    .clef-btn.active-clef {
+      border-color: #4f46e5;
+      background: #eef2ff;
+      box-shadow: 0 0 0 1px rgba(79,70,229,0.18);
+    }
+
     .top-right-controls {
       display: flex;
       gap: 10px;
@@ -976,7 +1001,12 @@
       justify-content: center;
       align-items: center;
       box-shadow: 0 2px 4px rgba(15,23,42,0.15);
-    }
+      height:48px;
+  line-height:48px;
+  font-size:22px;
+  padding:0 14px;
+  border-radius:12px;
+}
     .stat-notes {
       background: #dcfce7;
       color: #166534;
@@ -1762,7 +1792,7 @@ Music Rainbow</div>
       </button>
     </div>
 
-    <div class="home-version-label">Versione 2.90</div>
+    <div class="home-version-label">Versione 3.0</div>
   </div>
 </div>
 
@@ -2010,6 +2040,8 @@ Music Rainbow</div>
           <button class="menu-btn" id="menuBtnL1" aria-label="Menu">🏠</button>
           <button class="hint-btn" id="hintBtnL1" aria-label="Suggerimento">💡</button>
           <button class="trophy-btn" id="trophyBtnL1" aria-label="Trofei">🏆</button>
+          <button class="clef-btn clef-treble-btn active-clef" id="clefTrebleBtnL1" aria-label="Chiave di violino">&#119070;</button>
+          <button class="clef-btn clef-bass-btn" id="clefBassBtnL1" aria-label="Chiave di basso">&#119074;</button>
           <div class="stat-pill stat-errors-normal error-pill" id="errorPillL1">
             Errori: 0
           </div>
@@ -2063,7 +2095,7 @@ Music Rainbow</div>
         <line x1="150" y1="160" x2="790" y2="160" stroke="#111827" stroke-width="2"/>
         <line x1="150" y1="180" x2="790" y2="180" stroke="#111827" stroke-width="2"/>
         <line x1="150" y1="200" x2="790" y2="200" stroke="#111827" stroke-width="2"/>
-        <text x="88" y="195" font-size="150">&#119070;</text>
+        <text x="88" y="195" font-size="150" class="clef-symbol">&#119070;</text>
       </svg>
       <div class="status-bar" id="statusBarL1">
     </div>
@@ -2093,6 +2125,8 @@ Music Rainbow</div>
           <button class="reset-btn" id="resetBtn" aria-label="Reset">↻</button>
           <button class="menu-btn" id="menuBtnL2" aria-label="Menu">🏠</button>
           <button class="trophy-btn" id="trophyBtnL2" aria-label="Trofei">🏆</button>
+          <button class="clef-btn clef-treble-btn active-clef" id="clefTrebleBtnL2" aria-label="Chiave di violino">&#119070;</button>
+          <button class="clef-btn clef-bass-btn" id="clefBassBtnL2" aria-label="Chiave di basso">&#119074;</button>
           <div class="stat-pill stat-errors-normal error-pill" id="errorPillL2">
             Errori: 0
           </div>
@@ -2141,7 +2175,7 @@ Music Rainbow</div>
         <line x1="150" y1="160" x2="790" y2="160" stroke="#111827" stroke-width="2"/>
         <line x1="150" y1="180" x2="790" y2="180" stroke="#111827" stroke-width="2"/>
         <line x1="150" y1="200" x2="790" y2="200" stroke="#111827" stroke-width="2"/>
-        <text x="88" y="195" font-size="150">&#119070;</text>
+        <text x="88" y="195" font-size="150" class="clef-symbol">&#119070;</text>
       </svg>
       <div class="status-bar" id="statusBar">
     </div>
@@ -2165,6 +2199,8 @@ Music Rainbow</div>
           <button class="reset-btn" id="resetBtnL3" aria-label="Reset">↻</button>
           <button class="menu-btn" id="menuBtnL3" aria-label="Menu">🏠</button>
           <button class="trophy-btn" id="trophyBtnL3" aria-label="Trofei">🏆</button>
+          <button class="clef-btn clef-treble-btn active-clef" id="clefTrebleBtnL3" aria-label="Chiave di violino">&#119070;</button>
+          <button class="clef-btn clef-bass-btn" id="clefBassBtnL3" aria-label="Chiave di basso">&#119074;</button>
           <div class="stat-pill stat-errors-normal error-pill" id="errorPillL3">
             Errori: 0
           </div>
@@ -2213,7 +2249,7 @@ Music Rainbow</div>
         <line x1="150" y1="160" x2="790" y2="160" stroke="#111827" stroke-width="2"/>
         <line x1="150" y1="180" x2="790" y2="180" stroke="#111827" stroke-width="2"/>
         <line x1="150" y1="200" x2="790" y2="200" stroke="#111827" stroke-width="2"/>
-        <text x="88" y="195" font-size="150">&#119070;</text>
+        <text x="88" y="195" font-size="150" class="clef-symbol">&#119070;</text>
       </svg>
       <div class="status-bar" id="statusBarL3">
     </div>
@@ -2237,6 +2273,8 @@ Music Rainbow</div>
           <button class="reset-btn" id="resetBtnL4" aria-label="Reset">↻</button>
           <button class="menu-btn" id="menuBtnL4" aria-label="Menu">🏠</button>
           <button class="trophy-btn" id="trophyBtnL4" aria-label="Trofei">🏆</button>
+          <button class="clef-btn clef-treble-btn active-clef" id="clefTrebleBtnL4" aria-label="Chiave di violino">&#119070;</button>
+          <button class="clef-btn clef-bass-btn" id="clefBassBtnL4" aria-label="Chiave di basso">&#119074;</button>
           <div class="stat-pill stat-errors-normal error-pill" id="errorPillL4">
             Errori: 0
           </div>
@@ -2289,7 +2327,7 @@ Music Rainbow</div>
         <line x1="150" y1="160" x2="790" y2="160" stroke="#111827" stroke-width="2"/>
         <line x1="150" y1="180" x2="790" y2="180" stroke="#111827" stroke-width="2"/>
         <line x1="150" y1="200" x2="790" y2="200" stroke="#111827" stroke-width="2"/>
-        <text x="88" y="195" font-size="150">&#119070;</text>
+        <text x="88" y="195" font-size="150" class="clef-symbol">&#119070;</text>
 
       </svg>
       <div class="status-bar" id="statusBarL4">
@@ -2320,6 +2358,8 @@ Music Rainbow</div>
           <button class="reset-btn" id="resetBtnPlay" aria-label="Reset">↻</button>
           <button class="menu-btn" id="menuBtnPlay" aria-label="Menu">🏠</button>
           <button class="trophy-btn" id="trophyBtnPlay" aria-label="Trofei">🏆</button>
+          <button class="clef-btn clef-treble-btn active-clef" id="clefTrebleBtnPlay" aria-label="Chiave di violino">&#119070;</button>
+          <button class="clef-btn clef-bass-btn" id="clefBassBtnPlay" aria-label="Chiave di basso">&#119074;</button>
         </div>
         <h1 class="rainbow-title">
           <span>M</span><span>u</span><span>s</span><span>i</span><span>c</span>
@@ -2345,7 +2385,7 @@ Music Rainbow</div>
         <line x1="150" y1="160" x2="790" y2="160" stroke="#111827" stroke-width="2"/>
         <line x1="150" y1="180" x2="790" y2="180" stroke="#111827" stroke-width="2"/>
         <line x1="150" y1="200" x2="790" y2="200" stroke="#111827" stroke-width="2"/>
-        <text x="88" y="195" font-size="150">&#119070;</text>
+        <text x="88" y="195" font-size="150" class="clef-symbol">&#119070;</text>
       </svg>
 
     <div class="keyboard-container">
@@ -2436,7 +2476,13 @@ const NOTE_FREQS = {
   "do#": 277.18, "re#": 311.13, "fa#": 369.99, "sol#": 415.30, "la#": 466.16
 };
 
-const STAFF_CORE_POSITIONS = [
+const CLEF_TREBLE = "treble";
+const CLEF_BASS   = "bass";
+
+let currentClef = CLEF_TREBLE;
+
+// Posizioni del pentagramma in chiave di violino (setup originale)
+const STAFF_CORE_POSITIONS_TREBLE = [
   { y:200, noteName:"mi",  octave:1 },
   { y:190, noteName:"fa",  octave:1 },
   { y:180, noteName:"sol", octave:1 },
@@ -2448,15 +2494,56 @@ const STAFF_CORE_POSITIONS = [
   { y:120, noteName:"fa",  octave:2 }
 ];
 
-const STAFF_LEDGER_LOW = [
+const STAFF_LEDGER_LOW_TREBLE = [
   { y:210, noteName:"re", octave:1 },
   { y:220, noteName:"do", octave:1 }
 ];
 
-const STAFF_LEDGER_HIGH = [
+const STAFF_LEDGER_HIGH_TREBLE = [
   { y:110, noteName:"sol", octave:2 },
   { y:100, noteName:"la",  octave:2 }
 ];
+
+// Posizioni del pentagramma in chiave di basso
+// (stesse linee/spazi, ma con nomi delle note secondo la lettura in chiave di basso)
+const STAFF_CORE_POSITIONS_BASS = [
+  { y:200, noteName:"sol", octave:1 }, // linea 1 (in basso)
+  { y:190, noteName:"la",  octave:1 },
+  { y:180, noteName:"si",  octave:1 },
+  { y:170, noteName:"do",  octave:2 },
+  { y:160, noteName:"re",  octave:2 },
+  { y:150, noteName:"mi",  octave:2 },
+  { y:140, noteName:"fa",  octave:2 },
+  { y:130, noteName:"sol", octave:2 },
+  { y:120, noteName:"la",  octave:2 }  // linea 5 (in alto)
+];
+
+// Per semplicità, le note di taglio in alto/basso restano le stesse in entrambe le chiavi
+const STAFF_LEDGER_LOW_BASS  = STAFF_LEDGER_LOW_TREBLE.slice();
+const STAFF_LEDGER_HIGH_BASS = STAFF_LEDGER_HIGH_TREBLE.slice();
+
+// Questi sono i riferimenti effettivamente usati dal resto del codice.
+// Vengono reindirizzati automaticamente quando si cambia chiave.
+let STAFF_CORE_POSITIONS = STAFF_CORE_POSITIONS_TREBLE;
+let STAFF_LEDGER_LOW     = STAFF_LEDGER_LOW_TREBLE;
+let STAFF_LEDGER_HIGH    = STAFF_LEDGER_HIGH_TREBLE;
+
+function setClef(clef) {
+  currentClef = (clef === CLEF_BASS) ? CLEF_BASS : CLEF_TREBLE;
+  if (currentClef === CLEF_BASS) {
+    STAFF_CORE_POSITIONS = STAFF_CORE_POSITIONS_BASS;
+    STAFF_LEDGER_LOW     = STAFF_LEDGER_LOW_BASS;
+    STAFF_LEDGER_HIGH    = STAFF_LEDGER_HIGH_BASS;
+  } else {
+    STAFF_CORE_POSITIONS = STAFF_CORE_POSITIONS_TREBLE;
+    STAFF_LEDGER_LOW     = STAFF_LEDGER_LOW_TREBLE;
+    STAFF_LEDGER_HIGH    = STAFF_LEDGER_HIGH_TREBLE;
+  }
+  updateStaffClefSymbols();
+}
+
+// inizializza in chiave di violino
+setClef(CLEF_TREBLE);
 
 const MELODY_STEP_MS = 250;
 
@@ -2713,6 +2800,16 @@ function getStaffY(noteName, octave) {
   const pool = STAFF_CORE_POSITIONS.concat(STAFF_LEDGER_LOW, STAFF_LEDGER_HIGH);
   const found = pool.find(p => p.noteName === noteName && p.octave === octave);
   return found ? found.y : null;
+}
+
+function updateStaffClefSymbols() {
+  const trebleChar = "\uD834\uDD1E"; // 𝄞
+  const bassChar   = "\uD834\uDD22"; // 𝄢
+  const symbol = (currentClef === CLEF_BASS) ? bassChar : trebleChar;
+  const clefNodes = document.querySelectorAll(".clef-symbol");
+  clefNodes.forEach(el => {
+    el.textContent = symbol;
+  });
 }
 
 /* ===========================
@@ -5165,6 +5262,55 @@ document.addEventListener("DOMContentLoaded", function() {
   const trophyBtnL3   = document.getElementById("trophyBtnL3");
   const trophyBtnL4   = document.getElementById("trophyBtnL4");
   const trophyBtnPlay = document.getElementById("trophyBtnPlay");
+
+  const clefTrebleButtons = document.querySelectorAll(".clef-treble-btn");
+  const clefBassButtons   = document.querySelectorAll(".clef-bass-btn");
+
+  function refreshClefButtons() {
+    clefTrebleButtons.forEach(btn => {
+      if (currentClef === CLEF_TREBLE) btn.classList.add("active-clef");
+      else btn.classList.remove("active-clef");
+    });
+    clefBassButtons.forEach(btn => {
+      if (currentClef === CLEF_BASS) btn.classList.add("active-clef");
+      else btn.classList.remove("active-clef");
+    });
+  }
+
+  function regenerateNotesForCurrentPage() {
+    if (lastGamePageId === "level1Page") {
+      if (typeof softResetLevel1 === "function") softResetLevel1();
+    } else if (lastGamePageId === "level2Page") {
+      if (typeof softResetLevel2 === "function") softResetLevel2();
+    } else if (lastGamePageId === "level3Page") {
+      if (typeof softResetLevel3 === "function") softResetLevel3();
+    } else if (lastGamePageId === "level4Page") {
+      if (typeof softResetLevel4 === "function") softResetLevel4();
+    } else if (lastGamePageId === "playPage") {
+      if (typeof clearPlayStaff === "function") clearPlayStaff();
+    }
+  }
+
+  clefTrebleButtons.forEach(btn => {
+    btn.addEventListener("click", () => {
+      setClef(CLEF_TREBLE);
+      refreshClefButtons();
+      regenerateNotesForCurrentPage();
+    });
+  });
+
+  clefBassButtons.forEach(btn => {
+    btn.addEventListener("click", () => {
+      setClef(CLEF_BASS);
+      refreshClefButtons();
+      regenerateNotesForCurrentPage();
+    });
+  });
+
+  // allinea UI e simboli alla chiave iniziale
+  refreshClefButtons();
+  updateStaffClefSymbols();
+
 
   const hintBtnL1 = document.getElementById("hintBtnL1");
 
