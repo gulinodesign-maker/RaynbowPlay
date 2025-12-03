@@ -854,21 +854,10 @@
       font-size: 1rem;
     }
 
-    .medal-icon.bronze {
-      background: radial-gradient(circle at 30% 30%, #fef3c7, #f97316, #7c2d12);
-      border: 2px solid #f97316;
-      color: #4a1f07;
-    }
-    .medal-icon.silver {
-      background: radial-gradient(circle at 30% 30%, #f9fafb, #d4d4d8, #4b5563);
-      border: 2px solid #9ca3af;
-      color: #111827;
-    }
-    .medal-icon.gold {
-      background: radial-gradient(circle at 30% 30%, #fef9c3, #facc15, #b45309);
-      border: 2px solid #fbbf24;
-      color: #78350f;
-    }
+    .medal-icon.bronze { background: radial-gradient(circle at 30% 30%, #fecaca, #ef4444, #7f1d1d); border:2px solid #ef4444; color:#7f1d1d; }
+    .medal-icon.silver { background: radial-gradient(circle at 30% 30%, #ffedd5, #f97316, #7c2d12); border:2px solid #f97316; color:#7c2d12; }
+    .medal-icon.green { background: radial-gradient(circle at 30% 30%, #dcfce7, #22c55e, #14532d); border:2px solid #22c55e; color:#14532d; }
+.medal-icon.gold { background: radial-gradient(circle at 30% 30%, #fef9c3, #eab308, #92400e); border:2px solid #eab308; color:#92400e; }
 
     .staff-container {
       border-radius: 20px;
@@ -912,13 +901,6 @@
 }
 .note-head.filled {
   fill: #111827;
-}
-.note-symbol.note-played .note-head,
-.note-symbol.note-played .note-head.filled,
-.note-symbol.note-played .note-stem,
-.note-symbol.note-played .note-flag {
-  stroke: #ef4444;
-  fill: #ef4444;
 }
 
 .note-stem {
@@ -1211,27 +1193,27 @@
     }
 
     #rainbowOverlayL1 .medal-circle {
-      background:radial-gradient(circle at 30% 30%, #fef3c7, #f97316, #7c2d12);
-      border-color:#f97316;
-      color:#4a1f07;
+      background:radial-gradient(circle at 30% 30%, #fecaca, #ef4444, #7f1d1d);
+      border-color:#ef4444;
+      color:#7f1d1d;
     }
 
     #rainbowOverlay .medal-circle {
-      background:radial-gradient(circle at 30% 30%, #f9fafb, #d4d4d8, #4b5563);
-      border-color:#9ca3af;
-      color:#111827;
+      background:radial-gradient(circle at 30% 30%, #ffedd5, #f97316, #7c2d12);
+      border-color:#f97316;
+      color:#7c2d12;
     }
 
     #rainbowOverlayL3 .medal-circle {
-      background:radial-gradient(circle at 30% 30%, #fef9c3, #facc15, #b45309);
-      border-color:#fbbf24;
-      color:#78350f;
+      background:radial-gradient(circle at 30% 30%, #fef9c3, #eab308, #92400e);
+      border-color:#eab308;
+      color:#92400e;
     }
 
     #rainbowOverlayL4 .medal-circle {
-      background:radial-gradient(circle at 30% 30%, #fef9c3, #facc15, #b45309);
-      border-color:#fbbf24;
-      color:#78350f;
+      background:radial-gradient(circle at 30% 30%, #dcfce7, #22c55e, #14532d);
+      border-color:#22c55e;
+      color:#14532d;
     }
 
     #finalOverlayL1 .medal-circle,
@@ -1242,19 +1224,19 @@
     }
 
     #finalOverlayL1 .medal-circle {
-      background:radial-gradient(circle at 30% 30%, #fef3c7, #f97316, #7c2d12);
-      border-color:#f97316;
-      color:#4a1f07;
+      background:radial-gradient(circle at 30% 30%, #fecaca, #ef4444, #7f1d1d);
+      border-color:#ef4444;
+      color:#7f1d1d;
     }
     #finalOverlayL2 .medal-circle {
-      background:radial-gradient(circle at 30% 30%, #f9fafb, #d4d4d8, #4b5563);
-      border-color:#9ca3af;
-      color:#111827;
+      background:radial-gradient(circle at 30% 30%, #ffedd5, #f97316, #7c2d12);
+      border-color:#f97316;
+      color:#7c2d12;
     }
     #finalOverlayL3 .medal-circle {
-      background:radial-gradient(circle at 30% 30%, #fef9c3, #facc15, #b45309);
-      border-color:#fbbf24;
-      color:#78350f;
+      background:radial-gradient(circle at 30% 30%, #fef9c3, #eab308, #92400e);
+      border-color:#eab308;
+      color:#92400e;
     }
 
     .rainbow-message-main {
@@ -1273,7 +1255,7 @@
       padding: 16px 20px;
     }
 
-    /* Griglia scrigni (8x8) nella pagina trofei */
+    /* Griglia scrigni (6x6) nella pagina trofei */
     .chest-grid-container {
       margin-top: 16px;
       margin-bottom: 12px;
@@ -1281,7 +1263,7 @@
 
     .chest-grid {
       display: grid;
-      grid-template-columns: repeat(8, minmax(0, 1fr));
+      grid-template-columns: repeat(6, minmax(0, 1fr));
       gap: 8px;
       justify-items: stretch;
       margin-left: 20px;
@@ -1300,7 +1282,7 @@
       align-items: center;
       justify-content: center;
       text-align: center;
-      min-height: 40px;
+      min-height: 80px;
       line-height: 1.1;
     }
 
@@ -1780,7 +1762,7 @@ Music Rainbow</div>
       </button>
     </div>
 
-    <div class="home-version-label">Versione 2.64</div>
+    <div class="home-version-label">Versione 2.88</div>
   </div>
 </div>
 
@@ -2690,6 +2672,27 @@ function getNoteColor(noteName) {
   return (NOTES.find(n => n.name === base) || {color:"#ffffff"}).color;
 }
 
+function colorNoteElementByName(noteObj) {
+  if (!noteObj || !noteObj.element) return;
+  const color = getNoteColor(noteObj.noteName || "");
+  const el = noteObj.element;
+  const head = el.querySelector(".note-head");
+  const parts = el.querySelectorAll(".note-stem, .note-flag");
+
+  if (head) {
+    head.style.stroke = color;
+    head.style.fill = color;
+  }
+  parts.forEach(p => {
+    p.style.stroke = color;
+  });
+
+  // Manteniamo la classe come marcatore logico
+  if (el.classList) {
+    el.classList.add("note-played");
+  }
+}
+
 
 function setStatusBar(el, levelLabel, notes, errors, threshold) {
   // Versione 2.1: le pillole Note/Errori sono state rimosse dall'area sotto lo spartito.
@@ -2874,7 +2877,7 @@ function incrementSessionMedal(type) {
   if (!s) return;
 
   const hadMedalsBefore =
-    ((s.bronze || 0) + (s.silver || 0) + (s.gold || 0)) > 0;
+    ((s.bronze || 0) + (s.silver || 0) + (s.gold || 0) + (s.green || 0)) > 0;
 
   if (type === "bronze") {
     s.bronze = (s.bronze || 0) + 1;
@@ -2882,10 +2885,12 @@ function incrementSessionMedal(type) {
     s.silver = (s.silver || 0) + 1;
   } else if (type === "gold") {
     s.gold = (s.gold || 0) + 1;
+  } else if (type === "green") {
+    s.green = (s.green || 0) + 1;
   }
 
   const hasMedalsNow =
-    ((s.bronze || 0) + (s.silver || 0) + (s.gold || 0)) > 0;
+    ((s.bronze || 0) + (s.silver || 0) + (s.gold || 0) + (s.green || 0)) > 0;
 
   if (!hadMedalsBefore && hasMedalsNow && typeof s.displayNumber !== "number") {
     lastChestNumber++;
@@ -4181,7 +4186,7 @@ let rainbowsL4Local = 0;
 function addMedalIconL4(index) {
   if (!medalsPanelL4) return;
   const medal = document.createElement("div");
-  medal.className = "medal-icon gold";
+  medal.className = "medal-icon green";
   medal.textContent = index;
   medalsPanelL4.appendChild(medal);
 }
@@ -4220,9 +4225,8 @@ function onPatternCompletedL4() {
   // Aggiungi una piccola medaglia nel pannello del livello 4
   addMedalIconL4(rainbowsL4Local);
 
-  // Aggiorna lo scrigno di sessione con una medaglia d'oro
-  totalGold++;
-  incrementSessionMedal("gold");
+  // Aggiorna lo scrigno di sessione con una medaglia del livello 4 (verde)
+  incrementSessionMedal("green");
   updateRainbowCountersGlobal();
   checkForNewToken();
 
@@ -4591,8 +4595,22 @@ function restartSamePatternL4() {
   lastHitTimeL4 = null;
   if (Array.isArray(currentNotesL4)) {
     currentNotesL4.forEach(n => {
-      if (n.element && n.element.classList) {
-        n.element.classList.remove("note-played");
+      if (n.element) {
+        const el = n.element;
+        const head = el.querySelector(".note-head");
+        const parts = el.querySelectorAll(".note-stem, .note-flag");
+
+        if (head) {
+          head.style.stroke = "";
+          head.style.fill = "";
+        }
+        parts.forEach(p => {
+          p.style.stroke = "";
+        });
+
+        if (el.classList) {
+          el.classList.remove("note-played");
+        }
       }
     });
   }
@@ -4633,9 +4651,8 @@ function handleAnswerL4(answerNoteName, answerOctave) {
 
     const noteDurationMs = (target.beats || 1) * getBeatIntervalMsL4();
     playTone(target.freq, noteDurationMs);
-    if (target.element && target.element.classList) {
-      target.element.classList.add("note-played");
-    }
+    // Colora la nota con il suo colore (do=rosso, re=arancione, ecc.)
+    colorNoteElementByName(target);
     lastHitTimeL4 = now;
     currentIndexL4++;
 
@@ -4978,6 +4995,7 @@ function showChestDetails(session) {
   const bronzeCount = session.bronze || 0;
   const silverCount = session.silver || 0;
   const goldCount   = session.gold   || 0;
+  const greenCount  = session.green  || 0;
 
   let htmlInner = "";
   const labelNumber = (typeof session.displayNumber === "number")
@@ -4987,7 +5005,7 @@ function showChestDetails(session) {
   htmlInner += `<div class="trophy-section">
     <h2>Scrigno ${labelNumber}</h2>
     <div class="trophy-medals-row">`;
-  const totalCoins = bronzeCount + silverCount + goldCount;
+  const totalCoins = bronzeCount + silverCount + goldCount + greenCount;
   if (totalCoins === 0) {
     htmlInner += `<div class="trophy-empty">Nessuna medaglia in questa sessione.</div>`;
   } else {
@@ -4999,6 +5017,9 @@ function showChestDetails(session) {
     }
     for (let i = 0; i < goldCount; i++) {
       htmlInner += `<div class="medal-icon gold">●</div>`;
+    }
+    for (let i = 0; i < greenCount; i++) {
+      htmlInner += `<div class="medal-icon green">●</div>`;
     }
   }
   
@@ -5034,11 +5055,11 @@ function showChestDetails(session) {
 function renderChestGrid() {
   if (!chestGridEl) return;
   chestGridEl.innerHTML = "";
-  const maxSlots = 64;
+  const maxSlots = 36;
 
   // prendi solo le sessioni che hanno almeno una medaglia
   const filled = sessions
-    .filter(s => ((s.bronze || 0) + (s.silver || 0) + (s.gold || 0)) > 0)
+    .filter(s => ((s.bronze || 0) + (s.silver || 0) + (s.gold || 0) + (s.green || 0)) > 0)
     .sort((a, b) => a.id - b.id);
 
   for (let i = 0; i < maxSlots; i++) {
@@ -5051,7 +5072,7 @@ function renderChestGrid() {
         ? session.displayNumber
         : session.id;
       btn.className = "chest-btn chest-btn-filled";
-      btn.innerHTML = `🧰<br/>Scrigno ${labelNumber}`;
+      btn.innerHTML = `<div style="position:relative; width:100%; display:flex; justify-content:center; align-items:center;">  <span style="font-size:4rem; line-height:1;">🧰</span>  <span style="position:absolute; font-size:2rem; font-weight:bold; color:#fff; transform: translateY(5px);">${labelNumber}</span></div>`;
       btn.addEventListener("click", () => {
         showChestDetails(session);
       });
