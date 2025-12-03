@@ -635,7 +635,20 @@
     /* ===========================
        POPUP SCRIGNI TROFEI
        =========================== */
-    .trophy-overlay {
+    
+.token-icon {
+  width: 42px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.token-svg {
+  width: 42px;
+  height: 42px;
+}
+
+.trophy-overlay {
       position: fixed;
       inset: 0;
       display: none;
@@ -2403,20 +2416,11 @@ Music Rainbow</div>
       </div>
 
 
-      <div id="trophyTokensSection" class="trophy-content">
-        <div class="trophy-section">
-          <h2>GETTONI PLAY</h2>
-          <div id="trophyTokensRow" class="trophy-medals-row"></div>
-        </div>
-        <div class="trophy-note">
-          I gettoni Play non vengono salvati: si azzerano quando chiudi o ricarichi l'app.
-        </div>
+      
+        
       </div>
 
-      <div class="trophy-note">
-        Ogni scrigno giallo raccoglie le medaglie di una sessione di gioco.<br/>
-        Tocca uno scrigno per vedere le medaglie di quella sessione.
-      </div>
+      
     </div>
   </div>
 </div>
@@ -2849,12 +2853,15 @@ function startNewSessionChest() {
     createdAt: Date.now(),
     bronze: 0,
     silver: 0,
-    gold: 0
+    gold: 0,
+    tokens: 0,
+    tokenMedalCount: 0
   };
   sessions.push(newSession);
   saveSessionsToStorage();
   currentSessionId = newSession.id;
 }
+
 
 function getCurrentSessionChest() {
   if (!currentSessionId) return null;
@@ -2909,15 +2916,56 @@ const rainbowCountEl     = document.getElementById("rainbowCount");
 const rainbowCountElL3   = document.getElementById("rainbowCountL3");
 const rainbowCountElPlay = document.getElementById("rainbowCountPlay");
 
+const TOKENS_KEY = "musicRainbowPlayTokens";
+
+
 // ===========================
-//   GETTONI PLAY (non persistenti)
+//   GETTONI PLAY (persistenti)
 // ===========================
 let mintedTokens = 0;      // gettoni guadagnati in questa esecuzione
 let spentTokens  = 0;      // gettoni usati
 let lastTotalMedalsForTokens = 0; // conteggio medaglie alla precedente verifica
 
+function loadTokensFromStorage() {
+  try {
+    const raw = localStorage.getItem(TOKENS_KEY);
+    if (!raw) return;
+    const data = JSON.parse(raw);
+    if (!data || typeof data !== "object") return;
+
+    if (typeof data.minted === "number") {
+      mintedTokens = data.minted;
+    }
+    if (typeof data.spent === "number") {
+      spentTokens = data.spent;
+    }
+    if (typeof data.lastTotal === "number") {
+      lastTotalMedalsForTokens = data.lastTotal;
+    }
+  } catch (e) {
+    console.warn("Errore nel leggere i gettoni Play:", e);
+  }
+}
+
+function saveTokensToStorage() {
+  try {
+    const data = {
+      minted: mintedTokens || 0,
+      spent: spentTokens || 0,
+      lastTotal: lastTotalMedalsForTokens || 0
+    };
+    localStorage.setItem(TOKENS_KEY, JSON.stringify(data));
+  } catch (e) {
+    console.warn("Errore nel salvare i gettoni Play:", e);
+  }
+}
+
+
 function getAvailableTokens() {
-  return Math.max(0, mintedTokens - spentTokens);
+  const s = getCurrentSessionChest();
+  if (!s) return 0;
+  const tokens = typeof s.tokens === "number" ? s.tokens : 0;
+  return Math.max(0, tokens);
 }
 
 function getTokenSvgMarkup(className) {
@@ -2940,16 +2988,23 @@ function showTokenWonPopup() {
   }, 2200);
 }
 
+
 function checkForNewToken() {
-  const total = getTotalMedalsCount();
-  const prevTotal = lastTotalMedalsForTokens;
-  lastTotalMedalsForTokens = total;
+  const s = getCurrentSessionChest();
+  if (!s) return;
+
+  const prevTotal = typeof s.tokenMedalCount === "number" ? s.tokenMedalCount : 0;
+  const currentTotal = (s.bronze || 0) + (s.silver || 0) + (s.gold || 0);
+  s.tokenMedalCount = currentTotal;
+
   const prevFloor = Math.floor(prevTotal / 5);
-  const newFloor  = Math.floor(total / 5);
+  const newFloor  = Math.floor(currentTotal / 5);
   if (newFloor > prevFloor) {
     const gained = newFloor - prevFloor;
-    mintedTokens += gained;
+    const currentTokens = typeof s.tokens === "number" ? s.tokens : 0;
+    s.tokens = currentTokens + gained;
     showTokenWonPopup();
+    saveSessionsToStorage();
     updateTokensUIAll();
   }
 }
@@ -3012,17 +3067,50 @@ function updateTokensUIAll() {
   renderTokensInTrophyPage();
 }
 
-function handleTokenClick() {
-  if (getAvailableTokens() <= 0) return;
+
+
+
+function spendTokenFromSession(sessionId) {
+  // Trova la sessione corrispondente allo scrigno
+  const s = sessions.find(sess => sess.id === sessionId);
+  if (!s) return;
+  const available = typeof s.tokens === "number" ? s.tokens : 0;
+  if (available <= 0) return;
+
+  // Se c'è già una sessione Play attiva, avvisa e non consumare nulla
   if (playSessionActive) {
     alert("Hai già una sessione Play attiva.");
     return;
   }
-  const ok = window.confirm("Vuoi usare il gettone?");
+
+  const ok = window.confirm("Vuoi usare il gettone Play di questo scrigno?");
   if (!ok) return;
-  spentTokens++;
-  updateTokensUIAll();
-  openPlayPageFromToken();
+
+  // Scala di uno i gettoni di quello scrigno
+  s.tokens = available - 1;
+  saveSessionsToStorage();
+
+  // Aggiorna tutta l'interfaccia che mostra i gettoni
+  if (typeof updateTokensUIAll === "function") {
+    updateTokensUIAll();
+  }
+
+  // Chiudi l'eventuale popup dello scrigno
+  if (typeof trophyOverlayEl !== "undefined" && trophyOverlayEl) {
+    trophyOverlayEl.classList.remove("active");
+  }
+
+  // Avvia la modalità Play usando il gettone
+  if (typeof openPlayPageFromToken === "function") {
+    openPlayPageFromToken();
+  }
+}
+
+
+function handleTokenClick() {
+  const s = getCurrentSessionChest();
+  if (!s) return;
+  spendTokenFromSession(s.id);
 }
 
 // ===========================
@@ -4913,9 +5001,33 @@ function showChestDetails(session) {
       htmlInner += `<div class="medal-icon gold">●</div>`;
     }
   }
+  
   htmlInner += `</div></div>`;
 
+  // Gettoni Play legati a questa sessione
+  const tokens = typeof session.tokens === "number" ? session.tokens : 0;
+  if (tokens > 0) {
+    htmlInner += `<div class="trophy-section">
+        <h2>Gettoni Play</h2>
+        <div class="trophy-medals-row">`;
+    for (let i = 0; i < tokens; i++) {
+      htmlInner += `<button type="button" class="token-icon-btn" data-session-id="${session.id}">` + getTokenSvgMarkup("token-svg") + `</button>`;
+    }
+    htmlInner += `</div></div>`;
+  }
+
   trophyOverlayContentEl.innerHTML = htmlInner;
+  if (trophyOverlayContentEl) {
+    const tokenBtns = trophyOverlayContentEl.querySelectorAll(".token-icon-btn");
+    tokenBtns.forEach(btn => {
+      btn.addEventListener("click", () => {
+        const sid = parseInt(btn.getAttribute("data-session-id"), 10);
+        if (!isNaN(sid)) {
+          spendTokenFromSession(sid);
+        }
+      });
+    });
+  }
   trophyOverlayEl.classList.add("active");
 }
 
@@ -4998,6 +5110,7 @@ document.addEventListener("DOMContentLoaded", function() {
   loadSessionsFromStorage();
   renderChestGrid();
   startNewSessionChest();
+  updateTokensUIAll();
 
   const homeScreen = document.getElementById("homeScreen");
   const btnLevel1  = document.getElementById("btnLevel1");
