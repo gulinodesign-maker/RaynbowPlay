@@ -1742,6 +1742,13 @@ body {
       }
     }
 
+/* Nasconde completamente la pillola degli errori in tutti i livelli */
+.error-pill,
+.stat-errors-normal,
+.stat-errors-high {
+  display: none !important;
+}
+
 </style>
 </head>
 
@@ -1803,7 +1810,7 @@ Music Rainbow</div>
       </button>
     </div>
 
-    <div class="home-version-label">Versione 3.39</div>
+    <div class="home-version-label">Versione 3.42</div>
   </div>
 </div>
 
@@ -2051,8 +2058,8 @@ Music Rainbow</div>
           <button class="menu-btn" id="menuBtnL1" aria-label="Menu">🏠</button>
           <button class="hint-btn" id="hintBtnL1" aria-label="Suggerimento">💡</button>
           <button class="trophy-btn" id="trophyBtnL1" aria-label="Trofei">🏆</button>
-          <button class="clef-btn clef-treble-btn active-clef" id="clefTrebleBtnL1" aria-label="Chiave di violino">&#119070;</button>
-          <button class="clef-btn clef-bass-btn" id="clefBassBtnL1" aria-label="Chiave di basso">&#119074;</button>
+          
+          
           <div class="stat-pill stat-errors-normal error-pill" id="errorPillL1">
             Errori: 0
           </div>
@@ -2063,6 +2070,8 @@ Music Rainbow</div>
           <span>R</span><span>a</span><span>i</span><span>n</span><span>b</span><span>o</span><span>w</span>
         </h1>
         <div class="top-right-controls">
+          <button class="clef-btn clef-treble-btn active-clef" id="clefTrebleBtnL1" aria-label="Chiave di violino">&#119070;</button>
+          <button class="clef-btn clef-bass-btn" id="clefBassBtnL1" aria-label="Chiave di basso">&#119074;</button>
           <label class="auto-toggle">
             <span class="auto-label">Auto</span>
             <input type="checkbox" id="autoColorToggleL1" class="auto-toggle-input">
@@ -2145,8 +2154,8 @@ Music Rainbow</div>
           <button class="reset-btn" id="resetBtn" aria-label="Reset">↻</button>
           <button class="menu-btn" id="menuBtnL2" aria-label="Menu">🏠</button>
           <button class="trophy-btn" id="trophyBtnL2" aria-label="Trofei">🏆</button>
-          <button class="clef-btn clef-treble-btn active-clef" id="clefTrebleBtnL2" aria-label="Chiave di violino">&#119070;</button>
-          <button class="clef-btn clef-bass-btn" id="clefBassBtnL2" aria-label="Chiave di basso">&#119074;</button>
+          
+          
           <div class="stat-pill stat-errors-normal error-pill" id="errorPillL2">
             Errori: 0
           </div>
@@ -2157,6 +2166,8 @@ Music Rainbow</div>
           <span>R</span><span>a</span><span>i</span><span>n</span><span>b</span><span>o</span><span>w</span>
         </h1>
         <div class="top-right-controls">
+          <button class="clef-btn clef-treble-btn active-clef" id="clefTrebleBtnL2" aria-label="Chiave di violino">&#119070;</button>
+          <button class="clef-btn clef-bass-btn" id="clefBassBtnL2" aria-label="Chiave di basso">&#119074;</button>
           <button class="rainbow-counter" id="resetAudioBtnL2" type="button">
             Attiva audio
             <span id="rainbowCount" class="rainbow-hidden-count">0</span>
@@ -2228,8 +2239,8 @@ Music Rainbow</div>
           <button class="reset-btn" id="resetBtnL3" aria-label="Reset">↻</button>
           <button class="menu-btn" id="menuBtnL3" aria-label="Menu">🏠</button>
           <button class="trophy-btn" id="trophyBtnL3" aria-label="Trofei">🏆</button>
-          <button class="clef-btn clef-treble-btn active-clef" id="clefTrebleBtnL3" aria-label="Chiave di violino">&#119070;</button>
-          <button class="clef-btn clef-bass-btn" id="clefBassBtnL3" aria-label="Chiave di basso">&#119074;</button>
+          
+          
           <div class="stat-pill stat-errors-normal error-pill" id="errorPillL3">
             Errori: 0
           </div>
@@ -2240,6 +2251,8 @@ Music Rainbow</div>
           <span>R</span><span>a</span><span>i</span><span>n</span><span>b</span><span>o</span><span>w</span>
         </h1>
         <div class="top-right-controls">
+          <button class="clef-btn clef-treble-btn active-clef" id="clefTrebleBtnL3" aria-label="Chiave di violino">&#119070;</button>
+          <button class="clef-btn clef-bass-btn" id="clefBassBtnL3" aria-label="Chiave di basso">&#119074;</button>
           <button class="rainbow-counter" id="resetAudioBtnL3" type="button">
             Attiva audio
             <span id="rainbowCountL3" class="rainbow-hidden-count">0</span>
@@ -2311,8 +2324,8 @@ Music Rainbow</div>
           <button class="reset-btn" id="resetBtnL4" aria-label="Reset">↻</button>
           <button class="menu-btn" id="menuBtnL4" aria-label="Menu">🏠</button>
           <button class="trophy-btn" id="trophyBtnL4" aria-label="Trofei">🏆</button>
-          <button class="clef-btn clef-treble-btn active-clef" id="clefTrebleBtnL4" aria-label="Chiave di violino">&#119070;</button>
-          <button class="clef-btn clef-bass-btn" id="clefBassBtnL4" aria-label="Chiave di basso">&#119074;</button>
+          
+          
           <div class="stat-pill stat-errors-normal error-pill" id="errorPillL4">
             Errori: 0
           </div>
@@ -2323,6 +2336,8 @@ Music Rainbow</div>
           <span>R</span><span>a</span><span>i</span><span>n</span><span>b</span><span>o</span><span>w</span>
         </h1>
         <div class="top-right-controls">
+          <button class="clef-btn clef-treble-btn active-clef" id="clefTrebleBtnL4" aria-label="Chiave di violino">&#119070;</button>
+          <button class="clef-btn clef-bass-btn" id="clefBassBtnL4" aria-label="Chiave di basso">&#119074;</button>
           <div class="metronome-pill" id="metronomePillL4">
             <input id="bpmInputL4" class="metronome-bpm-input" type="number" min="40" max="160" value="80" aria-label="Tempo in BPM">
             <div class="metronome-dot" id="metronomeDotL4"></div>
@@ -2405,8 +2420,8 @@ Music Rainbow</div>
           <button class="reset-btn" id="resetBtnPlay" aria-label="Reset">↻</button>
           <button class="menu-btn" id="menuBtnPlay" aria-label="Menu">🏠</button>
           <button class="trophy-btn" id="trophyBtnPlay" aria-label="Trofei">🏆</button>
-          <button class="clef-btn clef-treble-btn active-clef" id="clefTrebleBtnPlay" aria-label="Chiave di violino">&#119070;</button>
-          <button class="clef-btn clef-bass-btn" id="clefBassBtnPlay" aria-label="Chiave di basso">&#119074;</button>
+          
+          
         </div>
         <h1 class="rainbow-title">
           <span>M</span><span>u</span><span>s</span><span>i</span><span>c</span>
@@ -2414,6 +2429,8 @@ Music Rainbow</div>
           <span>R</span><span>a</span><span>i</span><span>n</span><span>b</span><span>o</span><span>w</span>
         </h1>
         <div class="top-right-controls">
+          <button class="clef-btn clef-treble-btn active-clef" id="clefTrebleBtnPlay" aria-label="Chiave di violino">&#119070;</button>
+          <button class="clef-btn clef-bass-btn" id="clefBassBtnPlay" aria-label="Chiave di basso">&#119074;</button>
           <button class="rainbow-counter" id="resetAudioBtnPlay" type="button">
             Attiva audio
             <span id="rainbowCountPlay" class="rainbow-hidden-count">0</span>
@@ -2838,7 +2855,7 @@ function colorNoteElementByName(noteObj) {
 
 
 function setStatusBar(el, levelLabel, notes, errors, threshold) {
-  // Versione 3.39: le pillole Note/Errori sono state rimosse dall'area sotto lo spartito.
+  // Versione 3.42: le pillole Note/Errori sono state rimosse dall'area sotto lo spartito.
   // Manteniamo la funzione per compatibilità ma non mostriamo più nulla qui.
   if (!el) return;
   el.innerHTML = "";
