@@ -19,7 +19,27 @@
 
   <style>
     * { box-sizing: border-box; }
-    body { margin:0; padding:15px; background:#46d1c6; height:100vh; }
+    
+body {
+  margin: 0;
+  padding: 15px;
+
+  /* LIQUID GLASS ACQUAMARINA */
+  background: linear-gradient(
+      135deg,
+      rgba(70, 209, 198, 0.45),
+      rgba(70, 209, 198, 0.30),
+      rgba(255, 255, 255, 0.25)
+  );
+  backdrop-filter: blur(18px) saturate(180%);
+  -webkit-backdrop-filter: blur(18px) saturate(180%);
+  box-shadow:
+    inset 0 0 40px rgba(255,255,255,0.35),
+    inset 0 0 80px rgba(255,255,255,0.20);
+
+  height: 100vh;
+}
+
 
     /* ===========================
        HOME: SELEZIONE LIVELLI
@@ -2013,7 +2033,7 @@ Music Rainbow</div>
       </button>
     </div>
 
-    <div class="home-version-label">Versione 3.89</div>
+    <div class="home-version-label">Versione 3.90</div>
   </div>
 </div>
 
@@ -3238,7 +3258,7 @@ function colorNoteElementByName(noteObj) {
 
 
 function setStatusBar(el, levelLabel, notes, errors, threshold) {
-  // Versione 3.89: le pillole Note/Errori sono state rimosse dall'area sotto lo spartito.
+  // Versione 3.90: le pillole Note/Errori sono state rimosse dall'area sotto lo spartito.
   // Manteniamo la funzione per compatibilità ma non mostriamo più nulla qui.
   if (!el) return;
   el.innerHTML = "";
