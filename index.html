@@ -1151,6 +1151,13 @@ body {
   animation: notePulse 0.35s ease-out;
   filter: drop-shadow(0 6px 14px rgba(15,23,42,0.55));
 }
+/* Override: nel Livello 4 le note NON devono lampeggiare quando vengono suonate */
+#level4Page .note-symbol.note-played {
+  animation: none !important;
+  filter: none !important;
+  transform: none !important;
+}
+
 
 #level1Page .note-symbol.note-played .note-head,
 #level2Page .note-symbol.note-played .note-head {
@@ -1209,7 +1216,23 @@ body {
       filter: none;
     }
 
-    .ledger-line {
+    
+    /* Neon pulsante per i pallini del Livello 1 */
+    #level1Page .note-circle.neon-pulse-l1 {
+      animation: neonPulseL1 0.9s ease-in-out infinite alternate;
+      transform-origin: center;
+    }
+
+    @keyframes neonPulseL1 {
+      0% {
+        transform: scale(1);
+      }
+      100% {
+        transform: scale(1.15);
+      }
+    }
+
+.ledger-line {
       stroke: #111827;
       stroke-width: 2;
     }
@@ -3385,6 +3408,36 @@ let homeIntroTimerElapsed = false;
 // Stato globale audio: spento di default
 let audioEnabled = false;
 
+// Stato globale per i jingle finali degli spartiti
+let isJinglePlaying = false;
+let activeJingleTimeouts = [];
+
+let nextScoreTimeoutL4 = null;
+
+
+function clearJingleTimeouts() {
+  if (!activeJingleTimeouts || !activeJingleTimeouts.length) return;
+  activeJingleTimeouts.forEach(id => clearTimeout(id));
+  activeJingleTimeouts = [];
+}
+
+function stopGlobalJinglePlayback() {
+  if (!isJinglePlaying) return;
+  isJinglePlaying = false;
+  clearJingleTimeouts();
+  if (typeof nextScoreTimeoutL4 !== "undefined" && nextScoreTimeoutL4) {
+    clearTimeout(nextScoreTimeoutL4);
+    nextScoreTimeoutL4 = null;
+  }
+  try {
+    // Ferma immediatamente anche l'audio attuale
+    resetAudioOnEnable();
+  } catch (e) {
+    // ignore
+  }
+}
+
+
 function getAudioCtx() {
   // Crea o ricrea il contesto se non esiste o è stato chiuso
   if (!audioCtx || audioCtx.state === "closed") {
@@ -3407,6 +3460,24 @@ function unlockAudioOnce() {
 window.addEventListener("touchstart", unlockAudioOnce, { once: true });
 window.addEventListener("mousedown", unlockAudioOnce, { once: true });
 window.addEventListener("pointerdown", unlockAudioOnce, { once: true });
+
+// Qualsiasi tap/click mentre sta suonando un jingle finale interrompe subito il jingle
+window.addEventListener("pointerdown", function(ev) {
+  if (!isJinglePlaying) return;
+  stopGlobalJinglePlayback();
+  // Se siamo nel flusso del livello 4, passa subito allo spartito successivo
+  try {
+    if (typeof rainbowOverlayL4 !== "undefined" && rainbowOverlayL4) {
+      rainbowOverlayL4.classList.remove("active");
+    }
+    if (typeof createNotesL4 === "function") {
+      createNotesL4();
+    }
+  } catch (e) {
+    // ignora eventuali errori
+  }
+});
+
 
 
 function hardResetAudio() {
@@ -4448,13 +4519,47 @@ function handleAnswerL1(clickedNoteObj) {
     return;
   }
 
+  
   if (selectedColorL1 === target.noteName) {
     const col = getNoteColor(target.noteName);
-    target.element.style.fill = col;
+
+    // Colora il pallino con il colore della nota
     target.element.classList.remove("target");
-    target.element.style.stroke = "#111827";
-    target.element.style.filter = "none";
-    target.element.style.strokeWidth = 2;
+    try {
+      if (target.element.setAttribute) {
+        target.element.setAttribute("fill", col);
+        target.element.setAttribute("stroke", col);
+      } else {
+        target.element.style.fill = col;
+        target.element.style.stroke = col;
+      }
+    } catch (e) {
+      target.element.style.fill = col;
+      target.element.style.stroke = col;
+    }
+
+    // Effetto flash + pulsazione semplice compatibile anche su iPad (senza CSS filter/transform)
+    const baseR = parseFloat(target.element.getAttribute("r") || "6");
+    const baseStroke = parseFloat(target.element.getAttribute("stroke-width") || "2.4");
+
+    const pulses = [
+      { r: baseR * 1.5, sw: baseStroke + 3 },
+      { r: baseR * 1.0, sw: baseStroke },
+      { r: baseR * 1.3, sw: baseStroke + 2 },
+      { r: baseR * 1.0, sw: baseStroke }
+    ];
+
+    let step = 0;
+    function applyPulse() {
+      if (!target.element) return;
+      if (step >= pulses.length) return;
+      const p = pulses[step++];
+      target.element.setAttribute("r", p.r);
+      target.element.setAttribute("stroke-width", p.sw);
+      setTimeout(applyPulse, 90);
+    }
+    applyPulse();
+
     target.solved = true;
     const noteDurationMs = (target.beats || 1) * getBeatIntervalMsL4();
     playTone(target.freq, noteDurationMs);
@@ -4462,6 +4567,7 @@ function handleAnswerL1(clickedNoteObj) {
     currentIndexL1++;
     setTimeout(setCurrentTargetL1, 250);
   } else {
+
     playError();
     consecutiveErrorsL1++;
     updateStatusL1();
@@ -5157,12 +5263,14 @@ function softResetLevel3() {
   createNotesL3();
 }
 
+
 function handleAnswerL3(answerNoteName, answerOctave) {
   if (currentIndexL3 >= currentNotesL3.length) return;
   const target = currentNotesL3[currentIndexL3];
 
   if (answerNoteName === target.noteName && answerOctave === target.octave) {
-    target.element.style.fill = "#111827";
+    const col = getNoteColor(target.noteName);
+    target.element.style.fill = col;
     target.element.classList.remove("target");
     target.element.style.stroke = "#111827";
     target.element.style.filter = "none";
@@ -5195,7 +5303,6 @@ function handleAnswerL3(answerNoteName, answerOctave) {
     }
   }
 }
-
 function addMedalIconL3(index) {
   const medal = document.createElement("div");
   medal.className = "medal-icon gold";
@@ -5276,25 +5383,44 @@ function addMedalIconL4(index) {
   medalsPanelL4.appendChild(medal);
 }
 
+
 function playVictoryPatternL4() {
-  if (!currentNotesL4.length) return;
+  if (!currentNotesL4.length) return 0;
   const beatMs = getBeatIntervalMsL4();
   let offset = 0;
 
+  // reset stato jingle e timeouts
+  clearJingleTimeouts();
+  isJinglePlaying = true;
+
   currentNotesL4.forEach((n) => {
     const noteDurationMs = (n.beats || 1) * beatMs;
-    setTimeout(() => {
+    const timeoutId = setTimeout(() => {
+      if (!isJinglePlaying) return;
       try {
         playTone(n.freq, noteDurationMs);
       } catch (e) {
         // ignora eventuali errori audio
       }
     }, offset);
+    activeJingleTimeouts.push(timeoutId);
     offset += noteDurationMs;
   });
 
-  // Restituisce la durata totale della melodia (in ms)
-  return currentNotesL4.reduce((acc, n) => acc + ((n.beats || 1) * beatMs), 0);
+  // durata totale della melodia (in ms)
+  const totalMs = currentNotesL4.reduce(
+    (acc, n) => acc + ((n.beats || 1) * beatMs),
+    0
+  );
+
+  // al termine naturale della melodia, pulisci lo stato
+  const endId = setTimeout(() => {
+    isJinglePlaying = false;
+    clearJingleTimeouts();
+  }, totalMs + 100);
+  activeJingleTimeouts.push(endId);
+
+  return totalMs;
 }
 
 
@@ -5336,11 +5462,18 @@ function onPatternCompletedL4() {
 
     // Dopo la melodia, genera un nuovo pentagramma/ritmo
     const totalDuration = melodyDuration + 600;
-    setTimeout(() => {
+
+    if (typeof nextScoreTimeoutL4 !== "undefined" && nextScoreTimeoutL4) {
+      clearTimeout(nextScoreTimeoutL4);
+      nextScoreTimeoutL4 = null;
+    }
+
+    nextScoreTimeoutL4 = setTimeout(() => {
       if (rainbowOverlayL4) {
         rainbowOverlayL4.classList.remove("active");
       }
       createNotesL4();
+      nextScoreTimeoutL4 = null;
     }, totalDuration);
   }, lastNoteDelay);
 }
