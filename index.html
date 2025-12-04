@@ -1874,7 +1874,7 @@ Music Rainbow</div>
       </button>
     </div>
 
-    <div class="home-version-label">Versione 3.61</div>
+    <div class="home-version-label">Versione 3.73</div>
   </div>
 </div>
 
@@ -2925,7 +2925,10 @@ function playTone(freq, durationMs) {
   const doPlay = () => {
     const o = ctx.createOscillator();
     const g = ctx.createGain();
-    o.frequency.value = freq;
+    const effectiveFreq = (typeof currentClef !== "undefined" && currentClef === CLEF_BASS)
+      ? freq * 0.5
+      : freq;
+    o.frequency.value = effectiveFreq;
     o.type = "sine";
     o.connect(g);
     g.connect(ctx.destination);
@@ -3096,7 +3099,7 @@ function colorNoteElementByName(noteObj) {
 
 
 function setStatusBar(el, levelLabel, notes, errors, threshold) {
-  // Versione 3.61: le pillole Note/Errori sono state rimosse dall'area sotto lo spartito.
+  // Versione 3.73: le pillole Note/Errori sono state rimosse dall'area sotto lo spartito.
   // Manteniamo la funzione per compatibilità ma non mostriamo più nulla qui.
   if (!el) return;
   el.innerHTML = "";
@@ -4118,8 +4121,18 @@ function renderPiano() {
       whiteKey.dataset.freq = baseFreq;
       whiteKey.textContent = label;
 
+      // Colore base per il tasto (tinta unita)
       const col = getNoteColor(noteName);
-      whiteKey.style.background = `linear-gradient(to bottom, #ffffff 0%, ${col} 75%, #e5e7eb 100%)`;
+
+      // Effetto "vetro acidato / liquid glass" per i tasti del livello 2:
+      // tinta unita leggermente traslucida, bordo chiaro e bagliore interno.
+      whiteKey.style.background = col;
+      whiteKey.style.border = "2px solid rgba(255,255,255,0.85)";
+      whiteKey.style.boxShadow =
+        "0 8px 16px rgba(15,23,42,0.45), inset 0 0 12px rgba(255,255,255,0.65)";
+      whiteKey.style.backdropFilter = "blur(10px)";
+      whiteKey.style.webkitBackdropFilter = "blur(10px)";
+      whiteKey.style.opacity = "0.96";
 
       whiteKey.onclick = () => {
         animateKeyPress(whiteKey);
