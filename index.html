@@ -1137,7 +1137,6 @@
   }
 
     .note-button {
-      border: none;
       border-radius: 999px;
       padding: 12px 18px;
       min-width: 80px;
@@ -1145,8 +1144,15 @@
       font-weight: 800;
       color: #ffffff;
       cursor: pointer;
-      box-shadow: 0 3px 8px rgba(15,23,42,0.4);
+      border: 2px solid rgba(255,255,255,0.85);
+      box-shadow:
+        0 8px 16px rgba(15,23,42,0.45),
+        inset 0 0 12px rgba(255,255,255,0.65);
       transition: transform 0.1s, box-shadow 0.1s, filter 0.1s;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      opacity: 0.96;
+      background-clip: padding-box;
     }
 
     .note-button:active {
@@ -1783,6 +1789,14 @@ body {
                 opacity 0.18s ease,
                 filter 0.18s ease;
   }
+  .learn-note circle {
+    stroke: rgba(255,255,255,0.85);
+    stroke-width: 2.4;
+    fill-opacity: 0.96;
+    filter: drop-shadow(0 6px 14px rgba(15,23,42,0.45));
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
 
   .learn-note circle.learn-highlight {
     stroke: #ffffff;
@@ -1874,7 +1888,7 @@ Music Rainbow</div>
       </button>
     </div>
 
-    <div class="home-version-label">Versione 3.73</div>
+    <div class="home-version-label">Versione 3.74</div>
   </div>
 </div>
 
@@ -3099,7 +3113,7 @@ function colorNoteElementByName(noteObj) {
 
 
 function setStatusBar(el, levelLabel, notes, errors, threshold) {
-  // Versione 3.73: le pillole Note/Errori sono state rimosse dall'area sotto lo spartito.
+  // Versione 3.74: le pillole Note/Errori sono state rimosse dall'area sotto lo spartito.
   // Manteniamo la funzione per compatibilità ma non mostriamo più nulla qui.
   if (!el) return;
   el.innerHTML = "";
