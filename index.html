@@ -1451,6 +1451,21 @@ body {
 
 
 
+
+/* Neon molto luminoso per i tasti DO–SI nella MAPPA (learnNotesPage) quando vengono premuti */
+#learnNotesPage .btn-do.note-pressed  { box-shadow: 0 0 22px #ef4444, 0 0 52px #ef4444; }
+#learnNotesPage .btn-re.note-pressed  { box-shadow: 0 0 22px #f97316, 0 0 52px #f97316; }
+#learnNotesPage .btn-mi.note-pressed  { box-shadow: 0 0 22px #eab308, 0 0 52px #eab308; }
+#learnNotesPage .btn-fa.note-pressed  { box-shadow: 0 0 22px #22c55e, 0 0 52px #22c55e; }
+#learnNotesPage .btn-sol.note-pressed { box-shadow: 0 0 22px #38bdf8, 0 0 52px #38bdf8; }
+#learnNotesPage .btn-la.note-pressed  { box-shadow: 0 0 22px #a855f7, 0 0 52px #a855f7; }
+#learnNotesPage .btn-si.note-pressed  { box-shadow: 0 0 22px #4f46e5, 0 0 52px #4f46e5; }
+
+#learnNotesPage .note-button.note-pressed {
+  transform: translateY(4px);
+}
+
+
 #level2Page .note-button.note-pressed {
   animation: innerPulseL1 0.25s alternate infinite;
       transform: translateY(4px);
@@ -2374,7 +2389,7 @@ Music Rainbow</div>
       </button>
     </div>
 
-    <div class="home-version-label">Versione 3.129</div>
+    <div class="home-version-label">Versione 3.130</div>
   </div>
 </div>
 
@@ -3599,7 +3614,7 @@ function colorNoteElementByName(noteObj) {
 
 
 function setStatusBar(el, levelLabel, notes, errors, threshold) {
-  // Versione 3.129: le pillole Note/Errori sono state rimosse dall'area sotto lo spartito.
+  // Versione 3.130: le pillole Note/Errori sono state rimosse dall'area sotto lo spartito.
   // Manteniamo la funzione per compatibilità ma non mostriamo più nulla qui.
   if (!el) return;
   el.innerHTML = "";
@@ -6452,6 +6467,15 @@ const resetAudioBtnLearn = document.getElementById("resetAudioBtnLearn");
   learnNoteButtons.forEach(btn => {
     btn.addEventListener("click", () => {
       const noteName = btn.getAttribute("data-note");
+
+      // Comportamento identico alla tastiera del Livello 1
+      animateNoteButtonPressL1(btn);
+      const freq = NOTE_FREQS[noteName] || 440;
+      playTone(freq);
+      setSelectedColorL1(noteName);
+      if (autoColorL1) handleAutoColorL1(noteName);
+
+      // Comportamento specifico della mappa: evidenzia la nota sul pentagramma
       highlightLearnNote(noteName);
     });
   });
