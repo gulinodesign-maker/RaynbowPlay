@@ -748,11 +748,14 @@ body {
       justify-content: center;
       align-items: center;
       z-index: 10500;
-      backdrop-filter: blur(4px);
+
+      /* SFONDO PRINCIPALE ACQUAMARINA + VETRO LIQUIDO */
+      backdrop-filter: blur(10px) saturate(170%);
+      -webkit-backdrop-filter: blur(10px) saturate(170%);
       background: radial-gradient(circle at center,
-        rgba(15,23,42,0.96),
-        rgba(59,130,246,0.88),
-        rgba(15,23,42,0.7));
+        rgba(70, 209, 198, 0.98),
+        rgba(34, 197, 151, 0.94),
+        rgba(15, 23, 42, 0.88));
     }
 
     .level-select-overlay.active {
@@ -794,21 +797,92 @@ body {
       font-size: 2rem;
       font-weight: 800;
       cursor: pointer;
+      color: #f9fafb;
 
-      /* Liquid Glass per i tasti di selezione livello */
-      border: 2px solid rgba(255,255,255,0.9);
-      background: rgba(250,204,21,0.92);
-      color: #78350f;
+      /* BASE: effetto vetro + neon */
+      border: 2px solid rgba(255,255,255,0.95);
       box-shadow:
-        0 10px 20px rgba(15,23,42,0.7),
-        inset 0 0 14px rgba(255,255,255,0.7);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      opacity: 0.97;
+        0 0 16px rgba(15,23,42,0.7),
+        0 0 32px rgba(15,23,42,0.7),
+        inset 0 0 14px rgba(255,255,255,0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      opacity: 0.99;
       background-clip: padding-box;
 
       transition: transform 0.12s, box-shadow 0.12s, filter 0.12s;
       min-height: 88px;
+
+      /* NEON pulsante sempre acceso */
+      animation: neonLevelPulse 1.6s ease-in-out infinite alternate;
+    }
+
+    /* Colori neon per ogni tasto livello */
+    .level-select-btn:nth-child(1) {
+      /* LIVELLO 1 - ROSSO */
+      background: radial-gradient(circle at 30% 20%, #fee2e2, #ef4444, #7f1d1d);
+      text-shadow:
+        0 0 6px rgba(254,202,202,1),
+        0 0 18px rgba(248,113,113,1),
+        0 0 30px rgba(248,113,113,0.9);
+      box-shadow:
+        0 0 18px rgba(248,113,113,0.95),
+        0 0 38px rgba(248,113,113,0.9),
+        inset 0 0 14px rgba(255,255,255,0.85);
+    }
+
+    .level-select-btn:nth-child(2) {
+      /* LIVELLO 2 - ARANCIONE */
+      background: radial-gradient(circle at 30% 20%, #ffedd5, #f97316, #7c2d12);
+      text-shadow:
+        0 0 6px rgba(254,215,170,1),
+        0 0 18px rgba(251,146,60,1),
+        0 0 30px rgba(249,115,22,0.9);
+      box-shadow:
+        0 0 18px rgba(251,146,60,0.95),
+        0 0 38px rgba(249,115,22,0.9),
+        inset 0 0 14px rgba(255,255,255,0.85);
+    }
+
+    .level-select-btn:nth-child(3) {
+      /* LIVELLO 3 - GIALLO */
+      background: radial-gradient(circle at 30% 20%, #fef9c3, #eab308, #92400e);
+      text-shadow:
+        0 0 6px rgba(254,240,138,1),
+        0 0 18px rgba(234,179,8,1),
+        0 0 30px rgba(234,179,8,0.9);
+      box-shadow:
+        0 0 18px rgba(234,179,8,0.95),
+        0 0 38px rgba(234,179,8,0.9),
+        inset 0 0 14px rgba(255,255,255,0.85);
+    }
+
+    .level-select-btn:nth-child(4) {
+      /* LIVELLO 4 - VERDE */
+      background: radial-gradient(circle at 30% 20%, #dcfce7, #22c55e, #14532d);
+      text-shadow:
+        0 0 6px rgba(190,242,205,1),
+        0 0 18px rgba(52,211,153,1),
+        0 0 30px rgba(16,185,129,0.9);
+      box-shadow:
+        0 0 18px rgba(52,211,153,0.95),
+        0 0 38px rgba(16,185,129,0.9),
+        inset 0 0 14px rgba(255,255,255,0.85);
+    }
+
+    @keyframes neonLevelPulse {
+      0% {
+        transform: translateY(0) scale(1);
+        filter: brightness(1);
+      }
+      50% {
+        transform: translateY(-2px) scale(1.03);
+        filter: brightness(1.1);
+      }
+      100% {
+        transform: translateY(0) scale(1);
+        filter: brightness(1.02);
+      }
     }
 
     .level-select-btn:hover {
@@ -2305,6 +2379,17 @@ body {
   }
 }
 
+
+/* GLOBAL APP BACKGROUND ACQUAMARINA */
+body {
+  background: radial-gradient(circle at center,
+    #88f7e2 0%,
+    #5cdccb 40%,
+    #36b5aa 75%,
+    #1c8f82 100%);
+  background-attachment: fixed;
+}
+
 </style>
 </head>
 
@@ -3411,7 +3496,11 @@ let audioEnabled = false;
 // Stato globale per i jingle finali degli spartiti
 let isJinglePlaying = false;
 let activeJingleTimeouts = [];
+let currentJingleLevel = null;
 
+let nextScoreTimeoutL1 = null;
+let nextScoreTimeoutL2 = null;
+let nextScoreTimeoutL3 = null;
 let nextScoreTimeoutL4 = null;
 
 
@@ -3425,10 +3514,26 @@ function stopGlobalJinglePlayback() {
   if (!isJinglePlaying) return;
   isJinglePlaying = false;
   clearJingleTimeouts();
+
+  if (typeof nextScoreTimeoutL1 !== "undefined" && nextScoreTimeoutL1) {
+    clearTimeout(nextScoreTimeoutL1);
+    nextScoreTimeoutL1 = null;
+  }
+  if (typeof nextScoreTimeoutL2 !== "undefined" && nextScoreTimeoutL2) {
+    clearTimeout(nextScoreTimeoutL2);
+    nextScoreTimeoutL2 = null;
+  }
+  if (typeof nextScoreTimeoutL3 !== "undefined" && nextScoreTimeoutL3) {
+    clearTimeout(nextScoreTimeoutL3);
+    nextScoreTimeoutL3 = null;
+  }
   if (typeof nextScoreTimeoutL4 !== "undefined" && nextScoreTimeoutL4) {
     clearTimeout(nextScoreTimeoutL4);
     nextScoreTimeoutL4 = null;
   }
+
+  currentJingleLevel = null;
+
   try {
     // Ferma immediatamente anche l'audio attuale
     resetAudioOnEnable();
@@ -3464,14 +3569,67 @@ window.addEventListener("pointerdown", unlockAudioOnce, { once: true });
 // Qualsiasi tap/click mentre sta suonando un jingle finale interrompe subito il jingle
 window.addEventListener("pointerdown", function(ev) {
   if (!isJinglePlaying) return;
+
+  // Salva il livello per sapere quale spartito avanzare
+  const level = typeof currentJingleLevel !== "undefined" ? currentJingleLevel : null;
+
   stopGlobalJinglePlayback();
-  // Se siamo nel flusso del livello 4, passa subito allo spartito successivo
+
   try {
-    if (typeof rainbowOverlayL4 !== "undefined" && rainbowOverlayL4) {
-      rainbowOverlayL4.classList.remove("active");
-    }
-    if (typeof createNotesL4 === "function") {
-      createNotesL4();
+    if (level === 1) {
+      // LIVELLO 1: chiudi eventuali overlay e passa allo spartito/step successivo
+      if (typeof finalOverlayL1 !== "undefined" && finalOverlayL1 && finalOverlayL1.classList.contains("active")) {
+        finalOverlayL1.classList.remove("active");
+        level1PageEl.style.display = "none";
+        level2PageEl.style.display = "flex";
+        level3PageEl.style.display = "none";
+        playPageEl.style.display  = "none";
+        lastGamePageId = "level2Page";
+        softResetLevel2();
+      } else {
+        if (typeof rainbowOverlayL1 !== "undefined" && rainbowOverlayL1) {
+          rainbowOverlayL1.classList.remove("active");
+        }
+        if (typeof createNotesL1 === "function") {
+          createNotesL1();
+        }
+      }
+    } else if (level === 2) {
+      // LIVELLO 2: chiudi overlay e avanza come se il jingle fosse terminato
+      if (typeof finalOverlayL2 !== "undefined" && finalOverlayL2 && finalOverlayL2.classList.contains("active")) {
+        finalOverlayL2.classList.remove("active");
+        level2PageEl.style.display = "none";
+        level3PageEl.style.display = "flex";
+        playPageEl.style.display  = "none";
+        lastGamePageId = "level3Page";
+        softResetLevel3();
+      } else {
+        if (typeof rainbowOverlay !== "undefined" && rainbowOverlay) {
+          rainbowOverlay.classList.remove("active");
+        }
+        if (typeof createNotes === "function") {
+          createNotes();
+        }
+      }
+    } else if (level === 3) {
+      // LIVELLO 3: chiudi overlay e rigenera lo spartito
+      if (typeof finalOverlayL3 !== "undefined" && finalOverlayL3 && finalOverlayL3.classList.contains("active")) {
+        finalOverlayL3.classList.remove("active");
+      }
+      if (typeof rainbowOverlayL3 !== "undefined" && rainbowOverlayL3) {
+        rainbowOverlayL3.classList.remove("active");
+      }
+      if (typeof createNotesL3 === "function") {
+        createNotesL3();
+      }
+    } else if (level === 4) {
+      // LIVELLO 4: chiudi overlay e passa subito allo spartito successivo
+      if (typeof rainbowOverlayL4 !== "undefined" && rainbowOverlayL4) {
+        rainbowOverlayL4.classList.remove("active");
+      }
+      if (typeof createNotesL4 === "function") {
+        createNotesL4();
+      }
     }
   } catch (e) {
     // ignora eventuali errori
@@ -4628,10 +4786,34 @@ function addMedalIconL1(index) {
 }
 
 function playVictoryMelodyL1() {
-  if (!currentNotesL1.length) return;
+  if (!currentNotesL1.length) return 0;
+
+  const step = MELODY_STEP_MS;
+
+  // prepara stato jingle per LIVELLO 1
+  clearJingleTimeouts();
+  isJinglePlaying = true;
+  currentJingleLevel = 1;
+
   currentNotesL1.forEach((n, idx) => {
-    setTimeout(() => playTone(n.freq), idx * MELODY_STEP_MS);
+    const delay = idx * step;
+    const timeoutId = setTimeout(() => {
+      if (!isJinglePlaying || currentJingleLevel !== 1) return;
+      playTone(n.freq);
+    }, delay);
+    activeJingleTimeouts.push(timeoutId);
   });
+
+  const totalMs = step * currentNotesL1.length;
+  const endId = setTimeout(() => {
+    if (currentJingleLevel === 1) {
+      isJinglePlaying = false;
+    }
+    clearJingleTimeouts();
+  }, totalMs + 120);
+  activeJingleTimeouts.push(endId);
+
+  return totalMs;
 }
 
 function showRainbowL1() {
@@ -4652,7 +4834,11 @@ function showRainbowL1() {
     setFinalOverlayTexts(1);
     finalOverlayL1.classList.add("active");
     playVictoryMelodyL1();
-    setTimeout(() => {
+    if (typeof nextScoreTimeoutL1 !== "undefined" && nextScoreTimeoutL1) {
+      clearTimeout(nextScoreTimeoutL1);
+      nextScoreTimeoutL1 = null;
+    }
+    nextScoreTimeoutL1 = setTimeout(() => {
       finalOverlayL1.classList.remove("active");
       level1PageEl.style.display = "none";
       level2PageEl.style.display = "flex";
@@ -4660,14 +4846,20 @@ function showRainbowL1() {
       playPageEl.style.display  = "none";
       lastGamePageId = "level2Page";
       softResetLevel2();
+      nextScoreTimeoutL1 = null;
     }, totalDuration);
   } else {
     setNormalOverlayTexts(1);
     rainbowOverlayL1.classList.add("active");
     playVictoryMelodyL1();
-    setTimeout(() => {
+    if (typeof nextScoreTimeoutL1 !== "undefined" && nextScoreTimeoutL1) {
+      clearTimeout(nextScoreTimeoutL1);
+      nextScoreTimeoutL1 = null;
+    }
+    nextScoreTimeoutL1 = setTimeout(() => {
       rainbowOverlayL1.classList.remove("active");
       createNotesL1();
+      nextScoreTimeoutL1 = null;
     }, totalDuration);
   }
 }
@@ -4734,10 +4926,34 @@ function updateStatus() {
 }
 
 function playVictoryMelody() {
-  if (!currentNotes.length) return;
+  if (!currentNotes.length) return 0;
+
+  const step = MELODY_STEP_MS;
+
+  // prepara stato jingle per LIVELLO 2
+  clearJingleTimeouts();
+  isJinglePlaying = true;
+  currentJingleLevel = 2;
+
   currentNotes.forEach((n, idx) => {
-    setTimeout(() => playTone(n.freq), idx * MELODY_STEP_MS);
+    const delay = idx * step;
+    const timeoutId = setTimeout(() => {
+      if (!isJinglePlaying || currentJingleLevel !== 2) return;
+      playTone(n.freq);
+    }, delay);
+    activeJingleTimeouts.push(timeoutId);
   });
+
+  const totalMs = step * currentNotes.length;
+  const endId = setTimeout(() => {
+    if (currentJingleLevel === 2) {
+      isJinglePlaying = false;
+    }
+    clearJingleTimeouts();
+  }, totalMs + 120);
+  activeJingleTimeouts.push(endId);
+
+  return totalMs;
 }
 
 
@@ -5031,21 +5247,31 @@ function showRainbow() {
     setFinalOverlayTexts(2);
     finalOverlayL2.classList.add("active");
     playVictoryMelody();
-    setTimeout(() => {
+    if (typeof nextScoreTimeoutL2 !== "undefined" && nextScoreTimeoutL2) {
+      clearTimeout(nextScoreTimeoutL2);
+      nextScoreTimeoutL2 = null;
+    }
+    nextScoreTimeoutL2 = setTimeout(() => {
       finalOverlayL2.classList.remove("active");
       level2PageEl.style.display = "none";
       level3PageEl.style.display = "flex";
       playPageEl.style.display  = "none";
       lastGamePageId = "level3Page";
       softResetLevel3();
+      nextScoreTimeoutL2 = null;
     }, totalDuration);
   } else {
     setNormalOverlayTexts(2);
     rainbowOverlay.classList.add("active");
     playVictoryMelody();
-    setTimeout(() => {
+    if (typeof nextScoreTimeoutL2 !== "undefined" && nextScoreTimeoutL2) {
+      clearTimeout(nextScoreTimeoutL2);
+      nextScoreTimeoutL2 = null;
+    }
+    nextScoreTimeoutL2 = setTimeout(() => {
       rainbowOverlay.classList.remove("active");
       createNotes();
+      nextScoreTimeoutL2 = null;
     }, totalDuration);
   }
 }
@@ -5092,10 +5318,34 @@ function updateStatusL3() {
 }
 
 function playVictoryMelodyL3() {
-  if (!currentNotesL3.length) return;
+  if (!currentNotesL3.length) return 0;
+
+  const step = MELODY_STEP_MS;
+
+  // prepara stato jingle per LIVELLO 3
+  clearJingleTimeouts();
+  isJinglePlaying = true;
+  currentJingleLevel = 3;
+
   currentNotesL3.forEach((n, idx) => {
-    setTimeout(() => playTone(n.freq), idx * MELODY_STEP_MS);
+    const delay = idx * step;
+    const timeoutId = setTimeout(() => {
+      if (!isJinglePlaying || currentJingleLevel !== 3) return;
+      playTone(n.freq);
+    }, delay);
+    activeJingleTimeouts.push(timeoutId);
   });
+
+  const totalMs = step * currentNotesL3.length;
+  const endId = setTimeout(() => {
+    if (currentJingleLevel === 3) {
+      isJinglePlaying = false;
+    }
+    clearJingleTimeouts();
+  }, totalMs + 120);
+  activeJingleTimeouts.push(endId);
+
+  return totalMs;
 }
 
 function renderPianoL3() {
@@ -5328,17 +5578,27 @@ function showRainbowL3() {
     setFinalOverlayTexts(3);
     finalOverlayL3.classList.add("active");
     playVictoryMelodyL3();
-    setTimeout(() => {
+    if (typeof nextScoreTimeoutL3 !== "undefined" && nextScoreTimeoutL3) {
+      clearTimeout(nextScoreTimeoutL3);
+      nextScoreTimeoutL3 = null;
+    }
+    nextScoreTimeoutL3 = setTimeout(() => {
       finalOverlayL3.classList.remove("active");
       createNotesL3();
+      nextScoreTimeoutL3 = null;
     }, totalDuration);
   } else {
     setNormalOverlayTexts(3);
     rainbowOverlayL3.classList.add("active");
     playVictoryMelodyL3();
-    setTimeout(() => {
+    if (typeof nextScoreTimeoutL3 !== "undefined" && nextScoreTimeoutL3) {
+      clearTimeout(nextScoreTimeoutL3);
+      nextScoreTimeoutL3 = null;
+    }
+    nextScoreTimeoutL3 = setTimeout(() => {
       rainbowOverlayL3.classList.remove("active");
       createNotesL3();
+      nextScoreTimeoutL3 = null;
     }, totalDuration);
   }
 }
