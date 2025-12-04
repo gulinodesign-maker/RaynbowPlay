@@ -2829,7 +2829,10 @@ const STAFF_CORE_POSITIONS_BASS = [
 ];
 
 // Per semplicità, le note di taglio in alto/basso restano le stesse in entrambe le chiavi
-const STAFF_LEDGER_LOW_BASS  = STAFF_LEDGER_LOW_TREBLE.slice();
+const STAFF_LEDGER_LOW_BASS  = [
+  { y:210, noteName:"fa", octave:1 },
+  { y:220, noteName:"mi", octave:1 }
+];
 const STAFF_LEDGER_HIGH_BASS = STAFF_LEDGER_HIGH_TREBLE.slice();
 
 // Questi sono i riferimenti effettivamente usati dal resto del codice.
