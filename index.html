@@ -105,16 +105,21 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 12px 14px;
-      border-radius: 24px;
-      cursor: pointer;
-      box-shadow: 0 3px 8px rgba(148,163,184,0.7);
-      width: 100%;
-      max-width: 160px;
-      font-size: 1.05rem;
+      font-size: 1.3rem;
       font-weight: 700;
-      transition: background 0.12s, transform 0.12s, box-shadow 0.12s, color 0.12s;
+      border-radius: 20px;
+      padding: 14px 22px;
+      cursor: pointer;
       user-select: none;
+
+      /* Liquid Glass */
+      border: 2px solid rgba(255,255,255,0.85);
+      box-shadow: 0 8px 16px rgba(15,23,42,0.45), inset 0 0 12px rgba(255,255,255,0.65);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      opacity: 0.96;
+      background-clip: padding-box;
+      transition: transform 0.12s, box-shadow 0.12s, color 0.12s;
     }
     
 
@@ -189,20 +194,19 @@
     }
 
     .home-level-btn {
-      border: none;
-      border-radius: 24px;
-      padding: 14px 20px;
-      font-size: 1.3rem;
-      font-weight: 700;
-      cursor: pointer;
-      box-shadow: 0 6px 14px rgba(15, 23, 42, 0.3);
-      transition: transform 0.12s, box-shadow 0.12s, filter 0.12s;
-      width: 100%;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-    }
+  border-radius: 24px;
+  padding: 14px 22px;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #ffffff;
+  cursor: pointer;
+  border: 2px solid rgba(255,255,255,0.85);
+  box-shadow: 0 8px 16px rgba(15,23,42,0.45), inset 0 0 12px rgba(255,255,255,0.65);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  opacity: 0.96;
+  background-clip: padding-box;
+}
 
     .home-level-btn:active {
       transform: translateY(1px);
@@ -282,16 +286,39 @@
 
     .app { margin: 20px; padding:0; width: calc(100% - 40px); height: calc(100% - 40px); background:white; border-radius:12px; position:relative; z-index:1; display:flex; flex-direction:column; }
 
-    .top-panel {
-      border-radius: 20px;
-      border: 2px solid #e0e3f0;
-      padding: 12px 18px 10px;
-      background: linear-gradient(to bottom, #f9fafb, #eef2ff);
-      margin-bottom: 12px;
     
+
+
+.top-panel {
+  border-radius: 22px;
+  padding: 12px 18px 10px;
+
+  /* LIQUID GLASS AZZURRO / BLU REALISTICO */
+  background: rgba(255, 255, 255, 0.15);
+  border: 2px solid rgba(255, 255, 255, 0.45);
+
+  backdrop-filter: blur(18px) saturate(180%);
+  -webkit-backdrop-filter: blur(18px) saturate(180%);
+
+  box-shadow:
+    0 12px 28px rgba(30, 58, 138, 0.45),
+    inset 0 0 16px rgba(255, 255, 255, 0.8),
+    inset 0 0 8px rgba(147, 197, 253, 0.8);
+
+  background-image: linear-gradient(
+    135deg,
+    rgba(191, 219, 254, 0.35),
+    rgba(59, 130, 246, 0.25),
+    rgba(255, 255, 255, 0.30)
+  );
+
+  background-clip: padding-box;
+
+  margin-bottom: 12px;
   margin-left: 20px;
   margin-right: 20px;
-  margin-top: 20px;}
+  margin-top: 20px;
+}
 
     .top-row {
       display: grid;
@@ -613,16 +640,25 @@
 
     .level-select-btn {
       border-radius: 24px;
-      border: none;
-      padding: 20px 12px;          /* dimensione circa raddoppiata */
-      font-size: 2rem;             /* testo più grande (numero ben visibile) */
+      padding: 20px 12px;
+      font-size: 2rem;
       font-weight: 800;
       cursor: pointer;
-      background: linear-gradient(to bottom, #facc15, #eab308);
+
+      /* Liquid Glass per i tasti di selezione livello */
+      border: 2px solid rgba(255,255,255,0.9);
+      background: rgba(250,204,21,0.92);
       color: #78350f;
-      box-shadow: 0 4px 10px rgba(15,23,42,0.6);
+      box-shadow:
+        0 10px 20px rgba(15,23,42,0.7),
+        inset 0 0 14px rgba(255,255,255,0.7);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      opacity: 0.97;
+      background-clip: padding-box;
+
       transition: transform 0.12s, box-shadow 0.12s, filter 0.12s;
-      min-height: 88px;            /* tasto più alto e "importante" */
+      min-height: 88px;
     }
 
     .level-select-btn:hover {
@@ -641,14 +677,22 @@
 
     .level-select-close {
       border-radius: 999px;
-      border: none;
       padding: 8px 18px;
       font-weight: 600;
       font-size: 0.95rem;
       cursor: pointer;
-      background: #0f172a;
+
+      /* Liquid Glass per il tasto Chiudi */
+      border: 2px solid rgba(255,255,255,0.85);
+      background: rgba(15,23,42,0.9);
       color: #e5e7eb;
-      box-shadow: 0 3px 8px rgba(15,23,42,0.8);
+      box-shadow:
+        0 8px 16px rgba(15,23,42,0.75),
+        inset 0 0 10px rgba(255,255,255,0.55);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      opacity: 0.97;
+      background-clip: padding-box;
     }
 
     .level-select-close:active {
@@ -905,9 +949,16 @@
 
     .note-circle {
       stroke: #111827;
-      stroke-width: 2;
+      stroke-width: 2.4;
       fill: white;
-      transition: 0.15s;
+      fill-opacity: 0.96;
+      filter: drop-shadow(0 6px 14px rgba(15,23,42,0.45));
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      transition: transform 0.18s ease,
+                  stroke-width 0.18s ease,
+                  opacity 0.18s ease,
+                  filter 0.18s ease;
       cursor: pointer;
     }
 
@@ -916,7 +967,23 @@
   transition: transform 0.15s ease-out;
 }
     .note-symbol.note-played {
-  /* niente scala: la nota resta esattamente nella sua posizione */
+  transform-origin: center;
+  animation: notePulse 0.35s ease-out;
+  filter: drop-shadow(0 6px 14px rgba(15,23,42,0.55));
+}
+
+#level1Page .note-symbol.note-played .note-head,
+#level2Page .note-symbol.note-played .note-head {
+  stroke: rgba(255,255,255,0.9);
+  stroke-width: 2.4;
+  fill-opacity: 0.96;
+}
+
+#level1Page .note-symbol.note-played .note-stem,
+#level2Page .note-symbol.note-played .note-stem,
+#level1Page .note-symbol.note-played .note-flag,
+#level2Page .note-symbol.note-played .note-flag {
+  stroke-width: 2.4;
 }
 
 
@@ -1045,6 +1112,12 @@
     }
 
     .white-key {
+  border: 2px solid rgba(255,255,255,0.85);
+  box-shadow: 0 8px 16px rgba(15,23,42,0.45), inset 0 0 12px rgba(255,255,255,0.65);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  opacity: 0.96;
+
       flex: 1;
       margin: 0 1px;
       border-radius: 0 0 12px 12px;
@@ -1070,6 +1143,12 @@
     }
 
     .black-key {
+  border: 2px solid rgba(255,255,255,0.6);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.55), inset 0 0 10px rgba(255,255,255,0.4);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  opacity: 0.9;
+
       position: absolute;
       top: 0;
       transform: translateX(-50%);
@@ -1137,23 +1216,26 @@
   }
 
     .note-button {
-      border-radius: 999px;
-      padding: 12px 18px;
-      min-width: 80px;
-      font-size: 1.1rem;
-      font-weight: 800;
-      color: #ffffff;
-      cursor: pointer;
-      border: 2px solid rgba(255,255,255,0.85);
-      box-shadow:
-        0 8px 16px rgba(15,23,42,0.45),
-        inset 0 0 12px rgba(255,255,255,0.65);
-      transition: transform 0.1s, box-shadow 0.1s, filter 0.1s;
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      opacity: 0.96;
-      background-clip: padding-box;
-    }
+  border-radius: 999px;
+  padding: 12px 18px;
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #ffffff;
+  cursor: pointer;
+
+  /* Liquid glass pill + larghezza uniforme */
+  border: 2px solid rgba(255,255,255,0.85);
+  box-shadow: 0 8px 16px rgba(15,23,42,0.45), inset 0 0 12px rgba(255,255,255,0.65);
+  transition: transform 0.1s, box-shadow 0.1s, filter 0.1s;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  opacity: 0.96;
+  background-clip: padding-box;
+
+  /* Tutti i tasti DO–SI stessa larghezza */
+  flex: 1 1 0;
+  text-align: center;
+}
 
     .note-button:active {
       transform: translateY(1px);
@@ -1648,13 +1730,39 @@ body {
 
 /* Ottimizzazioni per landscape "basso" (es. iPhone 16 Pro Max: 956×440) */
 @media (orientation: landscape) and (max-height: 480px) {
-  .top-panel {
-    padding: 8px 10px 6px;
-    margin-bottom: 4px;
   
+
+
+.top-panel {
+  border-radius: 22px;
+  padding: 12px 18px 10px;
+
+  /* LIQUID GLASS AZZURRO / BLU REALISTICO */
+  background: rgba(255, 255, 255, 0.15);
+  border: 2px solid rgba(255, 255, 255, 0.45);
+
+  backdrop-filter: blur(18px) saturate(180%);
+  -webkit-backdrop-filter: blur(18px) saturate(180%);
+
+  box-shadow:
+    0 12px 28px rgba(30, 58, 138, 0.45),
+    inset 0 0 16px rgba(255, 255, 255, 0.8),
+    inset 0 0 8px rgba(147, 197, 253, 0.8);
+
+  background-image: linear-gradient(
+    135deg,
+    rgba(191, 219, 254, 0.35),
+    rgba(59, 130, 246, 0.25),
+    rgba(255, 255, 255, 0.30)
+  );
+
+  background-clip: padding-box;
+
+  margin-bottom: 12px;
   margin-left: 20px;
   margin-right: 20px;
-  margin-top: 20px;}
+  margin-top: 20px;
+}
 
   .staff-container {
     padding: 8px;
@@ -1784,19 +1892,29 @@ body {
   .learn-si.learn-highlight  { filter: drop-shadow(0 0 8px #4f46e5); }
 
   .learn-note circle {
-    transition: transform 0.18s ease,
-                stroke-width 0.18s ease,
-                opacity 0.18s ease,
-                filter 0.18s ease;
-  }
+  stroke: #111827;          /* bordo nero */
+  stroke-width: 2.4;
+  fill-opacity: 0.96;
+  filter: drop-shadow(0 6px 14px rgba(15,23,42,0.45));
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transition: transform 0.18s ease,
+              stroke-width 0.18s ease,
+              opacity 0.18s ease,
+              filter 0.18s ease;
+}
   .learn-note circle {
-    stroke: rgba(255,255,255,0.85);
-    stroke-width: 2.4;
-    fill-opacity: 0.96;
-    filter: drop-shadow(0 6px 14px rgba(15,23,42,0.45));
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-  }
+  stroke: #111827;          /* bordo nero */
+  stroke-width: 2.4;
+  fill-opacity: 0.96;
+  filter: drop-shadow(0 6px 14px rgba(15,23,42,0.45));
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transition: transform 0.18s ease,
+              stroke-width 0.18s ease,
+              opacity 0.18s ease,
+              filter 0.18s ease;
+}
 
   .learn-note circle.learn-highlight {
     stroke: #ffffff;
@@ -1824,6 +1942,13 @@ body {
   box-shadow: none !important;
   margin: 0 !important;
 }
+
+@keyframes notePulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.15); }
+  100% { transform: scale(1); }
+}
+
 </style>
 </head>
 
@@ -1888,7 +2013,7 @@ Music Rainbow</div>
       </button>
     </div>
 
-    <div class="home-version-label">Versione 3.74</div>
+    <div class="home-version-label">Versione 3.89</div>
   </div>
 </div>
 
@@ -3113,7 +3238,7 @@ function colorNoteElementByName(noteObj) {
 
 
 function setStatusBar(el, levelLabel, notes, errors, threshold) {
-  // Versione 3.74: le pillole Note/Errori sono state rimosse dall'area sotto lo spartito.
+  // Versione 3.89: le pillole Note/Errori sono state rimosse dall'area sotto lo spartito.
   // Manteniamo la funzione per compatibilità ma non mostriamo più nulla qui.
   if (!el) return;
   el.innerHTML = "";
