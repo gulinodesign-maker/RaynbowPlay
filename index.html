@@ -817,12 +817,12 @@
       border-radius: 999px;
       background: #22c55e;
       opacity: 0.4;
-      transform: scale(0.9);
+      
       transition: transform 0.12s ease-out, opacity 0.12s ease-out;
     }
     .metronome-dot.active {
       opacity: 1;
-      transform: scale(1.25);
+      
     }
     .error-pill {
       margin-left: 6px;
@@ -974,9 +974,9 @@
       animation: pop-fade 0.6s ease-out forwards;
     }
     @keyframes pop-fade {
-      0%{opacity:0;transform:scale(0.5);}
-      40%{opacity:1;transform:scale(1.05);}
-      100%{opacity:0;transform:scale(1) translateY(-10px);}
+      0%{opacity:0;}
+      40%{opacity:1;}
+      100%{opacity:0; translateY(-10px);}
     }
 
     /* Barra di stato: solo Note / Errori */
@@ -1493,7 +1493,8 @@
     #resetAudioBtnL2,
     #resetAudioBtnL3,
     #resetAudioBtnL4,
-    #resetAudioBtnPlay {
+    #resetAudioBtnPlay,
+#resetAudioBtnLearn {
       position: relative;
       font-size: 0; /* nasconde il testo interno */
     }
@@ -1503,7 +1504,8 @@
     #resetAudioBtnL2::before,
     #resetAudioBtnL3::before,
     #resetAudioBtnL4::before,
-    #resetAudioBtnPlay::before {
+    #resetAudioBtnPlay,
+#resetAudioBtnLearn::before {
       content: "🔊";
       font-size: 1.3rem;
     }
@@ -1512,7 +1514,8 @@
     #resetAudioBtnL2 span,
     #resetAudioBtnL3 span,
     #resetAudioBtnL4 span,
-    #resetAudioBtnPlay span {
+    #resetAudioBtnPlay,
+#resetAudioBtnLearn span {
       display: none;
     }
 
@@ -1531,7 +1534,8 @@
     #resetAudioBtnL2,
     #resetAudioBtnL3,
     #resetAudioBtnL4,
-    #resetAudioBtnPlay {
+    #resetAudioBtnPlay,
+#resetAudioBtnLearn {
       font-size: 0.9rem;
     }
 
@@ -1540,7 +1544,8 @@
     #resetAudioBtnL2::before,
     #resetAudioBtnL3::before,
     #resetAudioBtnL4::before,
-    #resetAudioBtnPlay::before {
+    #resetAudioBtnPlay,
+#resetAudioBtnLearn::before {
       margin-right: 0.35rem;
     }
 
@@ -1564,7 +1569,8 @@
     #resetAudioBtnL2,
     #resetAudioBtnL3,
     #resetAudioBtnL4,
-    #resetAudioBtnPlay {
+    #resetAudioBtnPlay,
+#resetAudioBtnLearn {
       position: relative;
       font-size: 0; /* nasconde il testo interno */
     }
@@ -1573,7 +1579,8 @@
     #resetAudioBtnL2::before,
     #resetAudioBtnL3::before,
     #resetAudioBtnL4::before,
-    #resetAudioBtnPlay::before {
+    #resetAudioBtnPlay,
+#resetAudioBtnLearn::before {
       content: "🔊";
       font-size: 1.3rem;
     }
@@ -1749,6 +1756,60 @@ body {
   display: none !important;
 }
 
+
+  /* Colori dei pallini nella Mappa delle note (coerenti con i bottoni DO–SI) */
+  .learn-do  { fill:#ef4444; }
+  .learn-re  { fill:#f97316; }
+  .learn-mi  { fill:#eab308; }
+  .learn-fa  { fill:#22c55e; }
+  .learn-sol { fill:#38bdf8; }
+  .learn-la  { fill:#a855f7; }
+  .learn-si  { fill:#4f46e5; }
+
+
+  
+  
+  .learn-do.learn-highlight  { filter: drop-shadow(0 0 8px #ef4444); }
+  .learn-re.learn-highlight  { filter: drop-shadow(0 0 8px #f97316); }
+  .learn-mi.learn-highlight  { filter: drop-shadow(0 0 8px #eab308); }
+  .learn-fa.learn-highlight  { filter: drop-shadow(0 0 8px #22c55e); }
+  .learn-sol.learn-highlight { filter: drop-shadow(0 0 8px #38bdf8); }
+  .learn-la.learn-highlight  { filter: drop-shadow(0 0 8px #a855f7); }
+  .learn-si.learn-highlight  { filter: drop-shadow(0 0 8px #4f46e5); }
+
+  .learn-note circle {
+    transition: transform 0.18s ease,
+                stroke-width 0.18s ease,
+                opacity 0.18s ease,
+                filter 0.18s ease;
+  }
+
+  .learn-note circle.learn-highlight {
+    stroke: #ffffff;
+    stroke-width: 2.8;
+    
+    filter:
+      drop-shadow(0 0 3px  #ef4444)
+      drop-shadow(0 0 6px  #f97316)
+      drop-shadow(0 0 9px  #eab308)
+      drop-shadow(0 0 12px #22c55e)
+      drop-shadow(0 0 15px #38bdf8)
+      drop-shadow(0 0 18px #a855f7)
+      drop-shadow(0 0 21px #4f46e5);
+  }
+
+.learn-note circle.learn-highlight { transform-origin:center center; }
+
+#homeLearnNotesBtn { background: #4f46e5 !important; color:white !important; }
+
+/* Override for MAPPA: remove frame around pentagram */
+#learnNotesPage .staff-container {
+  border: none !important;
+  background: none !important;
+  padding: 0 !important;
+  box-shadow: none !important;
+  margin: 0 !important;
+}
 </style>
 </head>
 
@@ -1805,12 +1866,15 @@ Music Rainbow</div>
       <button id="homePlayBtn" class="home-level-btn home-level-play home-play-disabled" type="button" disabled>
         Modalità Play
       </button>
+      <button id="homeLearnNotesBtn" class="home-level-btn home-level-main" type="button">
+        Mappa delle note
+      </button>
       <button id="homeTrophyBtn" class="home-level-btn home-level-trophy" type="button">
         Scrigno dei trofei
       </button>
     </div>
 
-    <div class="home-version-label">Versione 3.43</div>
+    <div class="home-version-label">Versione 3.61</div>
   </div>
 </div>
 
@@ -2046,6 +2110,179 @@ Music Rainbow</div>
   </div>
 </div>
 
+
+<!-- ===========================
+     MAPPA DELLE NOTE
+     =========================== -->
+<div id="learnNotesPage" class="page-container" style="display:none">
+  <div class="app">
+    <div class="top-panel">
+      <div class="top-row">
+        <div class="top-left-controls">
+          <button class="menu-btn" id="menuBtnLearn" aria-label="Menu">🏠</button>
+          
+        </div>
+        <h1 class="rainbow-title">
+          <span>M</span><span>a</span><span>p</span><span>p</span><span>a</span>
+          <span>&nbsp;</span>
+          <span>d</span><span>e</span><span>l</span><span>l</span><span>e</span>
+          <span>&nbsp;</span>
+          <span>n</span><span>o</span><span>t</span><span>e</span>
+        </h1>
+        <div class="top-right-controls">
+          <button class="clef-btn clef-treble-btn active-clef" id="clefTrebleBtnLearn" aria-label="Chiave di violino">&#119070;</button>
+          <button class="clef-btn clef-bass-btn" id="clefBassBtnLearn" aria-label="Chiave di basso">&#119074;</button>
+          <button class="rainbow-counter" id="resetAudioBtnLearn" type="button">
+            Attiva audio
+          </button>
+</div>
+      </div>
+
+          </div>
+
+    <div class="staff-container">
+      <svg id="learnStaffSvg" class="staff" viewBox="0 0 820 260">
+        <defs>
+          <linearGradient id="rainbowStroke" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#ef4444"/>
+            <stop offset="16%" stop-color="#f97316"/>
+            <stop offset="32%" stop-color="#eab308"/>
+            <stop offset="48%" stop-color="#22c55e"/>
+            <stop offset="64%" stop-color="#38bdf8"/>
+            <stop offset="80%" stop-color="#a855f7"/>
+            <stop offset="100%" stop-color="#4f46e5"/>
+          </linearGradient>
+          <filter id="rainbowGlow" x="-80%" y="-80%" width="260%" height="260%">
+            <feGaussianBlur stdDeviation="3" result="blur"/>
+            <feMerge>
+              <feMergeNode in="blur"/>
+              <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+          </filter>
+        </defs>
+
+        <line x1="30" y1="120" x2="788" y2="120" stroke="#111827" stroke-width="2"/>
+        <line x1="30" y1="140" x2="788" y2="140" stroke="#111827" stroke-width="2"/>
+        <line x1="30" y1="160" x2="788" y2="160" stroke="#111827" stroke-width="2"/>
+        <line x1="30" y1="180" x2="788" y2="180" stroke="#111827" stroke-width="2"/>
+        <line x1="30" y1="200" x2="788" y2="200" stroke="#111827" stroke-width="2"/>
+        
+        <!-- Barra iniziale a sinistra -->
+        <line x1="30" y1="120" x2="30" y2="200" stroke="#111827" stroke-width="3"/>
+
+        <!-- Doppia barra finale a destra -->
+        <line x1="788" y1="120" x2="788" y2="200" stroke="#111827" stroke-width="2"/>
+        <line x1="795" y1="119" x2="795" y2="201" stroke="#111827" stroke-width="4"/>
+        <g class="clef-group"><text x="40" y="213" font-size="150" class="clef-symbol">&#119070;</text>
+        <circle class="bass-dot" cx="95" cy="170" r="4" fill="#111827" />
+        <circle class="bass-dot" cx="95" cy="190" r="4" fill="#111827" /></g>
+      
+        <!-- Riga aggiuntiva per il DO centrale -->
+        
+
+        <!-- Note per chiave di SOL: righi e spazi -->
+        <g id="learnNotesGroupTreble">
+          <!-- RIGHI (dal basso: MI - SOL - SI - RE - FA) -->
+          <g class="learn-note">
+            <circle cx="150" cy="200" r="10" class="note-circle learn-mi"></circle>
+            
+          </g>
+          <g class="learn-note">
+            <circle cx="210" cy="180" r="10" class="note-circle learn-sol"></circle>
+            
+          </g>
+          <g class="learn-note">
+            <circle cx="270" cy="160" r="10" class="note-circle learn-si"></circle>
+            
+          </g>
+          <g class="learn-note">
+            <circle cx="330" cy="140" r="10" class="note-circle learn-re"></circle>
+            
+          </g>
+          <g class="learn-note">
+            <circle cx="390" cy="120" r="10" class="note-circle learn-fa"></circle>
+            
+          </g>
+
+          <!-- SPAZI (dal basso: FA - LA - DO - MI) -->
+          <g class="learn-note">
+            <circle cx="470" cy="190" r="10" class="note-circle learn-fa"></circle>
+            
+          </g>
+          <g class="learn-note">
+            <circle cx="530" cy="170" r="10" class="note-circle learn-la"></circle>
+            
+          </g>
+          <g class="learn-note">
+            <circle cx="590" cy="150" r="10" class="note-circle learn-do"></circle>
+            
+          </g>
+          <g class="learn-note">
+            <circle cx="650" cy="130" r="10" class="note-circle learn-mi"></circle>
+            
+          </g>
+        </g>
+
+        <!-- Note per chiave di FA: righi e spazi -->
+        <g id="learnNotesGroupBass" style="display:none;">
+          <!-- RIGHI (dal basso: SOL - SI - RE - FA - LA) -->
+          <g class="learn-note">
+            <circle cx="150" cy="200" r="10" class="note-circle learn-sol"></circle>
+            
+          </g>
+          <g class="learn-note">
+            <circle cx="210" cy="180" r="10" class="note-circle learn-si"></circle>
+            
+          </g>
+          <g class="learn-note">
+            <circle cx="270" cy="160" r="10" class="note-circle learn-re"></circle>
+            
+          </g>
+          <g class="learn-note">
+            <circle cx="330" cy="140" r="10" class="note-circle learn-fa"></circle>
+            
+          </g>
+          <g class="learn-note">
+            <circle cx="390" cy="120" r="10" class="note-circle learn-la"></circle>
+            
+          </g>
+
+          <!-- SPAZI (dal basso: LA - DO - MI - SOL) -->
+          <g class="learn-note">
+            <circle cx="470" cy="190" r="10" class="note-circle learn-la"></circle>
+            
+          </g>
+          <g class="learn-note">
+            <circle cx="530" cy="170" r="10" class="note-circle learn-do"></circle>
+            
+          </g>
+          <g class="learn-note">
+            <circle cx="590" cy="150" r="10" class="note-circle learn-mi"></circle>
+            
+          </g>
+          <g class="learn-note">
+            <circle cx="650" cy="130" r="10" class="note-circle learn-sol"></circle>
+            
+          </g>
+        </g>
+
+      </svg>
+      <div class="status-bar" id="statusBarLearn"></div>
+    </div>
+
+    <div class="note-buttons-container">
+      <div class="note-buttons-wrapper">
+        <button class="note-button btn-do"  data-note="do">DO</button>
+        <button class="note-button btn-re"  data-note="re">RE</button>
+        <button class="note-button btn-mi"  data-note="mi">MI</button>
+        <button class="note-button btn-fa"  data-note="fa">FA</button>
+        <button class="note-button btn-sol" data-note="sol">SOL</button>
+        <button class="note-button btn-la"  data-note="la">LA</button>
+        <button class="note-button btn-si"  data-note="si">SI</button>
+      </div>
+    </div>
+  </div>
+</div>
 <!-- ===========================
      LIVELLO 1
      =========================== -->
@@ -2764,7 +3001,8 @@ function updateAudioButtonsUI() {
     document.getElementById("resetAudioBtnL2"),
     document.getElementById("resetAudioBtnL3"),
     document.getElementById("resetAudioBtnL4"),
-    document.getElementById("resetAudioBtnPlay")
+    document.getElementById("resetAudioBtnPlay"),
+    document.getElementById("resetAudioBtnLearn")
   ].filter(Boolean);
 
   // Aggiorna classi colore per tutti
@@ -2855,7 +3093,7 @@ function colorNoteElementByName(noteObj) {
 
 
 function setStatusBar(el, levelLabel, notes, errors, threshold) {
-  // Versione 3.43: le pillole Note/Errori sono state rimosse dall'area sotto lo spartito.
+  // Versione 3.61: le pillole Note/Errori sono state rimosse dall'area sotto lo spartito.
   // Manteniamo la funzione per compatibilità ma non mostriamo più nulla qui.
   if (!el) return;
   el.innerHTML = "";
@@ -3451,6 +3689,7 @@ let currentNotesL1 = [];
 let currentIndexL1 = 0;
 let rainbowsL1 = 0;
 let consecutiveErrorsL1 = 0;
+const MAX_CONSECUTIVE_ERRORS_L1 = 5;
 let selectedColorL1 = null;
 let autoColorL1 = false;
 
@@ -3642,12 +3881,10 @@ function handleAnswerL1(clickedNoteObj) {
     playError();
     consecutiveErrorsL1++;
     updateStatusL1();
-
-    if (consecutiveErrorsL1 >= 5) {
-      resetAllLevels();
-      return;
+    if (consecutiveErrorsL1 >= MAX_CONSECUTIVE_ERRORS_L1) {
+      // Dopo troppi errori consecutivi, il livello 1 ricomincia con un nuovo spartito
+      setTimeout(() => { softResetLevel1(); }, 650);
     }
-
     const x = document.createElementNS("http://www.w3.org/2000/svg","text");
     x.setAttribute("x", clickedNoteObj.cx + 12);
     x.setAttribute("y", clickedNoteObj.cy + 6);
@@ -3662,12 +3899,10 @@ function handleAnswerL1(clickedNoteObj) {
     playError();
     consecutiveErrorsL1++;
     updateStatusL1();
-
-    if (consecutiveErrorsL1 >= 5) {
-      resetAllLevels();
-      return;
+    if (consecutiveErrorsL1 >= MAX_CONSECUTIVE_ERRORS_L1) {
+      // Dopo troppi errori consecutivi, il livello 1 ricomincia con un nuovo spartito
+      setTimeout(() => { softResetLevel1(); }, 650);
     }
-
     const x = document.createElementNS("http://www.w3.org/2000/svg","text");
     x.setAttribute("x", target.cx + 12);
     x.setAttribute("y", target.cy + 6);
@@ -3695,12 +3930,10 @@ function handleAnswerL1(clickedNoteObj) {
     playError();
     consecutiveErrorsL1++;
     updateStatusL1();
-
-    if (consecutiveErrorsL1 >= 5) {
-      resetAllLevels();
-      return;
+    if (consecutiveErrorsL1 >= MAX_CONSECUTIVE_ERRORS_L1) {
+      // Dopo troppi errori consecutivi, il livello 1 ricomincia con un nuovo spartito
+      setTimeout(() => { softResetLevel1(); }, 650);
     }
-
     const x = document.createElementNS("http://www.w3.org/2000/svg","text");
     x.setAttribute("x", target.cx + 12);
     x.setAttribute("y", target.cy + 6);
@@ -3732,12 +3965,10 @@ function handleAutoColorL1(colorNoteName) {
     playError();
     consecutiveErrorsL1++;
     updateStatusL1();
-
-    if (consecutiveErrorsL1 >= 5) {
-      resetAllLevels();
-      return;
+    if (consecutiveErrorsL1 >= MAX_CONSECUTIVE_ERRORS_L1) {
+      // Dopo troppi errori consecutivi, il livello 1 ricomincia con un nuovo spartito
+      setTimeout(() => { softResetLevel1(); }, 650);
     }
-
     const x = document.createElementNS("http://www.w3.org/2000/svg","text");
     x.setAttribute("x", target.cx + 12);
     x.setAttribute("y", target.cy + 6);
@@ -3833,6 +4064,7 @@ let currentNotes = [];
 let currentIndex = 0;
 let rainbows = 0;
 let consecutiveErrors = 0;
+const MAX_CONSECUTIVE_ERRORS_L2 = 5;
 
 function getNoteCount() {
   const base = 10;
@@ -4052,6 +4284,11 @@ function handleAnswer(answerNoteName, answerOctave) {
     playError();
     consecutiveErrors++;
     updateStatus();
+    if (consecutiveErrors >= MAX_CONSECUTIVE_ERRORS_L2) {
+      // Dopo troppi errori consecutivi, il livello 2 ricomincia con un nuovo spartito
+      setTimeout(() => { softResetLevel2(); }, 650);
+      return;
+    }
     const x = document.createElementNS("http://www.w3.org/2000/svg","text");
     x.setAttribute("x", target.cx + 12);
     x.setAttribute("y", target.cy + 6);
@@ -4134,6 +4371,7 @@ let currentNotesL3 = [];
 let currentIndexL3 = 0;
 let rainbowsL3 = 0;
 let consecutiveErrorsL3 = 0;
+const MAX_CONSECUTIVE_ERRORS_L3 = 5;
 
 function getNoteCountL3() {
   const base = 10;
@@ -4341,6 +4579,11 @@ function handleAnswerL3(answerNoteName, answerOctave) {
     playError();
     consecutiveErrorsL3++;
     updateStatusL3();
+    if (consecutiveErrorsL3 >= MAX_CONSECUTIVE_ERRORS_L3) {
+      // Dopo troppi errori consecutivi, il livello 3 ricomincia con un nuovo spartito
+      setTimeout(() => { createNotesL3(); }, 650);
+      return;
+    }
     const x = document.createElementNS("http://www.w3.org/2000/svg","text");
     x.setAttribute("x", target.cx + 12);
     x.setAttribute("y", target.cy + 6);
@@ -5404,6 +5647,9 @@ document.addEventListener("DOMContentLoaded", function() {
   const menuBtnL3   = document.getElementById("menuBtnL3");
   const menuBtnL4   = document.getElementById("menuBtnL4");
   const menuBtnPlay = document.getElementById("menuBtnPlay");
+  const learnNotesPage = document.getElementById("learnNotesPage");
+  const menuBtnLearn = document.getElementById("menuBtnLearn");
+  const homeLearnNotesBtn = document.getElementById("homeLearnNotesBtn");
 
   const trophyBtnL1   = document.getElementById("trophyBtnL1");
   const trophyBtnL2   = document.getElementById("trophyBtnL2");
@@ -5425,7 +5671,22 @@ document.addEventListener("DOMContentLoaded", function() {
     });
   }
 
-  function regenerateNotesForCurrentPage() {
+  function updateLearnNotesView() {
+    const groupTreble = document.getElementById("learnNotesGroupTreble");
+    const groupBass   = document.getElementById("learnNotesGroupBass");
+    if (!groupTreble || !groupBass) return;
+
+    if (currentClef === CLEF_TREBLE) {
+      groupTreble.style.display = "";
+      groupBass.style.display = "none";
+    } else if (currentClef === CLEF_BASS) {
+      groupTreble.style.display = "none";
+      groupBass.style.display = "";
+    }
+  }
+
+
+function regenerateNotesForCurrentPage() {
     if (lastGamePageId === "level1Page") {
       if (typeof softResetLevel1 === "function") softResetLevel1();
     } else if (lastGamePageId === "level2Page") {
@@ -5444,6 +5705,7 @@ document.addEventListener("DOMContentLoaded", function() {
       setClef(CLEF_TREBLE);
       refreshClefButtons();
       regenerateNotesForCurrentPage();
+      updateLearnNotesView();
     });
   });
 
@@ -5452,12 +5714,14 @@ document.addEventListener("DOMContentLoaded", function() {
       setClef(CLEF_BASS);
       refreshClefButtons();
       regenerateNotesForCurrentPage();
+      updateLearnNotesView();
     });
   });
 
   // allinea UI e simboli alla chiave iniziale
   refreshClefButtons();
   updateStaffClefSymbols();
+  updateLearnNotesView();
 
 
   const hintBtnL1 = document.getElementById("hintBtnL1");
@@ -5472,6 +5736,7 @@ document.addEventListener("DOMContentLoaded", function() {
   const resetAudioBtnL3 = document.getElementById("resetAudioBtnL3");
   const resetAudioBtnL4 = document.getElementById("resetAudioBtnL4");
   const resetAudioBtnPlay = document.getElementById("resetAudioBtnPlay");
+const resetAudioBtnLearn = document.getElementById("resetAudioBtnLearn");
 
   function refreshGenderButtons() {
     genderOptionLabels.forEach(label => {
@@ -5507,6 +5772,7 @@ document.addEventListener("DOMContentLoaded", function() {
     level4Page.style.display = "none";
     playPage.style.display   = "none";
     trophyPageEl.style.display = "none";
+    if (learnNotesPage) learnNotesPage.style.display = "none";
   }
 
   function showHome() {
@@ -5531,6 +5797,14 @@ document.addEventListener("DOMContentLoaded", function() {
       if (pageId === "level2Page") softResetLevel2();
       if (pageId === "level3Page") softResetLevel3();
       if (pageId === "level4Page") softResetLevel4();
+    }
+  }
+
+  function showLearnNotes() {
+    hideAllPages();
+    homeScreen.style.display = "none";
+    if (learnNotesPage) {
+      learnNotesPage.style.display = "flex";
     }
   }
 
@@ -5575,17 +5849,43 @@ document.addEventListener("DOMContentLoaded", function() {
     });
   }
 
-  if (btnLevel1) btnLevel1.addEventListener("click", () => { showLevel("level1Page"); });
+  
+  // Mappa delle note: evidenziazione dei pallini sul pentagramma
+  const learnNoteButtons = (learnNotesPage)
+    ? learnNotesPage.querySelectorAll(".note-button")
+    : [];
+
+  function highlightLearnNote(noteName) {
+    if (!learnStaffSvg) return;
+    const allCircles = learnStaffSvg.querySelectorAll(".learn-note circle");
+    allCircles.forEach(c => c.classList.remove("learn-highlight"));
+    if (!noteName) return;
+    const targetClass = "learn-" + noteName;
+    const targets = learnStaffSvg.querySelectorAll(".learn-note circle." + targetClass);
+    targets.forEach(c => c.classList.add("learn-highlight"));
+  }
+
+  learnNoteButtons.forEach(btn => {
+    btn.addEventListener("click", () => {
+      const noteName = btn.getAttribute("data-note");
+      highlightLearnNote(noteName);
+    });
+  });
+
+if (btnLevel1) btnLevel1.addEventListener("click", () => { showLevel("level1Page"); });
   if (btnLevel2) btnLevel2.addEventListener("click", () => { showLevel("level2Page"); });
   if (btnLevel3) btnLevel3.addEventListener("click", () => { showLevel("level3Page"); });
   if (btnLevel4) btnLevel4.addEventListener("click", () => { showLevel("level4Page"); });
   if (homeTrophyBtn) homeTrophyBtn.addEventListener("click", showTrophyPage);
+
+  if (homeLearnNotesBtn) homeLearnNotesBtn.addEventListener("click", showLearnNotes);
 
   if (menuBtnL1)   menuBtnL1.addEventListener("click", showHome);
   if (menuBtnL2)   menuBtnL2.addEventListener("click", showHome);
   if (menuBtnL3)   menuBtnL3.addEventListener("click", showHome);
   if (menuBtnL4)   menuBtnL4.addEventListener("click", showHome);
   if (menuBtnPlay) menuBtnPlay.addEventListener("click", showHome);
+  if (menuBtnLearn) menuBtnLearn.addEventListener("click", showHome);
 
   if (trophyBtnL1)   trophyBtnL1.addEventListener("click", showTrophyPage);
   if (trophyBtnL2)   trophyBtnL2.addEventListener("click", showTrophyPage);
@@ -5642,6 +5942,9 @@ document.addEventListener("DOMContentLoaded", function() {
   if (resetAudioBtnL3) resetAudioBtnL3.addEventListener("click", toggleAudio);
   if (resetAudioBtnL4) resetAudioBtnL4.addEventListener("click", toggleAudio);
   if (resetAudioBtnPlay) resetAudioBtnPlay.addEventListener("click", toggleAudio);
+if (resetAudioBtnLearn) resetAudioBtnLearn.addEventListener("click", toggleAudio);
+  
+  
 
   // Imposta audio spento di default e aggiorna subito i pulsanti
   setAudioEnabled(false);
