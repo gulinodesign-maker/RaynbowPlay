@@ -2723,7 +2723,7 @@ Music Rainbow</div>
         <span class="home-test-toggle-slider"></span>
       </div>
     </label>
-    <div class="home-version-label">Versione 3.161</div>
+    <div class="home-version-label">Versione 3.164</div>
   </div>
 </div>
 
@@ -3158,11 +3158,7 @@ Music Rainbow</div>
         <div class="top-right-controls">
           <button class="clef-btn clef-treble-btn active-clef" id="clefTrebleBtnL1" aria-label="Chiave di violino">&#119070;</button>
           <button class="clef-btn clef-bass-btn" id="clefBassBtnL1" aria-label="Chiave di basso">&#119074;</button>
-          <label class="auto-toggle">
-            <span class="auto-label">Auto</span>
-            <input type="checkbox" id="autoColorToggleL1" class="auto-toggle-input">
-            <span class="auto-slider"></span>
-          </label>
+          
           <button class="rainbow-counter" id="resetAudioBtnL1" type="button">
             Attiva audio
             <span id="rainbowCountL1" class="rainbow-hidden-count">0</span>
@@ -4069,7 +4065,7 @@ function colorNoteElementByName(noteObj) {
 
 
 function setStatusBar(el, levelLabel, notes, errors, threshold) {
-  // Versione 3.161: le pillole Note/Errori sono state rimosse dall'area sotto lo spartito.
+  // Versione 3.164: le pillole Note/Errori sono state rimosse dall'area sotto lo spartito.
   // Manteniamo la funzione per compatibilità ma non mostriamo più nulla qui.
   if (!el) return;
   el.innerHTML = "";
@@ -4671,7 +4667,7 @@ let rainbowsL1 = 0;
 let consecutiveErrorsL1 = 0;
 const MAX_CONSECUTIVE_ERRORS_L1 = 5;
 let selectedColorL1 = null;
-let autoColorL1 = false;
+let autoColorL1 = true;
 
 /* Suggerimento L1 */
 let hintCircleL1 = null;
