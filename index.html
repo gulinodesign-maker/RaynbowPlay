@@ -64,7 +64,7 @@ body {
 
     .home-title {
       font-size: 2.6rem;
-      margin-bottom: 8px;
+      margin-bottom: 20px;
     }
 
     .home-subtitle {
@@ -78,14 +78,14 @@ body {
       border-radius: 20px;
       padding: 18px 18px 20px;
       box-shadow: 0 8px 18px rgba(15,23,42,0.25);
-      margin-bottom: 26px;
+      margin-bottom: 20px;
       text-align: left;
       border: 2px solid #bfdbfe;
     }
 
     .home-player-label {
       font-size: 1.1rem;
-      margin-bottom: 6px;
+      margin-bottom: 20px;
       font-weight: 700;
     }
 
@@ -95,7 +95,7 @@ body {
       border: 3px solid #fbbf24;
       padding: 10px 16px;
       font-size: 1.25rem;
-      margin-bottom: 10px;
+      margin-bottom: 20px;
       font-family: "Baloo 2", sans-serif;
       box-shadow: 0 4px 10px rgba(148,163,184,0.45);
       background: #fefce8;
@@ -212,6 +212,68 @@ body {
       text-align: center;
       opacity: 0.9;
     }
+    .home-test-switch {
+      margin-top: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      font-size: 0.9rem;
+      color: #0f172a;
+    }
+
+    .home-test-toggle-wrapper {
+      position: relative;
+      width: 46px;
+      height: 24px;
+    }
+
+    .home-test-toggle-input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .home-test-toggle-slider {
+      position: absolute;
+      cursor: pointer;
+      inset: 0;
+      background: rgba(15,23,42,0.3);
+      border-radius: 999px;
+      box-shadow: inset 0 0 4px rgba(15,23,42,0.6);
+      transition: background 0.18s ease, box-shadow 0.18s ease;
+    }
+
+    .home-test-toggle-slider::before {
+      content: "";
+      position: absolute;
+      height: 18px;
+      width: 18px;
+      left: 3px;
+      top: 3px;
+      border-radius: 999px;
+      background: #e5e7eb;
+      box-shadow: 0 2px 4px rgba(15,23,42,0.4);
+      transition: transform 0.18s ease, background 0.18s ease;
+    }
+
+    .home-test-toggle-input:checked + .home-test-toggle-slider {
+      background: linear-gradient(135deg, #22c55e, #0ea5e9);
+      box-shadow:
+        0 0 6px rgba(56,189,248,0.8),
+        0 0 14px rgba(34,197,94,0.75);
+    }
+
+    .home-test-toggle-input:checked + .home-test-toggle-slider::before {
+      transform: translateX(20px);
+      background: #f9fafb;
+    }
+
+    .home-test-label {
+      font-weight: 600;
+      letter-spacing: 0.03em;
+    }
+
 
     .home-level-btn {
       border-radius: 999px;
@@ -366,7 +428,7 @@ body {
 
   background-clip: padding-box;
 
-  margin-bottom: 8px;
+  margin-bottom: 20px;
   margin-left: 20px;
   margin-right: 20px;
   margin-top: 8px;
@@ -377,7 +439,7 @@ body {
       grid-template-columns: auto 1fr auto;
       align-items: center;
       gap: 4px;
-      margin-bottom: 0;
+      margin-bottom: 20px;
       margin-top: 0;
     }
 
@@ -806,13 +868,13 @@ body {
 
     .level-select-title {
       font-size: 1.4rem;
-      margin-bottom: 4px;
+      margin-bottom: 20px;
       color: #e5e7eb;
     }
 
     .level-select-subtitle {
       font-size: 0.95rem;
-      margin-bottom: 16px;
+      margin-bottom: 20px;
       color: #c7d2fe;
     }
 
@@ -820,7 +882,7 @@ body {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 10px;
-      margin-bottom: 16px;
+      margin-bottom: 20px;
     }
 
     
@@ -1054,13 +1116,13 @@ body {
     .token-big-svg {
       width: 80px;
       height: 80px;
-      margin-bottom: 10px;
+      margin-bottom: 20px;
       filter: drop-shadow(0 6px 12px rgba(146,64,14,0.6));
     }
     .token-message-main {
       font-size: 1.4rem;
       font-weight: 700;
-      margin-bottom: 4px;
+      margin-bottom: 20px;
       color: #92400e;
     }
     .token-message-sub {
@@ -1202,7 +1264,7 @@ body {
 .staff-container {
   padding: 8px;
   margin-top: 4px;
-  margin-bottom: 4px;
+  margin-bottom: 20px;
   margin-left: 20px;
   margin-right: 20px;
 
@@ -1769,7 +1831,7 @@ body {
     .rainbow-message-main {
       font-size:1.4rem;
       font-weight:700;
-      margin-bottom:4px;
+      margin-bottom: 20px;
     }
     .rainbow-message-sub {
       font-size:1rem;
@@ -1785,7 +1847,7 @@ body {
     /* Griglia scrigni (6x6) nella pagina trofei */
     .chest-grid-container {
       margin-top: 16px;
-      margin-bottom: 12px;
+      margin-bottom: 20px;
     }
 
     .chest-grid {
@@ -1838,7 +1900,7 @@ body {
 
     .clear-chests-btn {
       margin-top: 12px;
-      margin-bottom: 8px;
+      margin-bottom: 20px;
       padding: 10px 18px;
       border-radius: 999px;
       border: none;
@@ -1921,7 +1983,7 @@ body {
     }
 
     .trophy-section {
-      margin-bottom: 16px;
+      margin-bottom: 20px;
     }
 
     .trophy-section h2 {
@@ -2109,7 +2171,7 @@ body {
 
 #rotateOverlay h1 {
   font-size: 2rem;
-  margin-bottom: 8px;
+  margin-bottom: 20px;
 }
 
 #rotateOverlay p {
@@ -2156,7 +2218,7 @@ body {
 
   background-clip: padding-box;
 
-  margin-bottom: 8px;
+  margin-bottom: 20px;
   margin-left: 20px;
   margin-right: 20px;
   margin-top: 8px;
@@ -2166,7 +2228,7 @@ body {
 .staff-container {
   padding: 8px;
   margin-top: 4px;
-  margin-bottom: 4px;
+  margin-bottom: 20px;
   margin-left: 20px;
   margin-right: 20px;
 
@@ -2349,7 +2411,7 @@ body {
 .staff-container {
   padding: 8px;
   margin-top: 4px;
-  margin-bottom: 4px;
+  margin-bottom: 20px;
   margin-left: 20px;
   margin-right: 20px;
 
@@ -2521,15 +2583,21 @@ Music Rainbow</div>
         Modalità Play
       </button>
       <button id="homeLearnNotesBtn" class="home-level-btn home-level-main" type="button">
-        <span class="home-level-btn-icon">🎹</span>
-        <span class="home-level-btn-label">Mappa delle note</span>
+        Mappa delle note
       </button>
       <button id="homeTrophyBtn" class="home-level-btn home-level-trophy" type="button">
-        <span class="home-level-btn-icon">🏆</span>
-        <span class="home-level-btn-label">Scrigno dei trofei</span>
+        Scrigno dei trofei
       </button>
     </div>
 
+    
+    <label class="home-test-switch">
+      <span class="home-test-label">Test</span>
+      <div class="home-test-toggle-wrapper">
+        <input type="checkbox" id="homeTestToggle" class="home-test-toggle-input">
+        <span class="home-test-toggle-slider"></span>
+      </div>
+    </label>
     <div class="home-version-label">Versione 3.154</div>
   </div>
 </div>
@@ -4328,6 +4396,7 @@ function handleTokenClick() {
 // ===========================
 //   TIMER MODALITÀ PLAY (5 minuti)
 // ===========================
+let testPlayUnlocked = false;
 let playTimerSeconds = 0;
 let playTimerIntervalId = null;
 let playSessionActive = false;
@@ -4335,7 +4404,10 @@ let playSessionActive = false;
 function updateHomePlayButtonState() {
   if (!homePlayBtn) return;
   homePlayBtn.classList.remove("home-play-active", "home-play-disabled");
-  if (playSessionActive) {
+
+  const canPlay = playSessionActive || testPlayUnlocked;
+
+  if (canPlay) {
     homePlayBtn.disabled = false;
     homePlayBtn.classList.add("home-play-active");
   } else {
@@ -6663,6 +6735,15 @@ document.addEventListener("DOMContentLoaded", function() {
 
   homePlayBtn = document.getElementById("homePlayBtn");
 
+  const homeTestToggle = document.getElementById("homeTestToggle");
+  if (homeTestToggle) {
+    homeTestToggle.addEventListener("change", function() {
+      testPlayUnlocked = homeTestToggle.checked;
+      updateHomePlayButtonState();
+    });
+  }
+
+
   const levelSelectOverlay = document.getElementById("levelSelectOverlay");
   const btnOpenLevelSelect = document.getElementById("btnOpenLevelSelect");
   const btnLevelSelectClose = document.getElementById("btnLevelSelectClose");
@@ -6929,7 +7010,9 @@ if (btnLevel1) btnLevel1.addEventListener("click", () => { showLevel("level1Page
   if (trophyBtnPlay) trophyBtnPlay.addEventListener("click", showTrophyPage);
   if (homePlayBtn) {
     homePlayBtn.addEventListener("click", () => {
-      if (!playSessionActive) return;
+      // In modalità TEST, il toggle può sbloccare la pagina play anche senza sessione attiva
+      if (!playSessionActive && !testPlayUnlocked) return;
+
       homeScreen.style.display = "none";
       level1Page.style.display = "none";
       level2Page.style.display = "none";
