@@ -2598,7 +2598,7 @@ Music Rainbow</div>
         <span class="home-test-toggle-slider"></span>
       </div>
     </label>
-    <div class="home-version-label">Versione 3.155</div>
+    <div class="home-version-label">Versione 3.159</div>
   </div>
 </div>
 
@@ -7012,6 +7012,11 @@ if (btnLevel1) btnLevel1.addEventListener("click", () => { showLevel("level1Page
     homePlayBtn.addEventListener("click", () => {
       // In modalità TEST, il toggle può sbloccare la pagina play anche senza sessione attiva
       if (!playSessionActive && !testPlayUnlocked) return;
+
+      // Quando si entra in modalità Play, attiva automaticamente l'audio
+      if (!audioEnabled) {
+        setAudioEnabled(true);
+      }
 
       homeScreen.style.display = "none";
       level1Page.style.display = "none";
