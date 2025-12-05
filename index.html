@@ -5652,6 +5652,7 @@ function playVictoryPatternL4() {
   // reset stato jingle e timeouts
   clearJingleTimeouts();
   isJinglePlaying = true;
+  currentJingleLevel = 4;
 
   currentNotesL4.forEach((n) => {
     const noteDurationMs = (n.beats || 1) * beatMs;
