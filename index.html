@@ -155,7 +155,7 @@ body {
 
     .home-gender-option.active {
       background: #0ea5e9;
-      color: #ffffff;
+      color: #4b0082;
       box-shadow: 0 3px 10px rgba(14,165,233,0.7);
       transform: translateY(-1px);
     }
@@ -182,12 +182,12 @@ body {
 
     .home-gender-option.active:nth-child(1) {
       background: #1d4ed8;
-      color: #ffffff;
+      color: #4b0082;
     }
 
     .home-gender-option.active:nth-child(2) {
       background: #db2777;
-      color: #ffffff;
+      color: #4b0082;
     }
 
     
@@ -208,7 +208,7 @@ body {
     .home-version-label {
       margin-top: 12px;
       font-size: 0.85rem;
-      color: #ffffff;
+      color: #4b0082;
       text-align: center;
       opacity: 0.9;
     }
@@ -283,7 +283,7 @@ body {
     
     .home-audio-reset {
       background: #0ea5e9;
-      color: #ffffff;
+      color: #4b0082;
       max-width: 360px;
       width: 100%;
       margin: 0 auto 16px;
@@ -508,7 +508,7 @@ body {
       width: 14px;
       left: 2px;
       top: 2px;
-      background-color: #ffffff;
+      background-color: #4b0082;
       border-radius: 50%;
       transition: transform 0.15s;
       box-shadow: 0 1px 3px rgba(15,23,42,0.5);
@@ -534,7 +534,7 @@ body {
       font-size: 1.05rem;
       cursor: pointer;
       border: none;
-      color: #ffffff;
+      color: #4b0082;
       background: #7c3aed;
       box-shadow: 0 4px 10px rgba(80, 30, 140, 0.25);
       transition: 0.15s;
@@ -1010,7 +1010,7 @@ body {
   border-radius: 999px;
   border: none;
   background: #f97316;
-  color: #ffffff;
+  color: #4b0082;
   font-size: 1.8rem;
   font-weight: 700;
   cursor: pointer;
@@ -1084,7 +1084,7 @@ body {
 
       /* acquamarina originale + liquid glass */
       background: rgba(70, 209, 198, 0.96);
-      color: #ffffff;
+      color: #4b0082;
 
       box-shadow:
         0 6px 14px rgba(15,23,42,0.35),
@@ -1521,7 +1521,7 @@ body {
   padding: 12px 18px;
   font-size: 1.1rem;
   font-weight: 800;
-  color: #ffffff;
+  color: #4b0082;
   cursor: pointer;
 
   /* Liquid glass pill + larghezza uniforme */
@@ -2414,6 +2414,13 @@ body {
   background-attachment: fixed;
 }
 
+
+/* HOME BACKGROUND ACQUAMARINA */
+#homePage {
+  background: radial-gradient(circle at center,
+    #88f7e2 0%, #5cdccb 40%, #36b5aa 75%, #1c8f82 100%) !important;
+}
+
 </style>
 </head>
 
@@ -2523,7 +2530,7 @@ Music Rainbow</div>
       </button>
     </div>
 
-    <div class="home-version-label">Versione 3.130</div>
+    <div class="home-version-label">Versione 3.154</div>
   </div>
 </div>
 
@@ -3869,7 +3876,7 @@ function colorNoteElementByName(noteObj) {
 
 
 function setStatusBar(el, levelLabel, notes, errors, threshold) {
-  // Versione 3.130: le pillole Note/Errori sono state rimosse dall'area sotto lo spartito.
+  // Versione 3.154: le pillole Note/Errori sono state rimosse dall'area sotto lo spartito.
   // Manteniamo la funzione per compatibilità ma non mostriamo più nulla qui.
   if (!el) return;
   el.innerHTML = "";
