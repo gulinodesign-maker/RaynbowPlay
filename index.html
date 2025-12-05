@@ -2598,7 +2598,7 @@ Music Rainbow</div>
         <span class="home-test-toggle-slider"></span>
       </div>
     </label>
-    <div class="home-version-label">Versione 3.154</div>
+    <div class="home-version-label">Versione 3.158</div>
   </div>
 </div>
 
@@ -3944,7 +3944,7 @@ function colorNoteElementByName(noteObj) {
 
 
 function setStatusBar(el, levelLabel, notes, errors, threshold) {
-  // Versione 3.154: le pillole Note/Errori sono state rimosse dall'area sotto lo spartito.
+  // Versione 3.158: le pillole Note/Errori sono state rimosse dall'area sotto lo spartito.
   // Manteniamo la funzione per compatibilità ma non mostriamo più nulla qui.
   if (!el) return;
   el.innerHTML = "";
@@ -5791,42 +5791,24 @@ function playVictoryPatternL4() {
 
 
 function onPatternCompletedL4() {
-  // Il metronomo continua a suonare fino alla fine della nota finale
-
-  // Aggiorna il contatore locale e il numero nell'arco
   rainbowsL4Local++;
   if (rainbowWinIndexL4) {
     rainbowWinIndexL4.textContent = rainbowsL4Local;
   }
-
-  // Aggiungi una piccola medaglia nel pannello del livello 4
   addMedalIconL4(rainbowsL4Local);
-
-  // Aggiorna lo scrigno di sessione con una medaglia del livello 4 (verde)
   incrementSessionMedal("green");
   updateRainbowCountersGlobal();
   checkForNewToken();
 
-  // Mostra il popup della medaglia (stile oro)
-  setNormalOverlayTexts(4);
-  if (rainbowOverlayL4) {
-    rainbowOverlayL4.classList.add("active");
-  }
-
-  // Calcola quanto deve durare ancora l'ultima nota
   let lastNoteDelay = 0;
   if (currentNotesL4.length) {
     const last = currentNotesL4[currentNotesL4.length - 1];
     lastNoteDelay = (last.beats || 1) * getBeatIntervalMsL4();
   }
 
-  // Riproduci la melodia come ricompensa solo dopo la fine della nota finale
   setTimeout(() => {
-    // Ora possiamo fermare il metronomo del livello 4
     stopMetronomeL4();
     const melodyDuration = playVictoryPatternL4() || 0;
-
-    // Dopo la melodia, genera un nuovo pentagramma/ritmo
     const totalDuration = melodyDuration + 600;
 
     if (typeof nextScoreTimeoutL4 !== "undefined" && nextScoreTimeoutL4) {
@@ -5835,10 +5817,10 @@ function onPatternCompletedL4() {
     }
 
     nextScoreTimeoutL4 = setTimeout(() => {
+      setNormalOverlayTexts(4);
       if (rainbowOverlayL4) {
-        rainbowOverlayL4.classList.remove("active");
+        rainbowOverlayL4.classList.add("active");
       }
-      createNotesL4();
       nextScoreTimeoutL4 = null;
     }, totalDuration);
   }, lastNoteDelay);
