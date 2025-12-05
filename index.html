@@ -2494,6 +2494,121 @@ body {
 }
 </style>
 
+
+<style>
+/* Effetto titolo (neon + animazione) per i tasti DO–SI
+   nel Livello 1 e nella Mappa delle note */
+#level1Page .note-button,
+#learnNotesPage .note-button {
+  position: relative;
+}
+
+/* DO */
+#level1Page .btn-do,
+#learnNotesPage .btn-do {
+  text-shadow:
+    0 0 4px rgba(255,255,255,0.75),
+    0 0 10px #ef4444,
+    0 0 18px #ef4444;
+  box-shadow:
+    0 0 6px rgba(255,255,255,0.8),
+    0 0 16px #ef4444,
+    0 0 30px #ef4444,
+    inset 0 0 10px rgba(255,255,255,0.65);
+  animation: neonTitlePulse 1.8s ease-in-out infinite;
+}
+
+/* RE */
+#level1Page .btn-re,
+#learnNotesPage .btn-re {
+  text-shadow:
+    0 0 4px rgba(255,255,255,0.75),
+    0 0 10px #f97316,
+    0 0 18px #f97316;
+  box-shadow:
+    0 0 6px rgba(255,255,255,0.8),
+    0 0 16px #f97316,
+    0 0 30px #f97316,
+    inset 0 0 10px rgba(255,255,255,0.65);
+  animation: neonTitlePulse 1.8s ease-in-out infinite;
+}
+
+/* MI */
+#level1Page .btn-mi,
+#learnNotesPage .btn-mi {
+  text-shadow:
+    0 0 4px rgba(255,255,255,0.75),
+    0 0 10px #eab308,
+    0 0 18px #eab308;
+  box-shadow:
+    0 0 6px rgba(255,255,255,0.8),
+    0 0 16px #eab308,
+    0 0 30px #eab308,
+    inset 0 0 10px rgba(255,255,255,0.65);
+  animation: neonTitlePulse 1.8s ease-in-out infinite;
+}
+
+/* FA */
+#level1Page .btn-fa,
+#learnNotesPage .btn-fa {
+  text-shadow:
+    0 0 4px rgba(255,255,255,0.75),
+    0 0 10px #22c55e,
+    0 0 18px #22c55e;
+  box-shadow:
+    0 0 6px rgba(255,255,255,0.8),
+    0 0 16px #22c55e,
+    0 0 30px #22c55e,
+    inset 0 0 10px rgba(255,255,255,0.65);
+  animation: neonTitlePulse 1.8s ease-in-out infinite;
+}
+
+/* SOL */
+#level1Page .btn-sol,
+#learnNotesPage .btn-sol {
+  text-shadow:
+    0 0 4px rgba(255,255,255,0.75),
+    0 0 10px #38bdf8,
+    0 0 18px #38bdf8;
+  box-shadow:
+    0 0 6px rgba(255,255,255,0.8),
+    0 0 16px #38bdf8,
+    0 0 30px #38bdf8,
+    inset 0 0 10px rgba(255,255,255,0.65);
+  animation: neonTitlePulse 1.8s ease-in-out infinite;
+}
+
+/* LA */
+#level1Page .btn-la,
+#learnNotesPage .btn-la {
+  text-shadow:
+    0 0 4px rgba(255,255,255,0.75),
+    0 0 10px #a855f7,
+    0 0 18px #a855f7;
+  box-shadow:
+    0 0 6px rgba(255,255,255,0.8),
+    0 0 16px #a855f7,
+    0 0 30px #a855f7,
+    inset 0 0 10px rgba(255,255,255,0.65);
+  animation: neonTitlePulse 1.8s ease-in-out infinite;
+}
+
+/* SI */
+#level1Page .btn-si,
+#learnNotesPage .btn-si {
+  text-shadow:
+    0 0 4px rgba(255,255,255,0.75),
+    0 0 10px #4f46e5,
+    0 0 18px #4f46e5;
+  box-shadow:
+    0 0 6px rgba(255,255,255,0.8),
+    0 0 16px #4f46e5,
+    0 0 30px #4f46e5,
+    inset 0 0 10px rgba(255,255,255,0.65);
+  animation: neonTitlePulse 1.8s ease-in-out infinite;
+}
+</style>
+
 </head>
 
 <body>
@@ -2608,7 +2723,7 @@ Music Rainbow</div>
         <span class="home-test-toggle-slider"></span>
       </div>
     </label>
-    <div class="home-version-label">Versione 3.159</div>
+    <div class="home-version-label">Versione 3.161</div>
   </div>
 </div>
 
@@ -3954,7 +4069,7 @@ function colorNoteElementByName(noteObj) {
 
 
 function setStatusBar(el, levelLabel, notes, errors, threshold) {
-  // Versione 3.155: le pillole Note/Errori sono state rimosse dall'area sotto lo spartito.
+  // Versione 3.161: le pillole Note/Errori sono state rimosse dall'area sotto lo spartito.
   // Manteniamo la funzione per compatibilità ma non mostriamo più nulla qui.
   if (!el) return;
   el.innerHTML = "";
