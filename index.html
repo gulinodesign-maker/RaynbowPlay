@@ -2751,7 +2751,7 @@ body {
         <span class="home-test-toggle-slider"></span>
       </div>
     </label>
-    <div class="home-version-label">Versione 3.170</div>
+    <div class="home-version-label">Versione 3.200</div>
   </div>
 </div>
 
@@ -3223,8 +3223,8 @@ body {
         <line x1="783" y1="120" x2="783" y2="200" stroke="#111827" stroke-width="2"/>
         <line x1="790" y1="119" x2="790" y2="201" stroke="#111827" stroke-width="4"/>
         <g class="clef-group"><text x="40" y="213" font-size="150" class="clef-symbol">&#119070;</text>
-        <circle class="bass-dot" cx="95"" cy="170" r="4" fill="#111827" />
-        <circle class="bass-dot" cx="95"" cy="190" r="4" fill="#111827" /></g>
+        <circle class="bass-dot" cx="95" cy="170" r="4" fill="#111827" />
+        <circle class="bass-dot" cx="95" cy="190" r="4" fill="#111827" /></g>
       </svg>
       <div class="status-bar" id="statusBarL1">
     </div>
@@ -3310,8 +3310,8 @@ body {
         <line x1="783" y1="120" x2="783" y2="200" stroke="#111827" stroke-width="2"/>
         <line x1="790" y1="119" x2="790" y2="201" stroke="#111827" stroke-width="4"/>
         <g class="clef-group"><text x="40" y="213" font-size="150" class="clef-symbol">&#119070;</text>
-        <circle class="bass-dot" cx="95"" cy="170" r="4" fill="#111827" />
-        <circle class="bass-dot" cx="95"" cy="190" r="4" fill="#111827" /></g>
+        <circle class="bass-dot" cx="95" cy="170" r="4" fill="#111827" />
+        <circle class="bass-dot" cx="95" cy="190" r="4" fill="#111827" /></g>
       </svg>
       <div class="status-bar" id="statusBar">
     </div>
@@ -3391,8 +3391,8 @@ body {
         <line x1="783" y1="120" x2="783" y2="200" stroke="#111827" stroke-width="2"/>
         <line x1="790" y1="119" x2="790" y2="201" stroke="#111827" stroke-width="4"/>
         <g class="clef-group"><text x="40" y="213" font-size="150" class="clef-symbol">&#119070;</text>
-        <circle class="bass-dot" cx="95"" cy="170" r="4" fill="#111827" />
-        <circle class="bass-dot" cx="95"" cy="190" r="4" fill="#111827" /></g>
+        <circle class="bass-dot" cx="95" cy="170" r="4" fill="#111827" />
+        <circle class="bass-dot" cx="95" cy="190" r="4" fill="#111827" /></g>
       </svg>
       <div class="status-bar" id="statusBarL3">
     </div>
@@ -3476,8 +3476,8 @@ body {
         <line x1="783" y1="120" x2="783" y2="200" stroke="#111827" stroke-width="2"/>
         <line x1="790" y1="119" x2="790" y2="201" stroke="#111827" stroke-width="4"/>
         <g class="clef-group"><text x="40" y="213" font-size="150" class="clef-symbol">&#119070;</text>
-        <circle class="bass-dot" cx="95"" cy="170" r="4" fill="#111827" />
-        <circle class="bass-dot" cx="95"" cy="190" r="4" fill="#111827" /></g>
+        <circle class="bass-dot" cx="95" cy="170" r="4" fill="#111827" />
+        <circle class="bass-dot" cx="95" cy="190" r="4" fill="#111827" /></g>
 
       </svg>
       <div class="status-bar" id="statusBarL4">
@@ -3541,8 +3541,8 @@ body {
         <line x1="783" y1="120" x2="783" y2="200" stroke="#111827" stroke-width="2"/>
         <line x1="790" y1="119" x2="790" y2="201" stroke="#111827" stroke-width="4"/>
         <g class="clef-group"><text x="40" y="213" font-size="150" class="clef-symbol">&#119070;</text>
-        <circle class="bass-dot" cx="95"" cy="170" r="4" fill="#111827" />
-        <circle class="bass-dot" cx="95"" cy="190" r="4" fill="#111827" /></g>
+        <circle class="bass-dot" cx="95" cy="170" r="4" fill="#111827" />
+        <circle class="bass-dot" cx="95" cy="190" r="4" fill="#111827" /></g>
       </svg>
 
     <div class="keyboard-container">
@@ -4061,7 +4061,7 @@ function colorNoteElementByName(noteObj) {
 
 
 function setStatusBar(el, levelLabel, notes, errors, threshold) {
-  // Versione 3.170: le pillole Note/Errori sono state rimosse dall'area sotto lo spartito.
+  // Versione 3.200: le pillole Note/Errori sono state rimosse dall'area sotto lo spartito.
   // Manteniamo la funzione per compatibilità ma non mostriamo più nulla qui.
   if (!el) return;
   el.innerHTML = "";
@@ -7201,10 +7201,10 @@ if (resetAudioBtnLearn) resetAudioBtnLearn.addEventListener("click", toggleAudio
 
 <script>
   if ("serviceWorker" in navigator) {
-    window.addEventListener("load", function () {
+    window.addEventListener("load", () => {
       navigator.serviceWorker
         .register("./service-worker.js")
-        .catch(function (err) {
+        .catch(err => {
           console.log("Service worker registration failed:", err);
         });
     });
@@ -7214,11 +7214,11 @@ if (resetAudioBtnLearn) resetAudioBtnLearn.addEventListener("click", toggleAudio
 
 <script>
 // Fix 100vh su Safari / iOS usando una variabile CSS --vh
-(function () {
-  function updateViewportVH() {
-    var vh = window.innerHeight * 0.01;
-    document.documentElement.style.setProperty("--vh", vh + "px");
-  }
+(() => {
+  const updateViewportVH = () => {
+    const vh = window.innerHeight * 0.01;
+    document.documentElement.style.setProperty("--vh", `${vh}px`);
+  };
 
   window.addEventListener("resize", updateViewportVH);
   window.addEventListener("orientationchange", updateViewportVH);
