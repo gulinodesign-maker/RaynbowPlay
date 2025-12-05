@@ -214,19 +214,51 @@ body {
     }
 
     .home-level-btn {
-  border-radius: 24px;
-  padding: 14px 22px;
-  font-size: 1.2rem;
-  font-weight: 700;
-  color: #ffffff;
-  cursor: pointer;
-  border: 2px solid rgba(255,255,255,0.85);
-  box-shadow: 0 8px 16px rgba(15,23,42,0.45), inset 0 0 12px rgba(255,255,255,0.65);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  opacity: 0.96;
-  background-clip: padding-box;
-}
+      border-radius: 999px;
+      padding: 14px 22px;
+      font-size: 1.25rem;
+      font-weight: 800;
+      cursor: pointer;
+
+      /* BASE: pill vetrosa neutra */
+      color: #f9fafb;
+      border: 2px solid rgba(255,255,255,0.9);
+      background: rgba(15,23,42,0.24);
+      box-shadow:
+        0 10px 20px rgba(15,23,42,0.55),
+        inset 0 0 14px rgba(255,255,255,0.55);
+      backdrop-filter: blur(16px) saturate(185%);
+      -webkit-backdrop-filter: blur(16px) saturate(185%);
+      opacity: 0.99;
+      background-clip: padding-box;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+
+      transition: transform 0.12s, box-shadow 0.12s, filter 0.12s;
+    }
+
+    .home-level-btn:active {
+      transform: translateY(1px) scale(0.99);
+      box-shadow: 0 4px 10px rgba(15, 23, 42, 0.5);
+    }
+
+    .home-level-btn:hover {
+      filter: brightness(1.06);
+    }
+
+    .home-level-btn-icon {
+      font-size: 1.4rem;
+      filter: drop-shadow(0 0 8px rgba(255,255,255,0.7));
+    }
+
+    .home-level-btn-label {
+      flex: 1;
+      text-align: left;
+      letter-spacing: 0.03em;
+    }
 
     .home-level-btn:active {
       transform: translateY(1px);
@@ -791,90 +823,82 @@ body {
       margin-bottom: 16px;
     }
 
-    .level-select-btn {
-      border-radius: 24px;
-      padding: 20px 12px;
-      font-size: 2rem;
-      font-weight: 800;
-      cursor: pointer;
-      color: #f9fafb;
+    
+.level-select-btn {
+  border-radius: 999px;
+  padding: 20px 12px;
+  font-size: 2rem;
+  font-weight: 800;
+  cursor: pointer;
 
-      /* BASE: effetto vetro + neon */
-      border: 2px solid rgba(255,255,255,0.95);
-      box-shadow:
-        0 0 16px rgba(15,23,42,0.7),
-        0 0 32px rgba(15,23,42,0.7),
-        inset 0 0 14px rgba(255,255,255,0.85);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      opacity: 0.99;
-      background-clip: padding-box;
+  /* Liquid Glass style like home */
+  color: #f9fafb;
+  border: 2px solid rgba(255,255,255,0.9);
+  background: rgba(15,23,42,0.24);
+  box-shadow:
+    0 10px 20px rgba(15,23,42,0.55),
+    inset 0 0 14px rgba(255,255,255,0.55);
+  backdrop-filter: blur(16px) saturate(185%);
+  -webkit-backdrop-filter: blur(16px) saturate(185%);
+  opacity: 0.99;
+  background-clip: padding-box;
 
-      transition: transform 0.12s, box-shadow 0.12s, filter 0.12s;
-      min-height: 88px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
 
-      /* NEON pulsante sempre acceso */
-      animation: neonLevelPulse 1.6s ease-in-out infinite alternate;
-    }
+  transition: transform 0.12s, box-shadow 0.12s, filter 0.12s;
+}
+/* Colored Liquid Glass buttons for level select */
+.level-select-btn:nth-child(1) {
+  background: rgba(239,68,68,0.35);
+  border-color: rgba(239,68,68,0.9);
+  box-shadow:
+    0 0 16px rgba(239,68,68,0.9),
+    0 0 32px rgba(239,68,68,0.9),
+    inset 0 0 10px rgba(255,255,255,0.4);
+}
+
+.level-select-btn:nth-child(2) {
+  background: rgba(249,115,22,0.35);
+  border-color: rgba(249,115,22,0.9);
+  box-shadow:
+    0 0 16px rgba(249,115,22,0.9),
+    0 0 32px rgba(249,115,22,0.9),
+    inset 0 0 10px rgba(255,255,255,0.4);
+}
+
+.level-select-btn:nth-child(3) {
+  background: rgba(234,179,8,0.35);
+  border-color: rgba(234,179,8,0.9);
+  box-shadow:
+    0 0 16px rgba(234,179,8,0.9),
+    0 0 32px rgba(234,179,8,0.9),
+    inset 0 0 10px rgba(255,255,255,0.4);
+}
+
+.level-select-btn:nth-child(4) {
+  background: rgba(34,197,94,0.35);
+  border-color: rgba(34,197,94,0.9);
+  box-shadow:
+    0 0 16px rgba(34,197,94,0.9),
+    0 0 32px rgba(34,197,94,0.9),
+    inset 0 0 10px rgba(255,255,255,0.4);
+}
+
+
 
     /* Colori neon per ogni tasto livello */
-    .level-select-btn:nth-child(1) {
-      /* LIVELLO 1 - ROSSO */
-      background: radial-gradient(circle at 30% 20%, #fee2e2, #ef4444, #7f1d1d);
-      text-shadow:
-        0 0 6px rgba(254,202,202,1),
-        0 0 18px rgba(248,113,113,1),
-        0 0 30px rgba(248,113,113,0.9);
-      box-shadow:
-        0 0 18px rgba(248,113,113,0.95),
-        0 0 38px rgba(248,113,113,0.9),
-        inset 0 0 14px rgba(255,255,255,0.85);
-    }
+    
 
-    .level-select-btn:nth-child(2) {
-      /* LIVELLO 2 - ARANCIONE */
-      background: radial-gradient(circle at 30% 20%, #ffedd5, #f97316, #7c2d12);
-      text-shadow:
-        0 0 6px rgba(254,215,170,1),
-        0 0 18px rgba(251,146,60,1),
-        0 0 30px rgba(249,115,22,0.9);
-      box-shadow:
-        0 0 18px rgba(251,146,60,0.95),
-        0 0 38px rgba(249,115,22,0.9),
-        inset 0 0 14px rgba(255,255,255,0.85);
-    }
+    
 
-    .level-select-btn:nth-child(3) {
-      /* LIVELLO 3 - GIALLO */
-      background: radial-gradient(circle at 30% 20%, #fef9c3, #eab308, #92400e);
-      text-shadow:
-        0 0 6px rgba(254,240,138,1),
-        0 0 18px rgba(234,179,8,1),
-        0 0 30px rgba(234,179,8,0.9);
-      box-shadow:
-        0 0 18px rgba(234,179,8,0.95),
-        0 0 38px rgba(234,179,8,0.9),
-        inset 0 0 14px rgba(255,255,255,0.85);
-    }
+    
 
-    .level-select-btn:nth-child(4) {
-      /* LIVELLO 4 - VERDE */
-      background: radial-gradient(circle at 30% 20%, #dcfce7, #22c55e, #14532d);
-      text-shadow:
-        0 0 6px rgba(190,242,205,1),
-        0 0 18px rgba(52,211,153,1),
-        0 0 30px rgba(16,185,129,0.9);
-      box-shadow:
-        0 0 18px rgba(52,211,153,0.95),
-        0 0 38px rgba(16,185,129,0.9),
-        inset 0 0 14px rgba(255,255,255,0.85);
-    }
+    
 
-    @keyframes neonLevelPulse {
-      0% {
-        transform: translateY(0) scale(1);
-        filter: brightness(1);
-      }
+    
       50% {
         transform: translateY(-2px) scale(1.03);
         filter: brightness(1.1);
@@ -2490,10 +2514,12 @@ Music Rainbow</div>
         Modalità Play
       </button>
       <button id="homeLearnNotesBtn" class="home-level-btn home-level-main" type="button">
-        Mappa delle note
+        <span class="home-level-btn-icon">🎹</span>
+        <span class="home-level-btn-label">Mappa delle note</span>
       </button>
       <button id="homeTrophyBtn" class="home-level-btn home-level-trophy" type="button">
-        Scrigno dei trofei
+        <span class="home-level-btn-icon">🏆</span>
+        <span class="home-level-btn-label">Scrigno dei trofei</span>
       </button>
     </div>
 
