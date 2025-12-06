@@ -342,7 +342,14 @@ body {
     }
 
     /* Livelli e scrigno: stile “scrigno” dorato uguale alla pagina trofei */
-    .home-level-main,
+    .home-level-main {
+      background: linear-gradient(to bottom, #22c55e, #16a34a);
+      color: #052e16;
+    }
+    .home-level-learn {
+      background: linear-gradient(to bottom, #38bdf8, #0ea5e9);
+      color: #0f172a;
+    }
     .home-level-1,
     .home-level-2,
     .home-level-3,
@@ -2777,11 +2784,8 @@ body {
       <button id="homePlayBtn" class="home-level-btn home-level-play home-play-disabled" type="button" disabled>
         Modalità Play
       </button>
-      <button id="homeLearnNotesBtn" class="home-level-btn home-level-main" type="button">
-        Mappa delle note
-      </button>
-      <button id="homeLearnTempoBtn" class="home-level-btn home-level-main" type="button">
-        Impara tempo
+      <button id="homeLearnMainBtn" class="home-level-btn home-level-learn" type="button">
+        Impara
       </button>
       <button id="homeTrophyBtn" class="home-level-btn home-level-trophy" type="button">
         Scrigno dei trofei
@@ -2796,7 +2800,7 @@ body {
         <span class="home-test-toggle-slider"></span>
       </div>
     </label>
-    <div class="home-version-label">Versione 3.300</div>
+    <div class="home-version-label">Versione 3.312</div>
   </div>
 </div>
 
@@ -2821,6 +2825,27 @@ body {
     </div>
     <div class="level-select-actions">
       <button type="button" id="btnLevelSelectClose" class="level-select-close">
+        Chiudi
+      </button>
+    </div>
+  </div>
+</div>
+
+
+<div id="learnSelectOverlay" class="level-select-overlay">
+  <div class="level-select-box">
+    <h2 class="level-select-title">Impara</h2>
+    <p class="level-select-subtitle">Scegli cosa vuoi allenare.</p>
+    <div class="level-select-grid">
+      <button type="button" id="homeLearnNotesBtn" class="level-select-btn">
+        <span class="home-level-btn-label">Note</span>
+      </button>
+      <button type="button" id="homeLearnTempoBtn" class="level-select-btn">
+        <span class="home-level-btn-label">Tempo</span>
+      </button>
+    </div>
+    <div class="level-select-actions">
+      <button type="button" id="learnSelectClose" class="level-select-close">
         Chiudi
       </button>
     </div>
@@ -7368,6 +7393,10 @@ document.addEventListener("DOMContentLoaded", function() {
   const btnLevelSelectClose = document.getElementById("btnLevelSelectClose");
   const levelSelectButtons = document.querySelectorAll(".level-select-btn");
 
+  const learnSelectOverlay = document.getElementById("learnSelectOverlay");
+  const homeLearnMainBtn   = document.getElementById("homeLearnMainBtn");
+  const btnLearnSelectClose = document.getElementById("learnSelectClose");
+
   const menuBtnL1   = document.getElementById("menuBtnL1");
   const menuBtnL2   = document.getElementById("menuBtnL2");
   const menuBtnL3   = document.getElementById("menuBtnL3");
@@ -7591,6 +7620,19 @@ function regenerateNotesForCurrentPage() {
   }
 
   
+
+  if (homeLearnMainBtn && learnSelectOverlay) {
+    homeLearnMainBtn.addEventListener("click", () => {
+      learnSelectOverlay.classList.add("active");
+    });
+  }
+
+  if (btnLearnSelectClose && learnSelectOverlay) {
+    btnLearnSelectClose.addEventListener("click", () => {
+      learnSelectOverlay.classList.remove("active");
+    });
+  }
+
   // Mappa delle note: evidenziazione dei pallini sul pentagramma
   const learnNoteButtons = (learnNotesPage)
     ? learnNotesPage.querySelectorAll(".note-button")
@@ -7628,8 +7670,14 @@ if (btnLevel1) btnLevel1.addEventListener("click", () => { showLevel("level1Page
   if (btnLevel4) btnLevel4.addEventListener("click", () => { showLevel("level4Page"); });
   if (homeTrophyBtn) homeTrophyBtn.addEventListener("click", showTrophyPage);
 
-  if (homeLearnNotesBtn) homeLearnNotesBtn.addEventListener("click", showLearnNotes);
-  if (homeLearnTempoBtn) homeLearnTempoBtn.addEventListener("click", showLearnTempo);
+  if (homeLearnNotesBtn) homeLearnNotesBtn.addEventListener("click", () => {
+    if (learnSelectOverlay) learnSelectOverlay.classList.remove("active");
+    showLearnNotes();
+  });
+  if (homeLearnTempoBtn) homeLearnTempoBtn.addEventListener("click", () => {
+    if (learnSelectOverlay) learnSelectOverlay.classList.remove("active");
+    showLearnTempo();
+  });
 
   if (menuBtnL1)   menuBtnL1.addEventListener("click", showHome);
   if (menuBtnL2)   menuBtnL2.addEventListener("click", showHome);
