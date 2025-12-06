@@ -1570,7 +1570,35 @@ body {
   
   margin-top: 20px;}
 
-    .note-buttons-wrapper {
+    
+    .tempo-action-container {
+      margin: 24px 16px 12px;
+      display: flex;
+      justify-content: center;
+    }
+    .tempo-action-btn {
+      width: 100%;
+      max-width: 520px;
+      aspect-ratio: 5 / 1; /* barra orizzontale 5:1 */
+      border-radius: 24px;
+      font-size: 1.6rem;
+      font-weight: 800;
+      cursor: pointer;
+      border: 2px solid rgba(255,255,255,0.9);
+      background: #0ea5e9;
+      color: #4b0082;
+      box-shadow:
+        0 10px 20px rgba(15,23,42,0.45),
+        inset 0 0 14px rgba(255,255,255,0.65);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .tempo-action-btn:active {
+      transform: translateY(1px);
+      box-shadow: 0 4px 10px rgba(15,23,42,0.5);
+    }
+.note-buttons-wrapper {
       width: 100%;
       max-width: none;
       margin: 12px 0 0 0;
@@ -2144,6 +2172,19 @@ body {
     }
 
 
+
+    /* Icona audio anche per Impara Tempo */
+    #resetAudioBtnTempo {
+      position: relative;
+      font-size: 0; /* nasconde il testo interno */
+    }
+    #resetAudioBtnTempo::before {
+      content: "🔊";
+      font-size: 1.3rem;
+    }
+    #resetAudioBtnTempo span {
+      display: none;
+    }
 :root {
   /* fix per 100vh sui mobile browser */
   --vh: 1vh;
@@ -2415,6 +2456,7 @@ body {
 .learn-note circle.learn-highlight { transform-origin:center center; }
 
 #homeLearnNotesBtn { background: #4f46e5 !important; color:white !important; }
+#homeLearnTempoBtn { background: #0ea5e9 !important; color:white !important; }
 
 /* Override for MAPPA: remove frame around pentagram */
 #learnNotesPage 
@@ -2738,6 +2780,9 @@ body {
       <button id="homeLearnNotesBtn" class="home-level-btn home-level-main" type="button">
         Mappa delle note
       </button>
+      <button id="homeLearnTempoBtn" class="home-level-btn home-level-main" type="button">
+        Impara tempo
+      </button>
       <button id="homeTrophyBtn" class="home-level-btn home-level-trophy" type="button">
         Scrigno dei trofei
       </button>
@@ -2751,7 +2796,7 @@ body {
         <span class="home-test-toggle-slider"></span>
       </div>
     </label>
-    <div class="home-version-label">Versione 3.200</div>
+    <div class="home-version-label">Versione 3.300</div>
   </div>
 </div>
 
@@ -3462,7 +3507,7 @@ body {
             </feMerge>
           </filter>
         </defs>
-
+        <g id="staffL4Group">
         <line x1="30" y1="120" x2="788" y2="120" stroke="#111827" stroke-width="2"/>
         <line x1="30" y1="140" x2="788" y2="140" stroke="#111827" stroke-width="2"/>
         <line x1="30" y1="160" x2="788" y2="160" stroke="#111827" stroke-width="2"/>
@@ -3479,7 +3524,9 @@ body {
         <circle class="bass-dot" cx="95" cy="170" r="4" fill="#111827" />
         <circle class="bass-dot" cx="95" cy="190" r="4" fill="#111827" /></g>
 
-      </svg>
+      
+        </g>
+</svg>
       <div class="status-bar" id="statusBarL4">
     </div>
 
@@ -3487,6 +3534,94 @@ body {
       <div class="piano">
         <div class="piano-keys" id="pianoKeysL4"></div>
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===========================
+     IMPARA IL TEMPO
+     =========================== -->
+<div id="learnTempoPage" class="page-container" style="display:none">
+  <div class="app">
+    <div class="top-panel">
+      <div class="top-row">
+        <div class="top-left-controls">
+          <button class="reset-btn" id="resetBtnTempo" aria-label="Reset">↻</button>
+          <button class="menu-btn" id="menuBtnTempo" aria-label="Menu">🏠</button>
+          <button class="trophy-btn" id="trophyBtnTempo" aria-label="Trofei">🏆</button>
+          
+          
+          <div class="stat-pill stat-errors-normal error-pill" id="errorPillTempo">
+            Errori: 0
+          </div>
+        </div>
+        <h1 class="rainbow-title"><span>M</span><span>u</span><span>s</span><span>i</span><span>c</span><span>&nbsp;</span><span>R</span><span>a</span><span>i</span><span>n</span><span>b</span><span>o</span><span>w</span></h1>
+        <div class="top-right-controls">
+          <button class="clef-btn clef-treble-btn active-clef" id="clefTrebleBtnTempo" aria-label="Chiave di violino">&#119070;</button>
+          <button class="clef-btn clef-bass-btn" id="clefBassBtnTempo" aria-label="Chiave di basso">&#119074;</button>
+          <div class="metronome-pill" id="metronomePillTempo">
+            <input id="bpmInputTempo" class="metronome-bpm-input" type="number" min="40" max="160" value="80" aria-label="Tempo in BPM">
+            <div class="metronome-dot" id="metronomeDotTempo"></div>
+          </div>
+          <button class="rainbow-counter" id="resetAudioBtnTempo" type="button">
+            Attiva audio
+            <span id="rainbowCountTempo" class="rainbow-hidden-count">0</span>
+          </button>
+        </div>
+      </div>
+      <div class="medals-panel-container">
+        <div class="medals-panel" id="medalsPanelTempo"></div>
+        <div class="tokens-panel" id="tokensPanelTempo"></div>
+      </div>
+    </div>
+
+    
+      <svg id="staffSvgTempo" class="staff" viewBox="0 0 820 260">
+        <defs>
+          <linearGradient id="rainbowStroke" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#ef4444"/>
+            <stop offset="16%" stop-color="#f97316"/>
+            <stop offset="32%" stop-color="#eab308"/>
+            <stop offset="48%" stop-color="#22c55e"/>
+            <stop offset="64%" stop-color="#38bdf8"/>
+            <stop offset="80%" stop-color="#a855f7"/>
+            <stop offset="100%" stop-color="#4f46e5"/>
+          </linearGradient>
+          <filter id="rainbowGlow" x="-80%" y="-80%" width="260%" height="260%">
+            <feGaussianBlur stdDeviation="3" result="blur"/>
+            <feMerge>
+              <feMergeNode in="blur"/>
+              <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+          </filter>
+        </defs>
+        <g id="staffTempoGroup">
+        <line x1="30" y1="120" x2="788" y2="120" stroke="#111827" stroke-width="2"/>
+        <line x1="30" y1="140" x2="788" y2="140" stroke="#111827" stroke-width="2"/>
+        <line x1="30" y1="160" x2="788" y2="160" stroke="#111827" stroke-width="2"/>
+        <line x1="30" y1="180" x2="788" y2="180" stroke="#111827" stroke-width="2"/>
+        <line x1="30" y1="200" x2="788" y2="200" stroke="#111827" stroke-width="2"/>
+        
+        <!-- Barra iniziale a sinistra -->
+        <line x1="30" y1="120" x2="30" y2="200" stroke="#111827" stroke-width="3"/>
+
+        <!-- Doppia barra finale a destra -->
+        <line x1="783" y1="120" x2="783" y2="200" stroke="#111827" stroke-width="2"/>
+        <line x1="790" y1="119" x2="790" y2="201" stroke="#111827" stroke-width="4"/>
+        <g class="clef-group"><text x="40" y="213" font-size="150" class="clef-symbol">&#119070;</text>
+        <circle class="bass-dot" cx="95" cy="170" r="4" fill="#111827" />
+        <circle class="bass-dot" cx="95" cy="190" r="4" fill="#111827" /></g>
+
+      
+        </g>
+</svg>
+      <div class="status-bar" id="statusBarTempo">
+    </div>
+
+    <div class="tempo-action-container">
+      <button id="tempoActionBtn" class="tempo-action-btn" type="button">
+        Tocca per suonare
+      </button>
     </div>
   </div>
 </div>
@@ -3970,6 +4105,7 @@ function updateAudioButtonsUI() {
     document.getElementById("resetAudioBtnL3"),
     document.getElementById("resetAudioBtnL4"),
     document.getElementById("resetAudioBtnPlay"),
+    document.getElementById("resetAudioBtnTempo"),
     document.getElementById("resetAudioBtnLearn")
   ].filter(Boolean);
 
@@ -4061,7 +4197,7 @@ function colorNoteElementByName(noteObj) {
 
 
 function setStatusBar(el, levelLabel, notes, errors, threshold) {
-  // Versione 3.200: le pillole Note/Errori sono state rimosse dall'area sotto lo spartito.
+  // Versione 3.300: le pillole Note/Errori sono state rimosse dall'area sotto lo spartito.
   // Manteniamo la funzione per compatibilità ma non mostriamo più nulla qui.
   if (!el) return;
   el.innerHTML = "";
@@ -5837,6 +5973,7 @@ if (pianoKeysElL3 && staffSvgL3) {
    =========================== */
 
 const staffSvgL4    = document.getElementById("staffSvgL4");
+const staffGroupL4  = document.getElementById("staffL4Group");
 const statusBarElL4 = document.getElementById("statusBarL4");
 const errorPillL4   = document.getElementById("errorPillL4");
 const pianoKeysElL4 = document.getElementById("pianoKeysL4");
@@ -6138,7 +6275,7 @@ function createNotesL4() {
       line.setAttribute("stroke", "#111827");
       line.setAttribute("stroke-width", "2");
       line.classList.add("measure-bar-l4");
-      staffSvgL4.appendChild(line);
+      (staffGroupL4 || staffSvgL4).appendChild(line);
     }
   });
 
@@ -6194,7 +6331,7 @@ function createNotesL4() {
         ledger.setAttribute("y1", cy);
         ledger.setAttribute("y2", cy);
         ledger.classList.add("ledger-line");
-        staffSvgL4.appendChild(ledger);
+        (staffGroupL4 || staffSvgL4).appendChild(ledger);
       }
 
             const duration = pattern[i];
@@ -6255,7 +6392,7 @@ function createNotesL4() {
         }
       }
 
-      staffSvgL4.appendChild(group);
+      (staffGroupL4 || staffSvgL4).appendChild(group);
 
       const obj = {
         cx,
@@ -6482,6 +6619,370 @@ if (staffSvgL4 && pianoKeysElL4) {
   renderPianoL4();
 }
 
+
+/* ===========================
+   IMPARA TEMPO - RITMO GUIDATO
+   =========================== */
+
+const staffSvgTempo    = document.getElementById("staffSvgTempo");
+const staffGroupTempo  = document.getElementById("staffTempoGroup");
+const statusBarElTempo = document.getElementById("statusBarTempo");
+const errorPillTempo   = document.getElementById("errorPillTempo");
+const resetBtnTempo    = document.getElementById("resetBtnTempo");
+const bpmInputTempo    = document.getElementById("bpmInputTempo");
+const metronomeDotTempo = document.getElementById("metronomeDotTempo");
+const tempoActionBtn   = document.getElementById("tempoActionBtn");
+
+let currentNotesTempo = [];
+let currentIndexTempo = 0;
+let consecutiveErrorsTempo = 0;
+let lastHitTimeTempo = null;
+let bpmTempo = 80;
+let metronomeIntervalIdTempo = null;
+
+const TOLERANCE_MS_TEMPO = (typeof TOLERANCE_MS_L4 !== "undefined" ? TOLERANCE_MS_L4 : 340);
+
+function getBeatIntervalMsTempo() {
+  return 60000 / bpmTempo;
+}
+
+function clickMetronomeTempo() {
+  if (!metronomeDotTempo) return;
+  // click visivo
+  metronomeDotTempo.classList.add("active");
+  setTimeout(() => {
+    if (metronomeDotTempo) metronomeDotTempo.classList.remove("active");
+  }, 90);
+  // click sonoro se l'audio è attivo
+  if (typeof audioEnabled !== "undefined" && audioEnabled) {
+    try {
+      playTone(1200, 120);
+    } catch (e) {
+      // ignora errori audio
+    }
+  }
+}
+
+function startMetronomeTempo() {
+  if (!bpmInputTempo) return;
+  const v = parseInt(bpmInputTempo.value, 10) || 80;
+  bpmTempo = v;
+  if (metronomeIntervalIdTempo) {
+    clearInterval(metronomeIntervalIdTempo);
+    metronomeIntervalIdTempo = null;
+  }
+  clickMetronomeTempo();
+  const interval = getBeatIntervalMsTempo();
+  metronomeIntervalIdTempo = setInterval(clickMetronomeTempo, interval);
+}
+
+function stopMetronomeTempo() {
+  if (metronomeIntervalIdTempo) {
+    clearInterval(metronomeIntervalIdTempo);
+    metronomeIntervalIdTempo = null;
+  }
+  if (metronomeDotTempo) {
+    metronomeDotTempo.classList.remove("active");
+  }
+}
+
+function restartSamePatternTempo() {
+  currentIndexTempo = 0;
+  lastHitTimeTempo = null;
+  if (Array.isArray(currentNotesTempo)) {
+    currentNotesTempo.forEach(n => {
+      if (!n.element) return;
+      const el = n.element;
+      const head = el.querySelector(".note-head");
+      const parts = el.querySelectorAll(".note-stem, .note-flag");
+      if (head) {
+        head.style.fill = "";
+        head.style.stroke = "";
+      }
+      parts.forEach(p => {
+        p.style.stroke = "";
+      });
+      if (el.classList) {
+        el.classList.remove("note-played");
+      }
+    });
+  }
+  updateErrorPill(errorPillTempo, consecutiveErrorsTempo, 7);
+}
+
+function createNotesTempo() {
+  if (!staffSvgTempo) return;
+
+  staffSvgTempo
+    .querySelectorAll(".note-head, .note-symbol, .error-x, .ledger-line, .note-stem, .note-flag, .measure-bar-l4")
+    .forEach(e => e.remove());
+
+  currentNotesTempo = [];
+  currentIndexTempo = 0;
+  consecutiveErrorsTempo = 0;
+  lastHitTimeTempo = null;
+  updateErrorPill(errorPillTempo, consecutiveErrorsTempo, 7);
+
+  const startX = 120;
+  const endX = 760;
+
+  const measureCount = 2;
+
+  const barPositions = [];
+  const span = endX - startX;
+  for (let i = 1; i < measureCount; i++) {
+    const x = startX + (span * i) / measureCount;
+    barPositions.push(x);
+  }
+
+  barPositions.forEach((barX) => {
+    const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+    line.setAttribute("x1", barX);
+    line.setAttribute("x2", barX);
+    line.setAttribute("y1", 120);
+    line.setAttribute("y2", 200);
+    line.setAttribute("stroke", "#111827");
+    line.setAttribute("stroke-width", "2");
+    line.classList.add("measure-bar-l4");
+    (staffGroupTempo || staffSvgTempo).appendChild(line);
+  });
+
+  const durationsPool = (typeof DURATIONS_L4 !== "undefined" && Array.isArray(DURATIONS_L4))
+    ? DURATIONS_L4.slice()
+    : [
+      { name:"semibreve",  beats:4 },
+      { name:"minima",     beats:2 },
+      { name:"semiminima", beats:1 }
+    ];
+
+  function pickMeasurePatternTempo() {
+    const targetBeats = 4;
+    const maxNotes = 7;
+    let pattern = [];
+    let sum = 0;
+    let safety = 0;
+    let lastName = null;
+
+    while (sum < targetBeats && safety < 1000 && pattern.length < maxNotes) {
+      const remaining = targetBeats - sum;
+      let candidates = durationsPool.filter(d => d.beats <= remaining);
+      if (!candidates.length) break;
+
+      if (lastName !== null) {
+        const alt = candidates.filter(d => d.name !== lastName);
+        if (alt.length) {
+          candidates = alt;
+        }
+      }
+
+      const d = candidates[Math.floor(Math.random() * candidates.length)];
+      pattern.push(d);
+      sum += d.beats;
+      lastName = d.name;
+      safety++;
+    }
+
+    if (Math.abs(sum - targetBeats) < 0.0001 && pattern.length > 0) {
+      return pattern;
+    }
+
+    const semiminima = durationsPool.find(d => d.name === "semiminima") || { name:"semiminima", beats:1 };
+    return [semiminima, semiminima, semiminima, semiminima];
+  }
+
+  const measure1 = pickMeasurePatternTempo();
+  const measure2 = pickMeasurePatternTempo();
+
+  let pool = STAFF_CORE_POSITIONS.slice();
+
+  function takeRandomPositionFromPool() {
+    if (!pool.length) {
+      pool = STAFF_CORE_POSITIONS.slice();
+    }
+    const idx = Math.floor(Math.random() * pool.length);
+    return pool.splice(idx, 1)[0];
+  }
+
+  function placeMeasureTempo(pattern, fromX, toX) {
+    const count = pattern.length;
+    if (count === 0) return;
+    for (let i = 0; i < count; i++) {
+      const p = takeRandomPositionFromPool();
+      const t = (count === 1) ? 0.5 : (i / Math.max(1, count - 1));
+      const margin = 25;
+      const leftX  = fromX + margin;
+      const rightX = toX - margin;
+      const cx = leftX + (rightX - leftX) * t;
+      const cy = getStaffY(p.noteName, p.octave);
+
+      const noteName = p.noteName;
+      const octave = p.octave;
+
+      const baseFreq = NOTE_FREQS[noteName] || 440;
+      const freq = baseFreq * (octave === 2 ? 2 : 1);
+
+      if (
+        (cy > 200 || cy < 120) &&
+        !(noteName === "re" && octave === 1) &&
+        !(noteName === "fa" && octave === 2)
+      ) {
+        const neededY = cy;
+        const refY = (neededY < 120) ? 120 : 200;
+        const dir = (neededY < 120) ? -1 : 1;
+        for (let ly = refY; dir < 0 ? ly >= neededY : ly <= neededY; ly += 10 * dir) {
+          const ledger = document.createElementNS("http://www.w3.org/2000/svg", "line");
+          ledger.setAttribute("x1", cx - 14);
+          ledger.setAttribute("x2", cx + 14);
+          ledger.setAttribute("y1", ly);
+          ledger.setAttribute("y2", ly);
+          ledger.setAttribute("stroke", "#111827");
+          ledger.setAttribute("stroke-width", "2");
+          ledger.classList.add("ledger-line");
+          (staffGroupTempo || staffSvgTempo).appendChild(ledger);
+        }
+      }
+
+      const duration = pattern[i];
+      const beats = duration.beats;
+      const durationName = duration.name;
+
+      const group = document.createElementNS("http://www.w3.org/2000/svg", "g");
+      group.classList.add("note-symbol");
+      group.setAttribute("transform", "translate(" + cx + ", " + cy + ")");
+
+      const head = document.createElementNS("http://www.w3.org/2000/svg", "ellipse");
+      head.setAttribute("cx", 0);
+      head.setAttribute("cy", 0);
+      head.setAttribute("rx", NOTE_HEAD_RX);
+      head.setAttribute("ry", NOTE_HEAD_RY);
+      head.setAttribute("transform", "rotate(-15)");
+      head.classList.add("note-head");
+      if (durationName === "semiminima") {
+        head.classList.add("filled");
+      }
+      group.appendChild(head);
+
+      if (durationName === "minima_puntata" || durationName === "semiminima_puntata") {
+        const dot = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+        dot.setAttribute("cx", STEM_X + NOTE_HEAD_RX + 4);
+        dot.setAttribute("cy", 0);
+        dot.setAttribute("r", 3);
+        dot.classList.add("note-head");
+        dot.classList.add("filled");
+        group.appendChild(dot);
+      }
+
+      if (durationName !== "semibreve") {
+        const stem = document.createElementNS("http://www.w3.org/2000/svg", "line");
+        stem.setAttribute("x1", STEM_X);
+        stem.setAttribute("y1", 0);
+        stem.setAttribute("x2", STEM_X);
+        stem.setAttribute("y2", -42);
+        stem.classList.add("note-stem");
+        group.appendChild(stem);
+      }
+
+      (staffGroupTempo || staffSvgTempo).appendChild(group);
+
+      const obj = {
+        cx,
+        cy,
+        noteName,
+        octave,
+        freq,
+        beats,
+        durationName,
+        element: group
+      };
+      currentNotesTempo.push(obj);
+    }
+  }
+
+  placeMeasureTempo(measure1, startX, barPositions[0] || endX);
+  placeMeasureTempo(measure2, barPositions[0] || startX, endX);
+}
+
+function handleTapTempo() {
+  if (!currentNotesTempo.length) return;
+
+  const target = currentNotesTempo[currentIndexTempo];
+  if (!target) return;
+
+  const now = performance.now();
+
+  let inTime = false;
+  if (currentIndexTempo === 0 || lastHitTimeTempo == null) {
+    inTime = true;
+  } else {
+    const prev = currentNotesTempo[currentIndexTempo - 1];
+    const expectedInterval = prev.beats * getBeatIntervalMsTempo();
+    const actualInterval = now - lastHitTimeTempo;
+    const delta = Math.abs(actualInterval - expectedInterval);
+    const isLastNote = (currentIndexTempo === currentNotesTempo.length - 1);
+    const effectiveTolerance = isLastNote ? (TOLERANCE_MS_TEMPO * 2.4) : TOLERANCE_MS_TEMPO;
+    inTime = (delta <= effectiveTolerance);
+  }
+
+  if (inTime) {
+    if (currentIndexTempo === 0 && !metronomeIntervalIdTempo) {
+      startMetronomeTempo();
+    }
+
+    const noteDurationMs = (target.beats || 1) * getBeatIntervalMsTempo();
+    playTone(target.freq, noteDurationMs);
+    colorNoteElementByName(target);
+    lastHitTimeTempo = now;
+    currentIndexTempo++;
+
+    if (currentIndexTempo >= currentNotesTempo.length) {
+      stopMetronomeTempo();
+      createNotesTempo();
+      return;
+    }
+  } else {
+    playError();
+    consecutiveErrorsTempo++;
+    updateErrorPill(errorPillTempo, consecutiveErrorsTempo, 7);
+    stopMetronomeTempo();
+    restartSamePatternTempo();
+  }
+}
+
+if (tempoActionBtn && staffSvgTempo) {
+  tempoActionBtn.addEventListener("click", handleTapTempo);
+}
+
+if (resetBtnTempo && staffSvgTempo) {
+  resetBtnTempo.addEventListener("click", () => {
+    stopMetronomeTempo();
+    createNotesTempo();
+  });
+}
+
+if (bpmInputTempo) {
+  bpmInputTempo.addEventListener("change", () => {
+    let v = parseInt(bpmInputTempo.value, 10);
+    if (isNaN(v)) v = 80;
+    v = Math.max(40, Math.min(160, v));
+    bpmInputTempo.value = v;
+    bpmTempo = v;
+    if (metronomeIntervalIdTempo) {
+      startMetronomeTempo();
+    }
+  });
+}
+
+if (metronomeDotTempo) {
+  metronomeDotTempo.addEventListener("click", () => {
+    stopMetronomeTempo();
+    createNotesTempo();
+  });
+}
+
+if (staffSvgTempo) {
+  bpmTempo = bpmInputTempo ? parseInt(bpmInputTempo.value, 10) || 80 : 80;
+  createNotesTempo();
+}
 /* ===========================
    MODALITÀ PLAY
    =========================== */
@@ -6848,6 +7349,7 @@ document.addEventListener("DOMContentLoaded", function() {
   const level2Page = document.getElementById("level2Page");
   const level3Page = document.getElementById("level3Page");
   const level4Page = document.getElementById("level4Page");
+  const learnTempoPage = document.getElementById("learnTempoPage");
   const playPage   = document.getElementById("playPage");
 
   homePlayBtn = document.getElementById("homePlayBtn");
@@ -6871,15 +7373,18 @@ document.addEventListener("DOMContentLoaded", function() {
   const menuBtnL3   = document.getElementById("menuBtnL3");
   const menuBtnL4   = document.getElementById("menuBtnL4");
   const menuBtnPlay = document.getElementById("menuBtnPlay");
+  const menuBtnTempo = document.getElementById("menuBtnTempo");
   const learnNotesPage = document.getElementById("learnNotesPage");
   const menuBtnLearn = document.getElementById("menuBtnLearn");
   const homeLearnNotesBtn = document.getElementById("homeLearnNotesBtn");
+  const homeLearnTempoBtn = document.getElementById("homeLearnTempoBtn");
 
   const trophyBtnL1   = document.getElementById("trophyBtnL1");
   const trophyBtnL2   = document.getElementById("trophyBtnL2");
   const trophyBtnL3   = document.getElementById("trophyBtnL3");
   const trophyBtnL4   = document.getElementById("trophyBtnL4");
   const trophyBtnPlay = document.getElementById("trophyBtnPlay");
+  const trophyBtnTempo = document.getElementById("trophyBtnTempo");
 
   const clefTrebleButtons = document.querySelectorAll(".clef-treble-btn");
   const clefBassButtons   = document.querySelectorAll(".clef-bass-btn");
@@ -6960,7 +7465,8 @@ function regenerateNotesForCurrentPage() {
   const resetAudioBtnL3 = document.getElementById("resetAudioBtnL3");
   const resetAudioBtnL4 = document.getElementById("resetAudioBtnL4");
   const resetAudioBtnPlay = document.getElementById("resetAudioBtnPlay");
-const resetAudioBtnLearn = document.getElementById("resetAudioBtnLearn");
+  const resetAudioBtnTempo = document.getElementById("resetAudioBtnTempo");
+  const resetAudioBtnLearn = document.getElementById("resetAudioBtnLearn");
 
   function refreshGenderButtons() {
     genderOptionLabels.forEach(label => {
@@ -6997,6 +7503,7 @@ const resetAudioBtnLearn = document.getElementById("resetAudioBtnLearn");
     playPage.style.display   = "none";
     trophyPageEl.style.display = "none";
     if (learnNotesPage) learnNotesPage.style.display = "none";
+    if (learnTempoPage) learnTempoPage.style.display = "none";
   }
 
   function showHome() {
@@ -7032,6 +7539,14 @@ const resetAudioBtnLearn = document.getElementById("resetAudioBtnLearn");
     }
   }
 
+  function showLearnTempo() {
+    hideAllPages();
+    homeScreen.style.display = "none";
+    if (learnTempoPage) {
+      learnTempoPage.style.display = "flex";
+    }
+  }
+
   function showTrophyPage() {
     homeScreen.style.display = "none";
     level1Page.style.display = "none";
@@ -7039,6 +7554,8 @@ const resetAudioBtnLearn = document.getElementById("resetAudioBtnLearn");
     level3Page.style.display = "none";
     level4Page.style.display = "none";
     playPage.style.display   = "none";
+    if (learnNotesPage) learnNotesPage.style.display = "none";
+    if (learnTempoPage) learnTempoPage.style.display = "none";
     trophyPageEl.style.display = "flex";
     if (trophyContentEl) {
       trophyContentEl.style.display = "none";
@@ -7112,12 +7629,14 @@ if (btnLevel1) btnLevel1.addEventListener("click", () => { showLevel("level1Page
   if (homeTrophyBtn) homeTrophyBtn.addEventListener("click", showTrophyPage);
 
   if (homeLearnNotesBtn) homeLearnNotesBtn.addEventListener("click", showLearnNotes);
+  if (homeLearnTempoBtn) homeLearnTempoBtn.addEventListener("click", showLearnTempo);
 
   if (menuBtnL1)   menuBtnL1.addEventListener("click", showHome);
   if (menuBtnL2)   menuBtnL2.addEventListener("click", showHome);
   if (menuBtnL3)   menuBtnL3.addEventListener("click", showHome);
   if (menuBtnL4)   menuBtnL4.addEventListener("click", showHome);
   if (menuBtnPlay) menuBtnPlay.addEventListener("click", showHome);
+  if (menuBtnTempo) menuBtnTempo.addEventListener("click", showHome);
   if (menuBtnLearn) menuBtnLearn.addEventListener("click", showHome);
 
   if (trophyBtnL1)   trophyBtnL1.addEventListener("click", showTrophyPage);
@@ -7125,6 +7644,7 @@ if (btnLevel1) btnLevel1.addEventListener("click", () => { showLevel("level1Page
   if (trophyBtnL3)   trophyBtnL3.addEventListener("click", showTrophyPage);
   if (trophyBtnL4)   trophyBtnL4.addEventListener("click", showTrophyPage);
   if (trophyBtnPlay) trophyBtnPlay.addEventListener("click", showTrophyPage);
+  if (trophyBtnTempo) trophyBtnTempo.addEventListener("click", showTrophyPage);
   if (homePlayBtn) {
     homePlayBtn.addEventListener("click", () => {
       // In modalità TEST, il toggle può sbloccare la pagina play anche senza sessione attiva
@@ -7182,7 +7702,8 @@ if (btnLevel1) btnLevel1.addEventListener("click", () => { showLevel("level1Page
   if (resetAudioBtnL3) resetAudioBtnL3.addEventListener("click", toggleAudio);
   if (resetAudioBtnL4) resetAudioBtnL4.addEventListener("click", toggleAudio);
   if (resetAudioBtnPlay) resetAudioBtnPlay.addEventListener("click", toggleAudio);
-if (resetAudioBtnLearn) resetAudioBtnLearn.addEventListener("click", toggleAudio);
+  if (resetAudioBtnTempo) resetAudioBtnTempo.addEventListener("click", toggleAudio);
+  if (resetAudioBtnLearn) resetAudioBtnLearn.addEventListener("click", toggleAudio);
   
   
 
