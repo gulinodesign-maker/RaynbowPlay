@@ -415,7 +415,7 @@ body {
       -webkit-overflow-scrolling: touch;
     }
 
-    .app { margin: 20px; padding:0; width: calc(100% - 40px); height: calc(100% - 40px); background:white; border-radius:12px; position:relative; z-index:1; display:flex; flex-direction:column; }
+    .app { padding-bottom:40px; margin: 20px; padding:0; width: calc(100% - 40px); height: calc(100% - 40px); background:white; border-radius:12px; position:relative; z-index:1; display:flex; flex-direction:column; }
 
     
 
@@ -1972,7 +1972,7 @@ body {
     /* ===========================
        PAGINA TROFEI
        =========================== */
-    #trophyPage .app { margin: 20px; padding:0; width: calc(100% - 40px); height: calc(100% - 40px); background:white; border-radius:12px; position:relative; z-index:1; display:flex; flex-direction:column; }
+    #trophyPage .app { padding-bottom:40px; margin: 20px; padding:0; width: calc(100% - 40px); height: calc(100% - 40px); background:white; border-radius:12px; position:relative; z-index:1; display:flex; flex-direction:column; }
 
     .trophy-main {
       text-align: center;
@@ -2474,16 +2474,15 @@ body {
   margin-left: 20px;
   margin-right: 20px;
 
-  /* LIQUID GLASS STAFF */
-  background: rgba(255,255,255,0.18);
-  border: 2px solid rgba(255,255,255,0.45);
-  backdrop-filter: blur(18px) saturate(180%);
-  -webkit-backdrop-filter: blur(18px) saturate(180%);
-  box-shadow:
-    0 10px 22px rgba(15,23,42,0.35),
-    inset 0 0 14px rgba(255,255,255,0.75);
-  border-radius: 18px;
+  /* STAFF TRANSPARENT ON PAGE BACKGROUND */
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border-radius: 0;
 }
+
 
 
 @keyframes notePulse {
@@ -2542,7 +2541,7 @@ body {
     #88f7e2 0%, #5cdccb 40%, #36b5aa 75%, #1c8f82 100%) !important;
 }
 
-</style>
+ .learn-popup button {text-align:center;} </style>
 
 <style>
 /* Raddoppio altezza tasti Livello 1 e Mappa */
@@ -2551,7 +2550,7 @@ body {
     padding-top: 24px !important;
     padding-bottom: 24px !important;
 }
-</style>
+ .learn-popup button {text-align:center;} </style>
 
 
 <style>
@@ -2666,7 +2665,7 @@ body {
     inset 0 0 10px rgba(255,255,255,0.65);
   animation: neonTitlePulse 1.8s ease-in-out infinite;
 }
-</style>
+ .learn-popup button {text-align:center;} </style>
 
 
 <style>
@@ -2675,7 +2674,7 @@ body {
 .top-row h1 {
   margin-top: 5px !important;
 }
-</style>
+ .learn-popup button {text-align:center;} </style>
 
 
 
@@ -2686,7 +2685,7 @@ body {
   white-space: nowrap !important;
   display: inline-block !important;
 }
-</style>
+ .learn-popup button {text-align:center;} </style>
 </head>
 
 <body>
@@ -2800,7 +2799,7 @@ body {
         <span class="home-test-toggle-slider"></span>
       </div>
     </label>
-    <div class="home-version-label">Versione 3.312</div>
+    <div class="home-version-label">Versione 3.315</div>
   </div>
 </div>
 
