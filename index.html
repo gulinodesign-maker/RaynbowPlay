@@ -1216,6 +1216,8 @@ body {
       opacity: 1;
       
     }
+    
+
     .error-pill {
       margin-left: 6px;
     }
@@ -2802,7 +2804,7 @@ body {
         <span class="home-test-toggle-slider"></span>
       </div>
     </label>
-    <div class="home-version-label">Versione 3.316</div>
+    <div class="home-version-label">Versione 3.320</div>
   </div>
 </div>
 
@@ -3502,6 +3504,11 @@ body {
             <input id="bpmInputL4" class="metronome-bpm-input" type="number" min="40" max="160" value="80" aria-label="Tempo in BPM">
             <div class="metronome-dot" id="metronomeDotL4"></div>
           </div>
+          <button
+            id="metronomeToggleBtnL4"
+            class="rainbow-counter"
+            type="button"
+            aria-label="Avvia o ferma il metronomo">⏱</button>
           <button class="rainbow-counter" id="resetAudioBtnL4" type="button">
             Attiva audio
             <span id="rainbowCountL4" class="rainbow-hidden-count">0</span>
@@ -3590,6 +3597,11 @@ body {
             <input id="bpmInputTempo" class="metronome-bpm-input" type="number" min="40" max="160" value="80" aria-label="Tempo in BPM">
             <div class="metronome-dot" id="metronomeDotTempo"></div>
           </div>
+          <button
+            id="metronomeToggleBtnTempo"
+            class="rainbow-counter"
+            type="button"
+            aria-label="Avvia o ferma il metronomo">⏱</button>
           <button class="rainbow-counter" id="resetAudioBtnTempo" type="button">
             Attiva audio
             <span id="rainbowCountTempo" class="rainbow-hidden-count">0</span>
@@ -6017,6 +6029,7 @@ let currentIndexL4 = 0;
 let consecutiveErrorsL4 = 0;
 let lastHitTimeL4 = null;
 let metronomeIntervalIdL4 = null;
+let metronomeToggleBtnL4 = null;
 let bpmL4 = 80;
 const TOLERANCE_MS_L4 = 340;
 let rainbowsL4Local = 0;
@@ -6666,6 +6679,8 @@ let consecutiveErrorsTempo = 0;
 let lastHitTimeTempo = null;
 let bpmTempo = 80;
 let metronomeIntervalIdTempo = null;
+let metronomeToggleBtnTempo = null;
+let metronomeStopTimeoutTempo = null;
 
 const TOLERANCE_MS_TEMPO = (typeof TOLERANCE_MS_L4 !== "undefined" ? TOLERANCE_MS_L4 : 340);
 
@@ -6694,6 +6709,13 @@ function startMetronomeTempo() {
   if (!bpmInputTempo) return;
   const v = parseInt(bpmInputTempo.value, 10) || 80;
   bpmTempo = v;
+
+  // Se c'è un timer programmato per spegnere il metronomo (ultima nota), annullalo
+  if (typeof metronomeStopTimeoutTempo !== "undefined" && metronomeStopTimeoutTempo) {
+    clearTimeout(metronomeStopTimeoutTempo);
+    metronomeStopTimeoutTempo = null;
+  }
+
   if (metronomeIntervalIdTempo) {
     clearInterval(metronomeIntervalIdTempo);
     metronomeIntervalIdTempo = null;
@@ -6703,15 +6725,21 @@ function startMetronomeTempo() {
   metronomeIntervalIdTempo = setInterval(clickMetronomeTempo, interval);
 }
 
+
 function stopMetronomeTempo() {
   if (metronomeIntervalIdTempo) {
     clearInterval(metronomeIntervalIdTempo);
     metronomeIntervalIdTempo = null;
   }
+  if (typeof metronomeStopTimeoutTempo !== "undefined" && metronomeStopTimeoutTempo) {
+    clearTimeout(metronomeStopTimeoutTempo);
+    metronomeStopTimeoutTempo = null;
+  }
   if (metronomeDotTempo) {
     metronomeDotTempo.classList.remove("active");
   }
 }
+
 
 function restartSamePatternTempo() {
   currentIndexTempo = 0;
@@ -6962,7 +6990,18 @@ function handleTapTempo() {
     currentIndexTempo++;
 
     if (currentIndexTempo >= currentNotesTempo.length) {
-      stopMetronomeTempo();
+      // Ultima nota: il metronomo deve continuare a scandire per tutta la durata della nota
+      if (typeof metronomeStopTimeoutTempo !== "undefined" && metronomeStopTimeoutTempo) {
+        clearTimeout(metronomeStopTimeoutTempo);
+        metronomeStopTimeoutTempo = null;
+      }
+
+      const stopDelay = noteDurationMs;
+      metronomeStopTimeoutTempo = setTimeout(() => {
+        stopMetronomeTempo();
+      }, stopDelay);
+
+      // Possiamo già preparare un nuovo pattern, il metronomo si fermerà solo a fine nota
       createNotesTempo();
       return;
     }
@@ -7498,6 +7537,38 @@ function regenerateNotesForCurrentPage() {
   const resetAudioBtnPlay = document.getElementById("resetAudioBtnPlay");
   const resetAudioBtnTempo = document.getElementById("resetAudioBtnTempo");
   const resetAudioBtnLearn = document.getElementById("resetAudioBtnLearn");
+
+
+  metronomeToggleBtnL4 = document.getElementById("metronomeToggleBtnL4");
+  metronomeToggleBtnTempo = document.getElementById("metronomeToggleBtnTempo");
+
+  if (metronomeToggleBtnL4) {
+    metronomeToggleBtnL4.addEventListener("click", () => {
+      if (metronomeIntervalIdL4) {
+        stopMetronomeL4();
+        metronomeToggleBtnL4.textContent = "▶";
+        metronomeToggleBtnL4.classList.remove("active");
+      } else {
+        startMetronomeL4();
+        metronomeToggleBtnL4.textContent = "⏸";
+        metronomeToggleBtnL4.classList.add("active");
+      }
+    });
+  }
+
+  if (metronomeToggleBtnTempo) {
+    metronomeToggleBtnTempo.addEventListener("click", () => {
+      if (metronomeIntervalIdTempo) {
+        stopMetronomeTempo();
+        metronomeToggleBtnTempo.textContent = "▶";
+        metronomeToggleBtnTempo.classList.remove("active");
+      } else {
+        startMetronomeTempo();
+        metronomeToggleBtnTempo.textContent = "⏸";
+        metronomeToggleBtnTempo.classList.add("active");
+      }
+    });
+  }
 
   function refreshGenderButtons() {
     genderOptionLabels.forEach(label => {
